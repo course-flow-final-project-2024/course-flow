@@ -28,8 +28,24 @@ export default function CourseCard() {
               </Text>
             </Stack>
             <div className="flex border-t-[1px] border-t-[#E4E6ED] gap-6 p-4">
-              <div> x Lesson</div>
-              <div> x Hours</div>
+              <div className="flex justify-between w-[82px] sm:w-[89px]">
+                <Image
+                  src="/icons/book.svg"
+                  alt="book icon"
+                  width="24px"
+                  height="24px"
+                />
+                <Text className=" sm:text-base text-sm">x Lesson</Text>
+              </div>
+              <div className="flex justify-between w-[77px] sm:w-[84px]">
+                <Image
+                  src="/icons/time.svg"
+                  alt="time icon"
+                  width="24px"
+                  height="24px"
+                />
+                <Text className=" sm:text-base text-sm">x Hours</Text>
+              </div>
             </div>
           </CardBody>
         </Card>

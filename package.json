@@ -22,6 +22,8 @@
     "@zeit/next-css": "^1.0.1",
     "antd": "^5.19.1",
     "axios": "^1.7.2",
+    "@next-auth/supabase-adapter": "^0.2.1",
+    "@supabase/supabase-js": "^2.44.3",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

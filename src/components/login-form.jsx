@@ -35,7 +35,7 @@ function LogInForm() {
         />
       </FormControl>
       <Button mt={4} colorScheme="teal" type="submit">
-        Register
+        log in
       </Button>
     </form>
   );

@@ -16,11 +16,15 @@
     "@emotion/react": "^11.11.4",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.5",
+<<<<<<< HEAD
     "@mui/material-nextjs": "^5.15.11",
     "@radix-ui/react-slot": "^1.1.0",
     "@supabase/supabase-js": "^2.44.3",
     "@zeit/next-css": "^1.0.1",
     "antd": "^5.19.1",
+=======
+    "@supabase/supabase-js": "^2.44.3",
+>>>>>>> d2d21fb (feat: create course-list page)
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",

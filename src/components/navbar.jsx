@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import LoginButton from "./loginButton";
+import LoginButton from "./login-button.jsx";
 
 function Navbar() {
   return (

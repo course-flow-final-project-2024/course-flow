@@ -6,7 +6,7 @@ function Navbar() {
   return (
     <div className="w-full h-14 bg-white flex justify-between shadow-md relative z-10 sm:px-[160px] px-4">
       <Image
-        src="/logo/CourseFlow-Logo.svg"
+        src="/logo/CourseFlowLogo.svg"
         width={117}
         height={13.37}
         alt="website-logo"

@@ -1,5 +1,5 @@
-import AllCoursesButton from "./allCoursesButton";
-import BackgroundVectors from "./backgroundVectors";
+import AllCoursesButton from "./all-courses-button";
+import BackgroundVectors from "./background-vectors";
 
 function HeroSection() {
   return (
@@ -12,7 +12,7 @@ function HeroSection() {
         </div>
         <span className="text-gray-700">
           Welcome to Schooler! The one-stop online class management system that
-          caters to all your educational needs!{" "}
+          caters to all your educational needs!
         </span>
         <AllCoursesButton />
       </div>

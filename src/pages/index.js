@@ -1,14 +1,17 @@
 import Navbar from "@/components/navbar.jsx";
-import HeroSection from "./homepage/heroSection";
+import HeroSection from "./homepage/hero-section/hero-section.jsx";
+import HomepageSecondSection from "./homepage/second-section/second-section-container";
 
 function Homepage() {
   return (
     <>
-      <header className="w-full h-screen bg-blue-100 relative overflow-hidden">
+      <div className="w-full h-[760px] bg-blue-100 relative overflow-hidden">
         <Navbar />
         <HeroSection />
-      </header>
-      <main></main>
+      </div>
+      <main>
+        <HomepageSecondSection />
+      </main>
     </>
   );
 }

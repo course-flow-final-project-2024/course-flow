@@ -10,12 +10,12 @@ export default function CourseList() {
     <>
       <div
         id="page-container"
-        className={`flex w-screen h-screen ${inter.className}`}
+        className={`flex flex-grow w-full mx-auto h-screen ${inter.className} `}
       >
         <AdminSidebar />
-        <div className="flex flex-col">
-          <AdminListingHeader title="Course" button="+ Add Course" />
-          <div className="bg-gray-100 w-auto h-full p-10 ">
+        <div className="flex flex-col w-full">
+          <AdminListingHeader section="Course" action="+ Add Course" />
+          <div className="bg-gray-100 h-full p-10 ">
             <AdminCoursesList />
           </div>
         </div>

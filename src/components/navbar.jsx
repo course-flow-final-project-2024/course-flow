@@ -1,0 +1,24 @@
+import Image from "next/image";
+import Link from "next/link";
+import LoginButton from "./loginButton";
+
+function Navbar() {
+  return (
+    <div className="w-full h-14 bg-white flex justify-between shadow-md relative z-10 px-4">
+      <Image
+        src="/logo/courseFlowLogo.svg"
+        width={117}
+        height={13.37}
+        alt="website-logo"
+      />
+      <div className=" h-full w-3/6 flex items-center justify-end gap-4">
+        <Link href="/" className="text-[#191C77] font-bold text-sm">
+          Our Courses
+        </Link>
+        <LoginButton />
+      </div>
+    </div>
+  );
+}
+
+export default Navbar;

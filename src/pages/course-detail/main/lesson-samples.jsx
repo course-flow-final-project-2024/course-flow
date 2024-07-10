@@ -20,8 +20,9 @@ function LessonSamples() {
           <AccordionItem>
             <h2>
               <AccordionButton px="0">
-                <Box as="span" flex="1" textAlign="left">
-                  01 Introduction
+                <Box as="span" flex="1" textAlign="left" fontSize="xl">
+                  <span className="mr-4 text-[#646D89]">01</span>
+                  <span>Introduction</span>
                 </Box>
                 <AccordionIcon />
               </AccordionButton>

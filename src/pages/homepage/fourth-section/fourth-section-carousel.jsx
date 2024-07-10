@@ -1,6 +1,5 @@
 // import HomepageCarouselItem from "./fourth-section-carousel-item";
 import Image from "next/image";
-import FourthSectionvectors from "./fourth-section-vectors";
 
 function HomepageCarouselItem(props) {
   return (

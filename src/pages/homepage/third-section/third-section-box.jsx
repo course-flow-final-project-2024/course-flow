@@ -3,12 +3,12 @@ import Image from "next/image";
 function SectionThreeBox(props) {
   return (
     <div className="w-full h-max flex flex-col gap-1">
-      <div className="w-full h-auto object-fit">
+      <div className="w-full h-auto object-fit flex flex-col items-center">
         <Image
           src={props.imageUrl}
           width={343}
           height={403.53}
-          className="w-full"
+          className="w-full max-w-[450px]"
           alt="Instructor Image"
         />
       </div>

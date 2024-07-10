@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-function FourthSectionvectors() {
+function FourthSectionVectors() {
   return (
     <>
       <Image
@@ -28,4 +28,4 @@ function FourthSectionvectors() {
   );
 }
 
-export default FourthSectionvectors;
+export default FourthSectionVectors;

@@ -68,9 +68,9 @@ const AdminCoursesList = () => {
               <Tr bg="gray.200" color="gray.800" borderRadius="md">
                 <Th width="30px"></Th>
                 <Th width="96px">Image</Th>
-                <Th width="268px">Course Name</Th>
-                <Th width="105px">Lesson</Th>
-                <Th width="105px">Price</Th>
+                <Th width="300px">Course Name</Th>
+                <Th width="100px">Lesson</Th>
+                <Th width="100px">Price</Th>
                 <Th width="188px">Created date</Th>
                 <Th width="188px">Updated date</Th>
                 <Th width="120px">Action</Th>
@@ -98,7 +98,7 @@ const AdminCoursesList = () => {
                         boxSize={47}
                       />
                     </Td>
-                    <Td wordWrap="normal">{item.course_name}</Td>
+                    <Td>{item.course_name}</Td>
                     <Td>{item.lessons[0].count} Lessons</Td>
                     <Td>{item.price}</Td>
                     {/* <Td>{item.created_at}</Td> */}

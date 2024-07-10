@@ -5,9 +5,19 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  let { data: courses, error } = await supabase
-    .from("courses")
-    .select("*, lessons(count)");
+  const { title } = req.query;
+
+  let query = supabase.from("courses").select("*, lessons(count)");
+
+  if (title) {
+    query = query.ilike("course_name", `%${title}%`);
+  }
+
+  let { data: courses, error } = await query;
+
+  // let { data: courses, error } = await supabase
+  //   .from("courses")
+  //   .select("*, lessons(count)");
 
   if (error) {
     return res.status(500).json({ error: "Failed to fetch courses" });

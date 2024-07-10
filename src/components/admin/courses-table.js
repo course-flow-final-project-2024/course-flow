@@ -14,20 +14,23 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
 
 const AdminCoursesList = () => {
   const [courseList, setCourseList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(8);
+  const searchParams = useSearchParams();
+  const title = searchParams.get("title") || "";
 
   useEffect(() => {
     getCourseList();
-  }, [currentPage]);
+  }, [currentPage, title]);
 
   async function getCourseList() {
     try {
       const result = await axios.get(
-        "/api/course?page=${currentPage}&perPage=${perPage}"
+        `/api/course?title=${encodeURIComponent(title)}`
       );
 
       setCourseList(result.data.courses);
@@ -50,12 +53,9 @@ const AdminCoursesList = () => {
   };
 
   const dateFormat = (key) => {
-    const year = key.slice(0, 4);
-    const month = key.slice(5, 7);
-    const date = key.slice(8, 10);
-    const hh = Number(key.slice(11, 13)) + 7;
-    const mm = Number(key.slice(14, 16));
-    const result = `${year}/${month}/${date} ${hh}:${mm}`;
+    const result = `${key.slice(0, 4)}/${key.slice(5, 7)}/${key.slice(8, 10)} ${
+      Number(key.slice(11, 13)) + 7
+    }:${key.slice(14, 16)}`;
     return result;
   };
 

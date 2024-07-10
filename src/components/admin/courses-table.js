@@ -10,6 +10,7 @@ import {
   Image,
   Box,
   Button,
+  Center,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -48,14 +49,24 @@ const AdminCoursesList = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
+  const dateFormat = (key) => {
+    const year = key.slice(0, 4);
+    const month = key.slice(5, 7);
+    const date = key.slice(8, 10);
+    const hh = Number(key.slice(11, 13)) + 7;
+    const mm = Number(key.slice(14, 16));
+    const result = `${year}/${month}/${date} ${hh}:${mm}`;
+    return result;
+  };
+
   return (
     <Box>
       <div>
         <TableContainer borderRadius="lg">
-          <Table variant="simple">
+          <Table variant="simple" className="table-fixed">
             <Thead>
               <Tr bg="gray.200" color="gray.800" borderRadius="md">
-                <Th width="48px">no.</Th>
+                <Th width="30px"></Th>
                 <Th width="96px">Image</Th>
                 <Th width="268px">Course Name</Th>
                 <Th width="105px">Lesson</Th>
@@ -68,6 +79,7 @@ const AdminCoursesList = () => {
             <Tbody>
               {courseList.slice(startIndex, endIndex).map((item, index) => {
                 const recordNumber = startIndex + index + 1;
+
                 return (
                   <Tr
                     bg="white"
@@ -80,19 +92,20 @@ const AdminCoursesList = () => {
                     <Td>{recordNumber}</Td>
                     <Td>
                       <Image
-                        src={item.course_image}
-                        // src="/logo/CourseFlow-logo.svg"
+                        // src={item.course_image}
+                        src="/logo/CourseFlow-logo.svg"
                         alt="course-image"
                         boxSize={47}
                       />
                     </Td>
-                    <Td wordBreak="break-word">{item.course_name}</Td>
-                    <Td>x Lessons</Td>
+                    <Td wordWrap="normal">{item.course_name}</Td>
+                    <Td>{item.lessons[0].count} Lessons</Td>
                     <Td>{item.price}</Td>
-                    <Td>{item.created_at}</Td>
-                    <Td>{item.updated_at}</Td>
+                    {/* <Td>{item.created_at}</Td> */}
+                    <Td>{dateFormat(item.created_at)}</Td>
+                    <Td>{dateFormat(item.updated_at)}</Td>
                     <Td>
-                      <Flex gap={2}>
+                      <Flex gap={2} align="center" justify="center">
                         <Image src="/icons/delete.svg" alt="delete icon" />
                         <Image src="/icons/edit.svg" alt="edit icon" />
                       </Flex>

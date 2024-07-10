@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import daisyui from "daisyui";
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -80,5 +81,9 @@ module.exports = {
       },
     },
   },
+<<<<<<< HEAD
   plugins: [require("tailwindcss-animate")],
+=======
+  plugins: [daisyui],
+>>>>>>> 13005ad (feat: install Daisy UI & create fourth section for landing page)
 };

@@ -2,6 +2,7 @@ import Navbar from "@/components/navbar.jsx";
 import HeroSection from "./homepage/hero-section/hero-section.jsx";
 import HomepageSecondSection from "./homepage/second-section/second-section-container";
 import HomepageThirdSection from "./homepage/third-section/third-section-container.jsx";
+import HomepageFourthSection from "./homepage/fourth-section/fourth-section-container.jsx";
 
 function Homepage() {
   return (
@@ -13,6 +14,7 @@ function Homepage() {
       <main>
         <HomepageSecondSection />
         <HomepageThirdSection />
+        <HomepageFourthSection />
       </main>
     </>
   );

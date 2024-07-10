@@ -3,6 +3,7 @@ import MainDetail from "./main/detail-section";
 import OtherCourses from "./other-courses/other-course-container";
 import CommonBottomSection from "@/components/bottom-section/common-bottom-section";
 import CommonFooter from "@/components/footer/common-footer";
+import BottomCourseCard from "./bottom-course-card/bottom-course-card";
 
 function CourseDetail() {
   return (
@@ -12,6 +13,7 @@ function CourseDetail() {
       <OtherCourses />
       <CommonBottomSection />
       <CommonFooter />
+      <BottomCourseCard />
     </div>
   );
 }

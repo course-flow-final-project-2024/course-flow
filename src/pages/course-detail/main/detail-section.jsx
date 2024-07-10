@@ -49,7 +49,7 @@ function CourseDetail() {
 
 function MainDetail() {
   return (
-    <div className="w-full h-max p-4 flex flex-col gap-8">
+    <div className="w-full h-max p-4 pb-10 flex flex-col gap-8">
       <TopContent />
       <CourseDetail />
       <LessonSamples />

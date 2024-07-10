@@ -2,7 +2,7 @@ import Image from "next/image";
 
 function OtherCourses() {
   return (
-    <div className="w-full h-max px-4 py-10">
+    <div className="w-full h-max px-4 py-10 bg-[#F6F7FC]">
       <div className="w-full h-max flex flex-col gap-4 items-center">
         <span className="font-medium text-2xl text-center">
           Other Interesting Course

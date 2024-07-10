@@ -27,7 +27,7 @@ function LessonSamples() {
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4} px={5}>
+            <AccordionPanel pb={4} pl={9}>
               Lorem ipsum dolor sit amet,
             </AccordionPanel>
           </AccordionItem>

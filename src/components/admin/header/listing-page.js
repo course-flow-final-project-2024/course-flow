@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
-const AdminListingHeader = ({ section, action }) => {
+const AdminListingHeader = ({ section, action, href }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -39,10 +39,7 @@ const AdminListingHeader = ({ section, action }) => {
             defaultValue={searchParams.get("title")?.toString()}
           />
         </div>
-        <Link
-          href="/admin/add-course"
-          className="text-white font-extrabold text-center"
-        >
+        <Link href={href} className="text-white font-extrabold text-center">
           <button className=" bg-blue-600 w-[172px] h-[60px] rounded-xl hover:bg-blue-800 active:bg-blue-600 focus:bg-blue-800 cursor-pointer">
             {action}
           </button>

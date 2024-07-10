@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import AdminSidebar from "@/components/admin/sidebar";
-import AdminListingHeader from "@/components/admin/list-header";
 import AdminCoursesList from "@/components/admin/courses-table";
+import AdminListingHeader from "@/components/admin/header/listing-page";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +14,11 @@ export default function CourseList() {
       >
         <AdminSidebar />
         <div className="flex flex-col w-full">
-          <AdminListingHeader section="Course" action="+ Add Course" />
+          <AdminListingHeader
+            section="Course"
+            action="+ Add Course"
+            href="/admin/add-course"
+          />
           <div className="bg-gray-100 h-full p-10 ">
             <AdminCoursesList />
           </div>

@@ -22,6 +22,8 @@ module.exports = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "blueBottom-gradient":
+          "linear-gradient(270.94deg, #5697FF 7.78%, #2558DD 73.86%)",
       },
       colors: {
         blueButton: "#2F5FAC",

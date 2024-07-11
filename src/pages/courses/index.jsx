@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import SearchCourse from "@/components/courses/search-course";
 import CourseCard from "../../components/courses/course-card";
 import { Pagination, Box } from "@mui/material";
+import CommonFooter from "@/components/footer/common-footer";
+import CommonBottomSection from "@/components/bottom-section/common-bottom-section";
 
 export default function Course() {
   const [course, setCourse] = useState([]);
@@ -96,6 +98,8 @@ export default function Course() {
           />
         </Box>
       </div>
+      <CommonBottomSection />
+      <CommonFooter />
     </>
   );
 }

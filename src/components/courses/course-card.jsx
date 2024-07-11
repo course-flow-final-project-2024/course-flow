@@ -1,55 +1,69 @@
 import { Card, Image, CardBody, Text, Stack, Heading } from "@chakra-ui/react";
+import Link from "next/link";
+import React from "react";
 
-export default function CourseCard() {
+export default function CourseCard({ course }) {
   return (
-    <div>
-      <div>
-        <Card className="sm:w-[375px] w-[343px] h-[475px] mb-[28px]">
-          <CardBody
-            borderRadius="8px"
-            padding="0px"
-            boxShadow="2px 2px 12px 0 rgba(0, 0, 0, 0.08)"
-          >
-            <Image
-              src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-              alt="Green double couch with wooden legs"
-              borderTopRadius="8px"
-              height="240px"
-              width="full"
-            />
-            <Stack spacing="3" marginY="24px" padding="0px 16px 16px 16px">
-              <Text color="#F47E20" fontSize="14px">
-                Course
-              </Text>
-              <Heading size="24px">Living room Sofa</Heading>
-              <Text color="#646D89" fontSize="16px">
-                This sofa is perfect for modern tropical spaces between eiei cry
-                baby.
-              </Text>
-            </Stack>
-            <div className="flex border-t-[1px] border-t-[#E4E6ED] gap-6 p-4">
-              <div className="flex justify-between w-[82px] sm:w-[89px]">
+    <React.Fragment>
+      {course.map((item, index) => {
+        return (
+          <Link href="/" key={index}>
+            <Card className="sm:w-[357px] w-[343px] h-[475px] sm:mb-[28px] mb-[20px] cursor-pointer">
+              <CardBody
+                borderRadius="8px"
+                padding="0px"
+                boxShadow="2px 2px 12px 0 rgba(0, 0, 0, 0.08)"
+              >
                 <Image
-                  src="/icons/book.svg"
-                  alt="book icon"
-                  width="24px"
-                  height="24px"
+                  src={item.course_image}
+                  alt="Green double couch with wooden legs"
+                  borderTopRadius="8px"
+                  height="240px"
+                  width="full"
                 />
-                <Text className=" sm:text-base text-sm">x Lesson</Text>
-              </div>
-              <div className="flex justify-between w-[77px] sm:w-[84px]">
-                <Image
-                  src="/icons/time.svg"
-                  alt="time icon"
-                  width="24px"
-                  height="24px"
-                />
-                <Text className=" sm:text-base text-sm">x Hours</Text>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-    </div>
+                <Stack
+                  spacing="3"
+                  marginY="14px"
+                  padding="0px 16px 16px 16px"
+                  height="151px"
+                >
+                  <Text color="#F47E20" fontSize="14px">
+                    Course
+                  </Text>
+                  <Heading size="24px">{item.course_name}</Heading>
+                  <Text color="#646D89" fontSize="16px" height="42px">
+                    {item.summary}
+                  </Text>
+                </Stack>
+                <div className="flex border-t-[1px] border-t-[#E4E6ED] gap-4 p-4">
+                  <div className="flex gap-1 w-[100px] sm:w-[110px]">
+                    <Image
+                      src="/icons/book.svg"
+                      alt="book icon"
+                      width="24px"
+                      height="24px"
+                    />
+                    <Text className=" sm:text-base text-sm">
+                      {item.lessons[0].count} Lessons
+                    </Text>
+                  </div>
+                  <div className="flex gap-1 w-[100px] sm:w-[100px]">
+                    <Image
+                      src="/icons/time.svg"
+                      alt="time icon"
+                      width="24px"
+                      height="24px"
+                    />
+                    <Text className=" sm:text-base text-sm">
+                      {item.duration} Hours
+                    </Text>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          </Link>
+        );
+      })}
+    </React.Fragment>
   );
 }

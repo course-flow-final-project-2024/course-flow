@@ -4,9 +4,9 @@ import LoginButton from "./login-button.jsx";
 
 function Navbar() {
   return (
-    <div className="w-full h-14 bg-white flex justify-between shadow-md relative z-10 px-4">
+    <div className="w-full h-14 bg-white flex justify-between shadow-md relative z-10 sm:px-[160px] px-4">
       <Image
-        src="/logo/courseFlowLogo.svg"
+        src="/logo/CourseFlow-Logo.svg"
         width={117}
         height={13.37}
         alt="website-logo"

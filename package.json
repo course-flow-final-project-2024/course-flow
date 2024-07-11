@@ -9,15 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/supabase-adapter": "^1.4.1",
     "@chakra-ui/next-js": "^2.2.0",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@next-auth/supabase-adapter": "^0.2.1",
+    "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.44.3",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
     "framer-motion": "^11.2.13",
-    "next": "14.2.4",
+    "jsonwebtoken": "^9.0.2",
+    "next": "^14.2.5",
     "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18"

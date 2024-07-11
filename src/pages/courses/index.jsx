@@ -60,7 +60,7 @@ export default function Course() {
       <Navbar />
       <div className="sm:px-[160px] px-4">
         <SearchCourse searchParams={searchParams} />
-        <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:mt-[100px] gap-6 ">
+        <div className="grid min-[2000px]:grid-cols-5 min-[1800px]:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:mt-[100px] gap-6 ">
           {course.map((item, index) => {
             return (
               <div className="grid justify-center" key={index}>

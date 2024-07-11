@@ -1,6 +1,6 @@
 import Link from "next/link";
-import RegistrationForm from "@/components/registration-form.jsx";
-import Navbar from "@/components/navbar.jsx";
+import RegistrationForm from "@/components/register/registration-form.jsx";
+import Navbar from "@/components/navbar/navbar.jsx";
 import BackgroundTemplate from "@/utils/bg-template";
 
 function RegisterPage() {

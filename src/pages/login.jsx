@@ -1,6 +1,6 @@
 import Link from "next/link";
-import LogInForm from "@/components/login-form.jsx";
-import Navbar from "@/components/navbar.jsx";
+import LogInForm from "@/components/login/login-form.jsx";
+import Navbar from "@/components/navbar/navbar.jsx";
 import BackgroundTemplate from "@/utils/bg-template";
 
 function LogInPage() {

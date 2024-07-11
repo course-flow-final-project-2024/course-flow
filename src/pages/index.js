@@ -10,7 +10,9 @@ function Homepage() {
   return (
     <>
       <div className="w-full h-[760px] bg-blue-100 relative overflow-hidden">
-        <Navbar />
+        <div className="w-full relative z-10">
+          <Navbar />
+        </div>
         <HeroSection />
       </div>
       <main>

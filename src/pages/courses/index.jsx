@@ -60,9 +60,24 @@ export default function Course() {
       <Navbar />
       <div className="sm:px-[160px] px-4">
         <SearchCourse searchParams={searchParams} />
-        <div className="flex flex-wrap justify-center sm:mt-[100px] gap-6">
-          <CourseCard course={course} />
+        <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:mt-[100px] gap-6 ">
+          {course.map((item, index) => {
+            return (
+              <div className="grid justify-center" key={index}>
+                <CourseCard
+                  course_image={item.course_image}
+                  course_name={item.course_name}
+                  summary={item.summary}
+                  lessons={item.lessons}
+                  duration={item.duration}
+                  index={index}
+                  key={index + item.course_name}
+                />
+              </div>
+            );
+          })}
         </div>
+
         <Box
           sx={{
             margin: "10px 0px 30px 0px",

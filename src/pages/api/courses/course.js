@@ -8,10 +8,13 @@ export default async function handler(req, res) {
   const { search, currentPage, limit } = req.query;
   const offset = (currentPage - 1) * limit;
 
-  let coursesQuery = supabase.from("courses").select("*, lessons(count)");
+  let coursesQuery = supabase
+    .from("courses")
+    .select("*, lessons(count)")
+    .order("updated_at", { ascending: false });
 
   if (search) {
-    coursesQuery = coursesQuery.filter("course_name", "ilike", `%${search}%`);
+    coursesQuery = coursesQuery.ilike("course_name", `%${search}%`);
   }
 
   const totalCourse = await coursesQuery;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/navbar/navbar";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import SearchCourse from "@/components/courses/search-course";

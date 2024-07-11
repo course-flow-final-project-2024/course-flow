@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import daisyui from "daisyui";
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -21,6 +22,8 @@ module.exports = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "blueBottom-gradient":
+          "linear-gradient(270.94deg, #5697FF 7.78%, #2558DD 73.86%)",
       },
       colors: {
         blueButton: "#2F5FAC",
@@ -76,8 +79,9 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        blueRole: "#5483D0",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), daisyui],
 };

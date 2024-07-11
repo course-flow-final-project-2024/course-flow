@@ -1,17 +1,18 @@
 import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
+import "dotenv/config";
 import { SupabaseAdapter } from "@next-auth/supabase-adapter";
 import { createClient } from "@supabase/supabase-js";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default NextAuth({
   providers: [
     //เงื่อนไขตัวlogin ด้วย email และ passwordน่ะคับ
-    Providers.Credentials({
+    CredentialsProvider({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "text" },
@@ -19,7 +20,7 @@ export default NextAuth({
       },
       authorize: async (credentials) => {
         const { email, password } = credentials;
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signIn({
           email,
           password,
         });
@@ -34,7 +35,10 @@ export default NextAuth({
       },
     }),
   ],
-  adapter: SupabaseAdapter(supabase), //ดูวิธีใช้supabaseได้ในdocของnextAuth.js ในหมวด adaptersคับแล้วเลือกsupabase มันจะมีรูปแบบcoppyมาได้เลย แล้มาปรับเอา
+  adapter: SupabaseAdapter({
+    url: supabaseUrl,
+    secret: supabaseAnonKey,
+  }), //ดูวิธีใช้supabaseได้ในdocของnextAuth.js ในหมวด adaptersคับแล้วเลือกsupabase มันจะมีรูปแบบcoppyมาได้เลย แล้มาปรับเอา
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     jwt: true,

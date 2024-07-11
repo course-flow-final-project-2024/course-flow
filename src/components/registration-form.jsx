@@ -3,9 +3,9 @@ import {
   FormLabel,
   FormErrorMessage,
   Input,
-  Button,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import Button from "@/utils/button";
 function RegistrationForm() {
   const [name, setName] = useState("");
   const [birthday, setBirthday] = useState();
@@ -18,13 +18,14 @@ function RegistrationForm() {
     console.log(userProfile);
   };
   return (
-    <form onSubmit={handleOnSubmit}>
+    <form className="flex flex-col w-full gap-8" onSubmit={handleOnSubmit}>
       <FormControl>
         <FormLabel>Name</FormLabel>
         <Input
           onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder="Enter Name and Lastname"
+          backgroundColor="#fff"
           required
         />
       </FormControl>
@@ -34,6 +35,7 @@ function RegistrationForm() {
           onChange={(e) => setBirthday(e.target.value)}
           type="date"
           placeholder="DD/MM/YY"
+          backgroundColor="#fff"
           required
         />
       </FormControl>
@@ -43,6 +45,7 @@ function RegistrationForm() {
           onChange={(e) => setEducation_bg(e.target.value)}
           type="text"
           placeholder="Enter Education Background"
+          backgroundColor="#fff"
           required
         />
       </FormControl>
@@ -52,6 +55,7 @@ function RegistrationForm() {
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           placeholder="Enter Email"
+          backgroundColor="#fff"
           required
         />
       </FormControl>
@@ -61,17 +65,11 @@ function RegistrationForm() {
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           placeholder="Enter Password"
+          backgroundColor="#fff"
           required
         />
       </FormControl>
-      <Button
-        mt={4}
-        colorScheme="teal"
-        //   isLoading={}
-        type="submit"
-      >
-        Register
-      </Button>
+      <Button text="Register" style="primary" height="60px" />
     </form>
   );
 }

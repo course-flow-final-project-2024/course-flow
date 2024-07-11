@@ -1,14 +1,30 @@
 import Link from "next/link";
-import LogInForm from "@/components/login-form.jsx";
+import AdminLogInForm from "@/components/admin-login-form";
+import Image from "next/image";
 function AdminLogInPage() {
   return (
-    <div className="bg">
-      <div className="container mx-auto">
-        <h1>CourseFlow</h1>
-        <p>Admin Panel Control</p>
-        <LogInForm />
+    <div className="w-screen h-screen flex justify-center items-center bg-gradient-to-r from-blue-600 to-blue-400">
+      <div className="w-full max-w-[570px] flex flex-col justify-center gap-[46px] px-[60px] pt-[60px] pb-[80px] rounded-lg bg-white">
+        <div className="container mx-auto flex flex-col justify-center items-center gap-6 ">
+          <Image
+            src="/logo/CourseFlow-logo.svg"
+            width={315}
+            height={36}
+            alt="website-logo"
+          />
+          <h1 className="text-2xl text-[#646D89]">Admin Panel Control</h1>
+        </div>
+        <AdminLogInForm />
       </div>
     </div>
   );
 }
 export default AdminLogInPage;
+/* (admin) login */
+
+// position: relative;
+// width: 1440px;
+// height: 1024px;
+
+// /* utility/linear2 */
+// background: linear-gradient(270.94deg, #5697FF 7.78%, #2558DD 73.86%);

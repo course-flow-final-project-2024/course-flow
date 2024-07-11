@@ -1,8 +1,8 @@
 import Navbar from "@/components/navbar/navbar.jsx";
-import HeroSection from "./homepage/hero-section/hero-section.jsx";
-import HomepageSecondSection from "./homepage/second-section/second-section-container";
-import HomepageThirdSection from "./homepage/third-section/third-section-container.jsx";
-import HomepageFourthSection from "./homepage/fourth-section/fourth-section-container.jsx";
+import HeroSection from "@/components/homepage/hero-section/hero-section.jsx";
+import HomepageSecondSection from "@/components/homepage/second-section/second-section-container.jsx";
+import HomepageThirdSection from "@/components/homepage/third-section/third-section-container.jsx";
+import HomepageFourthSection from "@/components/homepage/fourth-section/fourth-section-container.jsx";
 import CommonBottomSection from "@/components/bottom-section/common-bottom-section.jsx";
 import CommonFooter from "@/components/footer/common-footer.jsx";
 

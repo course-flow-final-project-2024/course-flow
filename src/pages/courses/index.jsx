@@ -20,14 +20,14 @@ export default function Course() {
 
   const limitCardPerPage = 12;
 
-  const query = searchParams.get("query") || "";
+  const title = searchParams.get("title") || "";
 
   useEffect(() => {
     async function getCourseData() {
       try {
         const result = await axios.get(`/api/courses/course`, {
           params: {
-            search: query,
+            search: title,
             currentPage: currentPage,
             limit: limitCardPerPage,
           },
@@ -53,7 +53,7 @@ export default function Course() {
     }
 
     getCourseData();
-  }, [query, currentPage]);
+  }, [title, currentPage]);
 
   return (
     <>

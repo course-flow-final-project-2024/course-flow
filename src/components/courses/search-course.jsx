@@ -11,9 +11,9 @@ export default function SearchCourse() {
     const params = new URLSearchParams(searchParams);
 
     if (text) {
-      params.set("query", text);
+      params.set("title", text);
     } else {
-      params.delete("query");
+      params.delete("title");
     }
     replace(`${pathname}?${params.toString()}`);
   };
@@ -37,7 +37,7 @@ export default function SearchCourse() {
           onChange={(e) => {
             handleSearch(e.target.value);
           }}
-          defaultValue={searchParams.get("query")?.toString()}
+          defaultValue={searchParams.get("title")?.toString()}
         />
       </div>
     </div>

@@ -1,27 +1,29 @@
+import Button from "@/utils/button";
 import {
   FormControl,
   FormLabel,
   FormErrorMessage,
   Input,
-  Button,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { signIn } from "next-auth/react";
 function LogInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState();
+  const [error, setError] = useState("");
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    console.log(email, password);
   };
   return (
-    <form onSubmit={handleOnSubmit}>
+    <form className="flex flex-col w-full gap-8" onSubmit={handleOnSubmit}>
       <FormControl>
         <FormLabel>Email</FormLabel>
         <Input
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           placeholder="Enter Email"
+          backgroundColor="#fff"
           required
         />
       </FormControl>
@@ -31,12 +33,11 @@ function LogInForm() {
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           placeholder="Enter Password"
+          backgroundColor="#fff"
           required
         />
       </FormControl>
-      <Button mt={4} colorScheme="teal" type="submit">
-        log in
-      </Button>
+      <Button text="Log in" style="primary" height="60px" />
     </form>
   );
 }

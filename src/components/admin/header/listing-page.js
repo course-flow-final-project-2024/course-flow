@@ -7,15 +7,16 @@ const AdminListingHeader = ({ section, action, href }) => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  function handleSearch(term) {
+  const handleSearch = (text) => {
     const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set("title", term);
+
+    if (text) {
+      params.set("title", text);
     } else {
       params.delete("title");
     }
     replace(`${pathname}?${params.toString()}`);
-  }
+  };
   return (
     <div className="flex items-center gap-4 h-[92px] px-10 py-4 border-b border-gray-400 bg-white">
       <h3 className="w-full font-medium text-[24px] text-gray-900 ">

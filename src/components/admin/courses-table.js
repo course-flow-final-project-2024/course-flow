@@ -9,60 +9,82 @@ import {
   Flex,
   Image,
   Box,
-  Button,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
+import { Pagination } from "@mui/material";
 
 const AdminCoursesList = () => {
-  const [courseList, setCourseList] = useState([]);
+  const [course, setCourse] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(8);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    allItem: 0,
+    page: 0,
+    limit: 0,
+  });
+
   const searchParams = useSearchParams();
+
+  const limitCardPerPage = 8;
+
   const title = searchParams.get("title") || "";
 
   useEffect(() => {
-    getCourseList();
-  }, [currentPage, title]);
+    async function getCourseData() {
+      try {
+        const result = await axios.get(`/api/courses/course`, {
+          params: {
+            search: title,
+            currentPage: currentPage,
+            limit: limitCardPerPage,
+          },
+        });
 
-  async function getCourseList() {
-    try {
-      const result = await axios.get(
-        `/api/course?title=${encodeURIComponent(title)}`
-      );
+        setCourse(result.data.courses);
 
-      setCourseList(result.data.courses);
-    } catch (error) {
-      console.error("Error fetching course list:", error);
+        if (currentPage > result.data.totalPages) {
+          setCurrentPage(result.data.totalPages);
+        } else {
+          setPagination({
+            currentPage: result.data.currentPage,
+            allItem: result.data.totalItems,
+            page: result.data.totalPages,
+            limit: limitCardPerPage,
+          });
+        }
+      } catch (error) {
+        return {
+          message: "Server could not read courses due to database connection",
+        };
+      }
     }
-  }
 
-  const totalPages = Math.ceil(courseList.length / perPage);
-
-  const startIndex = (currentPage - 1) * perPage;
-  const endIndex = Math.min(startIndex + perPage, courseList.length);
-
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  };
+    getCourseData();
+  }, [title, currentPage]);
 
   const dateFormat = (key) => {
     const result = `${key.slice(0, 4)}/${key.slice(5, 7)}/${key.slice(8, 10)} ${
       Number(key.slice(11, 13)) + 7
     }:${key.slice(14, 16)}`;
+
     return result;
   };
+
+  const startIndex = (currentPage - 1) * limitCardPerPage;
 
   return (
     <Box>
       <div>
         <TableContainer borderRadius="lg">
-          <Table variant="simple" className="table-fixed">
+          <Table
+            variant="simple"
+            //tablelayout="fixed"
+            minwidth="1120px"
+            width="100%"
+            className="table-fixed"
+          >
             <Thead>
               <Tr bg="gray.200" color="gray.700" height="41px">
                 <Th width="30px"></Th>
@@ -70,15 +92,13 @@ const AdminCoursesList = () => {
                 <Th width="300px">Course Name</Th>
                 <Th width="100px">Lesson</Th>
                 <Th width="100px">Price</Th>
-                <Th width="188px">Created date</Th>
-                <Th width="188px">Updated date</Th>
+                <Th width="187px">Created date</Th>
+                <Th width="187px">Updated date</Th>
                 <Th width="120px">Action</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {courseList.slice(startIndex, endIndex).map((item, index) => {
-                const recordNumber = startIndex + index + 1;
-
+              {course.map((item, index) => {
                 return (
                   <Tr
                     bg="white"
@@ -89,7 +109,7 @@ const AdminCoursesList = () => {
                     align="center"
                     key={index}
                   >
-                    <Td>{recordNumber}</Td>
+                    <Td>{startIndex + index + 1}</Td>
                     <Td>
                       <Image
                         // src={item.course_image}
@@ -116,23 +136,23 @@ const AdminCoursesList = () => {
             </Tbody>
           </Table>
         </TableContainer>
-        <Flex justify="center" mt={4}>
-          <Button
-            variant="outline"
-            disabled={currentPage === 1}
-            onClick={handlePrevPage}
-            mr={2}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            disabled={currentPage === totalPages}
-            onClick={handleNextPage}
-          >
-            Next
-          </Button>
-        </Flex>
+        <Box
+          sx={{
+            margin: "10px 0px 30px 0px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Pagination
+            count={pagination.page}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+            onChange={(_, page) => {
+              setCurrentPage(page);
+            }}
+          />
+        </Box>
       </div>
     </Box>
   );

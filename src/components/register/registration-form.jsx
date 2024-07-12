@@ -19,9 +19,9 @@ function RegistrationForm() {
   };
   return (
     <form className="form-control w-full gap-8" onSubmit={handleOnSubmit}>
-      <label class="form-control grow">
-        <div class="label">
-          <span class="label-text text-base font-normal">Name</span>
+      <label className="form-control grow">
+        <div className="label">
+          <span className="label-text text-base font-normal">Name</span>
         </div>
         <input
           onChange={(e) => setName(e.target.value)}
@@ -31,9 +31,11 @@ function RegistrationForm() {
           required
         />
       </label>
-      <label class="form-control grow">
-        <div class="label">
-          <span class="label-text text-base font-normal">Date of Birth</span>
+      <label className="form-control grow">
+        <div className="label">
+          <span className="label-text text-base font-normal">
+            Date of Birth
+          </span>
         </div>
         <input
           onChange={(e) => setBirthday(e.target.value)}
@@ -43,9 +45,9 @@ function RegistrationForm() {
           required
         />
       </label>
-      <label class="form-control grow">
-        <div class="label">
-          <span class="label-text text-base font-normal">
+      <label className="form-control grow">
+        <div className="label">
+          <span className="label-text text-base font-normal">
             Education Background
           </span>
         </div>
@@ -57,9 +59,9 @@ function RegistrationForm() {
           required
         />
       </label>
-      <label class="form-control grow">
-        <div class="label">
-          <span class="label-text text-base font-normal">Email</span>
+      <label className="form-control grow">
+        <div className="label">
+          <span className="label-text text-base font-normal">Email</span>
         </div>
         <input
           onChange={(e) => setEmail(e.target.value)}
@@ -69,9 +71,9 @@ function RegistrationForm() {
           required
         />
       </label>
-      <label class="form-control grow">
-        <div class="label">
-          <span class="label-text text-base font-normal">Password</span>
+      <label className="form-control grow">
+        <div className="label">
+          <span className="label-text text-base font-normal">Password</span>
         </div>
         <input
           onChange={(e) => setPassword(e.target.value)}

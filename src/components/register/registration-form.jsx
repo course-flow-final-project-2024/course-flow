@@ -18,58 +18,71 @@ function RegistrationForm() {
     console.log(userProfile);
   };
   return (
-    <form className="flex flex-col w-full gap-8" onSubmit={handleOnSubmit}>
-      <FormControl>
-        <FormLabel>Name</FormLabel>
-        <Input
+    <form className="form-control w-full gap-8" onSubmit={handleOnSubmit}>
+      <label class="form-control grow">
+        <div class="label">
+          <span class="label-text text-base font-normal">Name</span>
+        </div>
+        <input
           onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder="Enter Name and Lastname"
-          backgroundColor="#fff"
+          className="input input-bordered grow bg-white"
           required
         />
-      </FormControl>
-      <FormControl>
-        <FormLabel>Date of Birth</FormLabel>
-        <Input
+      </label>
+      <label class="form-control grow">
+        <div class="label">
+          <span class="label-text text-base font-normal">Date of Birth</span>
+        </div>
+        <input
           onChange={(e) => setBirthday(e.target.value)}
           type="date"
           placeholder="DD/MM/YY"
-          backgroundColor="#fff"
+          className="input input-bordered grow bg-white"
           required
         />
-      </FormControl>
-      <FormControl>
-        <FormLabel>Education Background</FormLabel>
-        <Input
+      </label>
+      <label class="form-control grow">
+        <div class="label">
+          <span class="label-text text-base font-normal">
+            Education Background
+          </span>
+        </div>
+        <input
           onChange={(e) => setEducation_bg(e.target.value)}
           type="text"
           placeholder="Enter Education Background"
-          backgroundColor="#fff"
+          className="input input-bordered grow bg-white"
           required
         />
-      </FormControl>
-      <FormControl>
-        <FormLabel>Email</FormLabel>
-        <Input
+      </label>
+      <label class="form-control grow">
+        <div class="label">
+          <span class="label-text text-base font-normal">Email</span>
+        </div>
+        <input
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           placeholder="Enter Email"
-          backgroundColor="#fff"
+          className="input input-bordered grow bg-white"
           required
         />
-      </FormControl>
-      <FormControl>
-        <FormLabel>Password</FormLabel>
-        <Input
+      </label>
+      <label class="form-control grow">
+        <div class="label">
+          <span class="label-text text-base font-normal">Password</span>
+        </div>
+        <input
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           placeholder="Enter Password"
-          backgroundColor="#fff"
+          className="input input-bordered grow bg-white"
           required
         />
-      </FormControl>
-      <Button text="Register" style="primary" height="60px" />
+      </label>
+
+      <Button text="Log in" style="primary" />
     </form>
   );
 }

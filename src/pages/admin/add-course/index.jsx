@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-export default function ADdNewCourse() {
-  return (
-    <>
-      <h1>ADD COURSE PAGE</h1>
-=======
 import AdminSidebar from "@/components/admin/sidebar";
 import AdminCreatingHeader from "@/components/admin/header/creating-page";
 import { LessonTable } from "@/components/admin/add-course/lesson-table";
@@ -38,7 +32,6 @@ export default function AddNewCourse() {
           </div>
         </div>
       </div>
->>>>>>> 8de8d92 (feat: create lesson table on add-course page)
     </>
   );
 }

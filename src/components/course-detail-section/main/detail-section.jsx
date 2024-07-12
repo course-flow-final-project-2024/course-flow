@@ -1,16 +1,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import LessonSamples from "./lesson-samples";
+import SideCourseCard from "./side-course-card";
 
 function TopContent() {
   return (
-    <div className="w-full h-max flex flex-col gap-4">
-      <Link href="/" className="w-max flex flex-row gap-2 py-1 px-2">
+    <div className="w-full h-max flex flex-col gap-4 ">
+      <Link href="/" className="w-max flex flex-row gap-2 py-1 px-2 ">
         <Image src="course-detail/left-arrow.svg" width={16} height={16} />
         <span className="w-max h-max font-bold text-[#2F5FAC]">Back</span>
       </Link>
-      <div className="w-full h-max">
-        <Image src="course-detail/mock-video.svg" width={343} height={214} />
+      <div className="w-full h-max object-cover ">
+        <Image
+          src="course-detail/mock-video.svg"
+          width={343}
+          height={214}
+          alt="mock"
+          className="object-cover w-full"
+        />
       </div>
     </div>
   );
@@ -19,10 +26,10 @@ function TopContent() {
 function CourseDetail() {
   return (
     <div className="w-full h-max flex flex-col gap-4">
-      <h3 className="w-full h-max text-left font-medium text-2xl ">
+      <h3 className="w-full h-max text-left font-medium text-2xl lg:text-3xl ">
         Course Detail
       </h3>
-      <div className="w-full h-max text-sm text-[#646D89]">
+      <div className="w-full h-max text-sm text-[#646D89] lg:text-base">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum
         aenean fermentum, velit vel, scelerisque morbi accumsan. Nec, tellus leo
         id leo id felis egestas. Quam sit lorem quis vitae ut mus imperdiet.
@@ -49,10 +56,15 @@ function CourseDetail() {
 
 function MainDetail() {
   return (
-    <div className="w-full h-max p-4 pb-10 flex flex-col gap-8">
-      <TopContent />
-      <CourseDetail />
-      <LessonSamples />
+    <div className="lg:flex lg:flex-row p-4 pb-10 flex flex-col gap-8 sm:px-12 ease-in-out duration-200 xl:px-40 min-[1800px]:px-96">
+      <div className="w-full h-max flex flex-col gap-8">
+        <TopContent />
+        <CourseDetail />
+        <LessonSamples />
+      </div>
+      <div className="max-lg:hidden w-[50%] h-max pt-12 ">
+        <SideCourseCard />
+      </div>
     </div>
   );
 }

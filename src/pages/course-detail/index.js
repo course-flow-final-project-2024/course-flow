@@ -1,9 +1,9 @@
 import Navbar from "@/components/navbar/navbar.jsx";
-import MainDetail from "./main/detail-section";
-import OtherCourses from "./other-courses/other-course-container";
+import MainDetail from "../../components/course-detail-section/main/detail-section";
+import OtherCourses from "../../components/course-detail-section/other-courses/other-course-container";
 import CommonBottomSection from "@/components/bottom-section/common-bottom-section";
 import CommonFooter from "@/components/footer/common-footer";
-import BottomCourseCard from "./bottom-course-card/bottom-course-card";
+import BottomCourseCard from "../../components/course-detail-section/bottom-course-card/bottom-course-card";
 
 function CourseDetail() {
   return (

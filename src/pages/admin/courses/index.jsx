@@ -1,16 +1,13 @@
-import { Inter } from "next/font/google";
 import AdminSidebar from "@/components/admin/sidebar";
-import AdminCoursesList from "@/components/admin/courses-table";
+import AdminCoursesList from "@/components/admin/courses/courses-table";
 import AdminListingHeader from "@/components/admin/header/listing-page";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function CourseList() {
   return (
     <>
       <div
         id="page-container"
-        className={`flex flex-grow w-full mx-auto h-screen ${inter.className} `}
+        className="flex flex-grow w-full mx-auto h-screen"
       >
         <AdminSidebar />
         <div className="flex flex-col w-full">

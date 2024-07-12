@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const AdminSidebar = () => {
   return (
@@ -21,30 +22,34 @@ const AdminSidebar = () => {
           <p className="text-[16px] text-gray-700">Admin Panel Control</p>
         </div>
         <div id="sidebar-menu" className="flex flex-col h-[540px] ">
-          <div
-            id="course"
-            className="flex gap-4 px-6 py-4 hover:bg-gray-200 active:bg-gray-300 focus:bg-gray-200"
-          >
-            <Image
-              src="/icons/book.svg"
-              alt="Course Icon"
-              width={24}
-              height={24}
-            />
-            <h3 className="text-gray-800 text-[16px] ">Course</h3>
-          </div>
-          <div
-            id="assignment"
-            className="flex gap-4 px-6 py-4 hover:bg-gray-200 active:bg-gray-300 focus:bg-gray-200"
-          >
-            <Image
-              src="/icons/copy.svg"
-              alt="Assignment Icon"
-              width={24}
-              height={24}
-            />
-            <h3 className="text-gray-800 text-[16px] w-full ">Assignment</h3>
-          </div>
+          <Link href="/admin/courses">
+            <div
+              id="course"
+              className="flex gap-4 px-6 py-4 hover:bg-gray-200 active:bg-gray-300 focus:bg-gray-200"
+            >
+              <Image
+                src="/icons/book.svg"
+                alt="Course Icon"
+                width={24}
+                height={24}
+              />
+              <h3 className="text-gray-800 text-[16px] ">Course</h3>
+            </div>
+          </Link>
+          <Link href="/admin/assignments">
+            <div
+              id="assignment"
+              className="flex gap-4 px-6 py-4 hover:bg-gray-200 active:bg-gray-300 focus:bg-gray-200"
+            >
+              <Image
+                src="/icons/copy.svg"
+                alt="Assignment Icon"
+                width={24}
+                height={24}
+              />
+              <h3 className="text-gray-800 text-[16px] w-full ">Assignment</h3>
+            </div>
+          </Link>
         </div>
         <div>
           <div className="flex gap-4 px-6 py-4 hover:bg-gray-200 active:bg-gray-300 focus:bg-gray-200">

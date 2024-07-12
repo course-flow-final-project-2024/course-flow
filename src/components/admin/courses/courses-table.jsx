@@ -118,7 +118,9 @@ const AdminCoursesList = () => {
                         boxSize={47}
                       />
                     </Td>
-                    <Td align="start">{item.course_name}</Td>
+                    <Td align="start" whiteSpace="normal">
+                      {item.course_name}
+                    </Td>
                     <Td>{item.lessons[0].count} Lessons</Td>
                     <Td>{item.price}</Td>
                     {/* <Td>{item.created_at}</Td> */}

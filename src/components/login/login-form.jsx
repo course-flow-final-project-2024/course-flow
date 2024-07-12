@@ -11,9 +11,9 @@ function LogInForm() {
   };
   return (
     <form className="form-control w-full gap-8" onSubmit={handleOnSubmit}>
-      <label class="form-control grow">
-        <div class="label">
-          <span class="label-text text-base font-normal">Email</span>
+      <label className="form-control grow">
+        <div className="label">
+          <span className="label-text text-base font-normal">Email</span>
         </div>
         <input
           onChange={(e) => setEmail(e.target.value)}
@@ -23,9 +23,9 @@ function LogInForm() {
           required
         />
       </label>
-      <label class="form-control grow">
-        <div class="label">
-          <span class="label-text text-base font-normal">Password</span>
+      <label className="form-control grow">
+        <div className="label">
+          <span className="label-text text-base font-normal">Password</span>
         </div>
         <input
           onChange={(e) => setPassword(e.target.value)}

@@ -4,7 +4,7 @@ import LoginButton from "./login-button.jsx";
 
 function Navbar() {
   return (
-    <div className="w-full h-14 bg-white flex justify-between shadow-md px-4 ease-in-out duration-200 sm:px-16 lg:px-40 lg:h-[88px]">
+    <div className="w-full h-14 bg-white flex justify-between shadow-md px-4 ease-in-out duration-200 sm:px-16 xl:px-40 lg:h-[88px] min-[1800px]:px-96">
       <Image
         src="/logo/CourseFlowLogo.svg"
         width={117}

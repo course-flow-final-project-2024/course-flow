@@ -22,6 +22,7 @@ function BackgroundVectors() {
         width={317}
         height={314}
         className="absolute bottom-5 right-[5%] sm:scale-[1.2] sm:bottom-16 sm:right-[12%] ease-in-out duration-200 lg:scale-[1.4] lg:bottom-28 "
+        alt="computer"
       />
     </>
   );

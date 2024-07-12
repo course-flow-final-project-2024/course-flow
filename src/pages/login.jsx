@@ -28,6 +28,4 @@ function LogInPage() {
     </div>
   );
 }
-
 export default LogInPage;
-

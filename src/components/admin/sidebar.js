@@ -13,7 +13,7 @@ const AdminSidebar = () => {
           className="flex flex-col gap-6 h-fit p-6 pt-10 items-center justify-center"
         >
           <Image
-            src="/logo/CourseFlow-logo.svg"
+            src="/logo/CourseFlowLogo.svg"
             width={174}
             height={19}
             alt="course-flox-logo"

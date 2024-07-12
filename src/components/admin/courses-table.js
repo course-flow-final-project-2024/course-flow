@@ -10,7 +10,6 @@ import {
   Image,
   Box,
   Button,
-  Center,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -65,7 +64,7 @@ const AdminCoursesList = () => {
         <TableContainer borderRadius="lg">
           <Table variant="simple" className="table-fixed">
             <Thead>
-              <Tr bg="gray.200" color="gray.800" borderRadius="md">
+              <Tr bg="gray.200" color="gray.700" height="41px">
                 <Th width="30px"></Th>
                 <Th width="96px">Image</Th>
                 <Th width="300px">Course Name</Th>
@@ -87,18 +86,19 @@ const AdminCoursesList = () => {
                     height="88px"
                     borderbuttom="1px"
                     borderColor="gray.200"
+                    align="center"
                     key={index}
                   >
                     <Td>{recordNumber}</Td>
                     <Td>
                       <Image
                         // src={item.course_image}
-                        src="/logo/CourseFlow-logo.svg"
+                        src="/logo/CourseFlowLogo.svg"
                         alt="course-image"
                         boxSize={47}
                       />
                     </Td>
-                    <Td>{item.course_name}</Td>
+                    <Td align="start">{item.course_name}</Td>
                     <Td>{item.lessons[0].count} Lessons</Td>
                     <Td>{item.price}</Td>
                     {/* <Td>{item.created_at}</Td> */}

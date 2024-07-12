@@ -19,7 +19,7 @@ export default function CourseList() {
             action="+ Add Course"
             href="/admin/add-course"
           />
-          <div className="bg-gray-100 h-full p-10 ">
+          <div className="bg-gray-100 h-full p-10 w-full">
             <AdminCoursesList />
           </div>
         </div>

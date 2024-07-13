@@ -1,3 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
 import {
   Table,
   Thead,
@@ -8,9 +10,12 @@ import {
   TableContainer,
   Flex,
 } from "@chakra-ui/react";
-import Image from "next/image";
 
-export function LessonTable() {
+export function AdminLessonList({ lesson }) {
+  const handleDelete = () => {
+    return "Deleted";
+  };
+
   return (
     <TableContainer rounded={"8px"}>
       <Table variant={"simple"} width={"full"}>
@@ -40,86 +45,66 @@ export function LessonTable() {
             </Th>
           </Tr>
         </Thead>
-        <Tbody fontSize={16} textColor={"#000"} backgroundColor={"#fff"}>
-          <Tr height={"88px"} borderBottom={"1px"} borderColor={"#F1F2F6"}>
-            <Td>
-              <Flex justifyContent={"center"} gap={0.5} align={"center"}>
-                <Image
-                  src="/icons/drag.svg"
-                  alt="drag Icon"
-                  width={7}
-                  height={7}
-                />
-                <Image
-                  src="/icons/drag.svg"
-                  alt="drag Icon"
-                  width={7}
-                  height={7}
-                />
-              </Flex>
-            </Td>
-            <Td textAlign={"center"}>1</Td>
-            <Td paddingX={3}>Introduction</Td>
-            <Td isNumeric paddingX={3}>
-              10
-            </Td>
-            <Td>
-              <Flex justifyContent={"center"} alignItems={"center"} gap={17}>
-                <Image
-                  src="/icons/delete.svg"
-                  alt="delete Icon"
-                  width={24}
-                  height={24}
-                />
-                <Image
-                  src="/icons/edit.svg"
-                  alt="edit Icon"
-                  width={24}
-                  height={24}
-                />
-              </Flex>
-            </Td>
-          </Tr>
-          <Tr height={"88px"} borderBottom={"1px"} borderColor={"#F1F2F6"}>
-            <Td>
-              <Flex justifyContent={"center"} gap={0.5} align={"center"}>
-                <Image
-                  src="/icons/drag.svg"
-                  alt="drag Icon"
-                  width={7}
-                  height={7}
-                />
-                <Image
-                  src="/icons/drag.svg"
-                  alt="drag Icon"
-                  width={7}
-                  height={7}
-                />
-              </Flex>
-            </Td>
-            <Td textAlign={"center"}>1</Td>
-            <Td paddingX={3}>Introduction</Td>
-            <Td isNumeric paddingX={3}>
-              10
-            </Td>
-            <Td>
-              <Flex justifyContent={"center"} alignItems={"center"} gap={17}>
-                <Image
-                  src="/icons/delete.svg"
-                  alt="delete Icon"
-                  width={24}
-                  height={24}
-                />
-                <Image
-                  src="/icons/edit.svg"
-                  alt="edit Icon"
-                  width={24}
-                  height={24}
-                />
-              </Flex>
-            </Td>
-          </Tr>
-        </Tbody>
+        {lesson.map((item, index) => {
+          return (
+            <Tbody
+              fontSize={16}
+              textColor={"#000"}
+              backgroundColor={"#fff"}
+              key={index + item.lesson_title}
+            >
+              <Tr height={"88px"} borderBottom={"1px"} borderColor={"#F1F2F6"}>
+                <Td>
+                  <Flex justifyContent={"center"} gap={0.5} align={"center"}>
+                    <Image
+                      src="/icons/drag.svg"
+                      alt="drag Icon"
+                      width={5}
+                      height={5}
+                    />
+                    <Image
+                      src="/icons/drag.svg"
+                      alt="drag Icon"
+                      width={5}
+                      height={5}
+                    />
+                  </Flex>
+                </Td>
+                <Td textAlign={"center"}>{index + 1}</Td>
+                <Td paddingX={3}>{item.lesson_title}</Td>
+                <Td isNumeric paddingX={3}>
+                  {item.sub_lessons[0].count}
+                </Td>
+                <Td>
+                  <Flex
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    gap={17}
+                  >
+                    <Image
+                      src="/icons/delete.svg"
+                      alt="delete Icon"
+                      width={24}
+                      height={24}
+                      onClick={() => {
+                        handleDelete();
+                      }}
+                      className=" cursor-pointer"
+                    />
+                    <Link href="/">
+                      <Image
+                        src="/icons/edit.svg"
+                        alt="edit Icon"
+                        width={24}
+                        height={24}
+                      />
+                    </Link>
+                  </Flex>
+                </Td>
+              </Tr>
+            </Tbody>
+          );
+        })}
       </Table>
     </TableContainer>
   );

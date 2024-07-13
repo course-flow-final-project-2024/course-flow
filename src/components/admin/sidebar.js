@@ -12,7 +12,12 @@ const AdminSidebar = () => {
           id="sidebar-header"
           className="flex flex-col gap-6 h-[131px] p-6 pt-10  items-center justify-center"
         >
-          <Image src="/logo/CourseFlow-logo.svg" width={174} height={19} />
+          <Image
+            src="/logo/CourseFlowLogo.svg"
+            alt=""
+            width={174}
+            height={19}
+          />
           <p className="text-[16px] text-gray-700">Admin Panel Control</p>
         </div>
         <div id="sidebar-menu" className="flex flex-col h-[540px] ">

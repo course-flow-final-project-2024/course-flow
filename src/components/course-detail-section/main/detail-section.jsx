@@ -56,13 +56,13 @@ function CourseDetail() {
 
 function MainDetail() {
   return (
-    <div className="lg:flex lg:flex-row p-4 pb-10 flex flex-col gap-8 sm:px-12 ease-in-out duration-200 xl:px-40 min-[1800px]:px-96">
-      <div className="w-full h-max flex flex-col gap-8">
+    <div className="lg:flex h-max min-h-max lg:flex-row p-4 pb-10 flex flex-col gap-8 sm:px-12 ease-in-out duration-200 xl:px-40 min-[1800px]:px-96 ">
+      <div className="w-full h-max flex flex-col gap-8 ">
         <TopContent />
         <CourseDetail />
         <LessonSamples />
       </div>
-      <div className="max-lg:hidden w-[50%] h-max pt-12 ">
+      <div className="max-lg:hidden w-[50%] flex-grow t-12 relative pt-12">
         <SideCourseCard />
       </div>
     </div>

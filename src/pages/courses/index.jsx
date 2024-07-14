@@ -68,6 +68,7 @@ export default function Course() {
             return (
               <div className="grid justify-center" key={index}>
                 <CourseCard
+                  course_id={item.course_id}
                   course_image={item.course_image}
                   course_name={item.course_name}
                   summary={item.summary}
@@ -80,7 +81,6 @@ export default function Course() {
             );
           })}
         </div>
-
         <Box
           sx={{
             margin: "10px 0px 30px 0px",

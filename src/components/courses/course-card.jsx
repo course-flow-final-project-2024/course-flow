@@ -24,7 +24,7 @@ export default function CourseCard({
         >
           <Image
             src={course_image}
-            alt="Green double couch with wooden legs"
+            alt={course_name}
             borderTopRadius="8px"
             height="240px"
             width="full"

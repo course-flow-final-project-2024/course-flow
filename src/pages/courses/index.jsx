@@ -67,6 +67,7 @@ export default function Course() {
             return (
               <div className="grid justify-center" key={index}>
                 <CourseCard
+                  course_id={item.course_id}
                   course_image={item.course_image}
                   course_name={item.course_name}
                   summary={item.summary}

@@ -9,10 +9,11 @@ export default function CourseCard({
   lessons,
   duration,
   index,
+  course_id,
 }) {
   return (
     <Link
-      href="/"
+      href={`/courses/${course_id}`}
       key={index}
       className="sm:w-[357px] w-[343px] h-[475px] sm:mb-[28px] mb-[20px] cursor-pointer"
     >
@@ -54,7 +55,7 @@ export default function CourseCard({
                 height="24px"
               />
               <Text className=" sm:text-base text-sm">
-                {lessons[0].count} Lessons
+                {lessons[0].count || lessons.length} Lessons
               </Text>
             </div>
             <div className="flex gap-1 w-[100px] sm:w-[100px]">

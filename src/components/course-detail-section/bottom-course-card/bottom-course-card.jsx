@@ -8,8 +8,18 @@ import {
   Box,
 } from "@chakra-ui/react";
 
-function BottomCourseCard() {
+function BottomCourseCard({ courseData }) {
   const [isClient, setIsClient] = useState(false);
+  const calculatePriceWithComma = (price) => {
+    const priceStr = (price * 36).toString();
+    if (priceStr.length > 2) {
+      return priceStr.slice(0, 1) + "," + priceStr.slice(1);
+    }
+    return priceStr;
+  };
+
+  const calculatedPrice =
+    courseData.length > 0 && calculatePriceWithComma(courseData[0].price);
 
   useEffect(() => {
     setIsClient(true);
@@ -35,18 +45,17 @@ function BottomCourseCard() {
                   <div className="w-full h-max font-normal text-base">
                     <div className="flex flex-row justify-between items-center ">
                       <span className="block sm:text-lg ">
-                        Service Design Essentials
+                        {courseData.length > 0 && courseData[0].course_name}
                       </span>
                       <AccordionIcon />
                     </div>
                     <AccordionPanel p={0}>
                       <span className="text-[#646D89] font-normal text-sm leading-4 block my-1 sm:text-base ">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        In, animi!
+                        {courseData.length > 0 && courseData[0].summary}
                       </span>
                     </AccordionPanel>
                     <span className="block text-[#646D89] sm:text-lg">
-                      THB 3,559.00
+                      THB {calculatedPrice}
                     </span>
                   </div>
                   <div className="w-full h-10 flex flex-row gap-2">

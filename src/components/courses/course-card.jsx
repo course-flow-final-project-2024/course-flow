@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 export default function CourseCard({
+  course_id,
   course_image,
   course_name,
   summary,
@@ -12,7 +13,7 @@ export default function CourseCard({
 }) {
   return (
     <Link
-      href="/"
+      href={`/courses/${course_id}`}
       key={index}
       className="sm:w-[357px] w-[343px] h-[475px] sm:mb-[28px] mb-[20px] cursor-pointer"
     >

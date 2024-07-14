@@ -1,4 +1,3 @@
-// File: utils/supabase/components.js
 import { createClient as createBrowserClient } from '@supabase/supabase-js';
 
 let supabaseInstance = null;

@@ -19,8 +19,7 @@ function CommonBottomSection() {
 
       <div className="h-full w-max xl:flex xl:flex-col relative ">
         <Image
-          src="bottom-section/bottom-teaching-vector.svg"
-          alt=""
+          src="/bottom-section/bottom-teaching-vector.svg"
           width={328}
           height={298}
           className="w-full sm:scale-110 ease-in-out duration-200 xl:scale-[1.8] relative xl:-bottom-20 xl:right-16"

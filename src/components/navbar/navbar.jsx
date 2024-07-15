@@ -17,7 +17,6 @@ function Navbar() {
           className="lg:w-[140px]"
         />
       </Link>
-
       <div className=" h-full w-3/6 flex items-center justify-end gap-4 lg:gap-8">
         <Link
           href="/courses"

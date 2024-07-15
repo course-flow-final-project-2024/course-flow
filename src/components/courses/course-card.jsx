@@ -10,7 +10,6 @@ export default function CourseCard({
   lessons,
   duration,
   index,
-  course_id,
 }) {
   return (
     <Link

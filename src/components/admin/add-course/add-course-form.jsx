@@ -4,7 +4,7 @@ import FileUpload2 from "./file-upload-test";
 import { supabase } from "../../../../lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 
-const AddCourseForm = () => {
+const AdminAddCourseForm = () => {
   const inputStyle =
     "border border-[#D6D9E4] p-3 pr-4 rounded-[8px] outline-none";
 
@@ -86,74 +86,76 @@ const AddCourseForm = () => {
   };
 
   return (
-    <div className=" bg-white min-w-[1120px] w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">
-      <form onSubmit={onSubmit} className="flex flex-col gap-10">
-        <div className="flex flex-col gap-1 w-full">
-          <label>Course name *</label>
-          <input
-            name="course_name"
-            required
-            type="text"
-            placeholder="Place Holder"
-            className={inputStyle}
-          />
-        </div>
-        <div className="flex gap-10">
+    <div className="p-10">
+      <div className=" bg-white min-w-[1120px] w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">
+        <form onSubmit={onSubmit} className="flex flex-col gap-10">
           <div className="flex flex-col gap-1 w-full">
-            <label>Price *</label>
+            <label>Course name *</label>
             <input
-              name="price"
+              name="course_name"
               required
-              type="number"
-              placeholder="Place Holder"
-              className={inputStyle}
-              step="0.01"
-            />
-          </div>
-          <div className="flex grow flex-col gap-1 w-full">
-            <label>Total learning time *</label>
-            <input
-              name="duration"
-              required
-              type="number"
+              type="text"
               placeholder="Place Holder"
               className={inputStyle}
             />
           </div>
-        </div>
-        <div className="flex flex-col gap-1 w-full">
-          <label>Course summary *</label>
-          <textarea
-            name="summary"
-            required
-            type="text"
-            placeholder="Place Holder"
-            rows={2}
-            className={inputStyle}
-          />
-        </div>
-        <div className="flex flex-col gap-1 w-full">
-          <label>Course detail *</label>
-          <textarea
-            name="detail"
-            required
-            type="text"
-            placeholder="Place Holder"
-            rows={7}
-            className={inputStyle}
-          />
-        </div>
-        <button
-          type="submit"
-          className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg"
-        >
-          Submit
-        </button>
+          <div className="flex gap-10">
+            <div className="flex flex-col gap-1 w-full">
+              <label>Price *</label>
+              <input
+                name="price"
+                required
+                type="number"
+                placeholder="Place Holder"
+                className={inputStyle}
+                step="0.01"
+              />
+            </div>
+            <div className="flex grow flex-col gap-1 w-full">
+              <label>Total learning time *</label>
+              <input
+                name="duration"
+                required
+                type="number"
+                placeholder="Place Holder"
+                className={inputStyle}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label>Course summary *</label>
+            <textarea
+              name="summary"
+              required
+              type="text"
+              placeholder="Place Holder"
+              rows={2}
+              className={inputStyle}
+            />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label>Course detail *</label>
+            <textarea
+              name="detail"
+              required
+              type="text"
+              placeholder="Place Holder"
+              rows={7}
+              className={inputStyle}
+            />
+          </div>
+          <button
+            type="submit"
+            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg"
+          >
+            Submit
+          </button>
 
-        <FileUpload2 onFilesChange={setFiles} />
-      </form>
+          <FileUpload2 onFilesChange={setFiles} />
+        </form>
+      </div>
     </div>
   );
 };
 
-export default AddCourseForm;
+export default AdminAddCourseForm;

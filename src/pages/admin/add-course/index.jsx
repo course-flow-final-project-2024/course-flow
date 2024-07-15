@@ -1,6 +1,7 @@
 import AdminSidebar from "@/components/admin/sidebar";
 import AdminCreatingHeader from "@/components/admin/header/creating-page";
 import { AdminLessonSection } from "@/components/admin/add-course/section-lesson";
+import AdminAddCourseForm from "@/components/admin/add-course/add-course-form";
 
 export default function AddNewCourse() {
   return (
@@ -11,7 +12,8 @@ export default function AddNewCourse() {
         </div>
         <div className="flex flex-col w-full bg-gray-100">
           <AdminCreatingHeader section="Add Course" />
-          <div className="h-[1520px] border border-black">ploy</div>
+          {/* Ployyyyyy */}
+          <AdminAddCourseForm />
           {/* Nonnnnnn */}
           <AdminLessonSection />
         </div>

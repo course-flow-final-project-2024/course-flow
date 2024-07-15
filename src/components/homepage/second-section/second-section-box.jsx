@@ -7,10 +7,10 @@ function SectionTwoBoxFeatures(props) {
         <Image src={props.imageUrl} width={36} height={36} alt="Feature Icon" />
       </div>
       <div className="w-full flex flex-col gap-2 lg:gap-0 ">
-        <span className="text-xl font-normal text-left xl:text-2xl min-[1700px]:text-4xl ">
+        <span className="text-xl font-normal text-left xl:text-2xl min-[1800px]:text-3xl  ">
           {props.featureTitle}
         </span>
-        <span className="text-sm font-normal text-left text-gray-700 xl:text-base min-[1700px]:text-2xl  ">
+        <span className="text-sm font-normal text-left text-gray-700 xl:text-base min-[1800px]:text-xl  ">
           {props.featureDescription}
         </span>
       </div>
@@ -31,7 +31,7 @@ function SectionTwoBox(props) {
         />
       </div>
       <div className="flex flex-col gap-8 lg:justify-between lg:gap-4 lg:w-1/2 ">
-        <h3 className="text-2xl font-medium xl:text-3xl ease-in-out duration-200 min-[1700px]:text-5xl">
+        <h3 className="text-2xl font-medium xl:text-3xl ease-in-out duration-200 min-[1800px]:text-3xl  ">
           {props.boxTitle}
         </h3>
         <SectionTwoBoxFeatures

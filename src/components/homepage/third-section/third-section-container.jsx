@@ -3,12 +3,12 @@ import ThirdSectionVector from "./third-bg-vector";
 
 function HomepageThirdSection() {
   return (
-    <div className="h-max w-full py-16 px-4 relative lg:px-40">
+    <div className="h-max w-full py-16 px-4 relative sm:px-16 lg:px-40 min-[1800px]:px-96">
       <div className=" relative flex flex-col gap-12 z-10">
         <h3 className="font-medium text-2xl block text-center sm:text-3xl ease-in-out duration-200 ">
           Our Professional Instructors
         </h3>
-        <div className="flex flex-col gap-8 lg:flex-row lg:gap-4 lg:justify-center min-[1700px]:gap-32 ease-in-out duration-500">
+        <div className="w-full h-full flex flex-col gap-8 lg:flex-row lg:gap-4 lg:justify-between ease-in-out duration-500">
           <SectionThreeBox
             instructorName="Jane Cooper"
             role="UX/UI Designer"

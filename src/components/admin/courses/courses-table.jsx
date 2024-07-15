@@ -42,17 +42,27 @@ const AdminCoursesList = () => {
           },
         });
 
-        setCourse(result.data.courses);
-
-        if (currentPage > result.data.totalPages) {
-          setCurrentPage(result.data.totalPages);
-        } else {
+        if (result.data.totalItems === 0) {
+          setCourse([]);
           setPagination({
-            currentPage: result.data.currentPage,
-            allItem: result.data.totalItems,
-            page: result.data.totalPages,
+            currentPage: 1,
+            allItem: 0,
+            page: 0,
             limit: limitCardPerPage,
           });
+          setCurrentPage(1);
+        } else {
+          setCourse(result.data.courses);
+          if (currentPage > result.data.totalPages) {
+            setCurrentPage(result.data.totalPages);
+          } else {
+            setPagination({
+              currentPage: result.data.currentPage,
+              allItem: result.data.totalItems,
+              page: result.data.totalPages,
+              limit: limitCardPerPage,
+            });
+          }
         }
       } catch (error) {
         return {
@@ -98,8 +108,8 @@ const AdminCoursesList = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {course.map((item, index) => {
-                return (
+              {course.length > 0 ? (
+                course.map((item, index) => (
                   <Tr
                     bg="white"
                     color="black"
@@ -123,7 +133,6 @@ const AdminCoursesList = () => {
                     </Td>
                     <Td>{item.lessons[0].count} Lessons</Td>
                     <Td>{item.price}</Td>
-                    {/* <Td>{item.created_at}</Td> */}
                     <Td>{dateFormat(item.created_at)}</Td>
                     <Td>{dateFormat(item.updated_at)}</Td>
                     <Td>
@@ -133,8 +142,14 @@ const AdminCoursesList = () => {
                       </Flex>
                     </Td>
                   </Tr>
-                );
-              })}
+                ))
+              ) : (
+                <Tr>
+                  <Td colSpan="8" align="center">
+                    No courses found.
+                  </Td>
+                </Tr>
+              )}
             </Tbody>
           </Table>
         </TableContainer>

@@ -27,7 +27,7 @@ export default function Course() {
   useEffect(() => {
     async function getCourseData() {
       try {
-        const result = await axios.get(`/api/courses/course`, {
+        const result = await axios.get(`/api/courses/get`, {
           params: {
             search: title,
             currentPage: currentPage,
@@ -36,6 +36,7 @@ export default function Course() {
         });
 
         setCourse(result.data.courses);
+        console.log({ title });
 
         if (currentPage > result.data.totalPages) {
           setCurrentPage(result.data.totalPages);
@@ -80,7 +81,6 @@ export default function Course() {
             );
           })}
         </div>
-
         <Box
           sx={{
             margin: "10px 0px 30px 0px",

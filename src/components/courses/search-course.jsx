@@ -2,8 +2,7 @@ import Image from "next/image";
 import PageDecoration from "../../components/courses/page-decoration";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function SearchCourse() {
-  const searchParams = useSearchParams();
+export default function SearchCourse({ searchParams }) {
   const pathname = usePathname();
   const { replace } = useRouter();
 

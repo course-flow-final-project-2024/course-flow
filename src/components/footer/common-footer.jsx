@@ -4,6 +4,7 @@ import Link from "next/link";
 function CommonFooter() {
   return (
     <div className="w-full h-max bg-[#183056] py-8 px-4 sm:px-12 ease-in-out duration-200 xl:px-40 xl:min-h-[240px] xl:flex xl:flex-col xl:justify-center min-[1800px]:px-96">
+
       <div className="flex flex-col gap-8 xl:flex-row xl:justify-between ">
         <Image
           src="/logo/CourseFlowLogo.svg"
@@ -12,46 +13,47 @@ function CommonFooter() {
           alt="website logo"
           className="w-max "
         />
+
         <div className="w-max flex flex-col gap-4 xl:flex-row xl:items-center xl:gap-16 ">
           <Link
-            href="/"
-            className="font-normal text-[#C8CCDB] text-base sm:text-xl ease-in-out duration-200 xl:text-base"
+            href="/courses"
+            className="font-normal text-[#C8CCDB] text-base sm:text-xl ease-in-out hover:text-[#F47E20] duration-200 xl:text-base"
           >
             All Courses
           </Link>
           <Link
-            href="/"
-            className="font-normal text-[#C8CCDB] text-base sm:text-xl ease-in-out duration-200 xl:text-base"
+            href="/courses"
+            className="font-normal text-[#C8CCDB] text-base sm:text-xl ease-in-out hover:text-[#F47E20] duration-200 xl:text-base"
           >
             Bundle package
           </Link>
         </div>
         <div className="w-full flex flex-row gap-4 xl:max-w-[230px] ">
-          <Link href="/">
+          <Link href="https://www.facebook.com" target="_blank">
             <Image
               src="/bottom-section/fb-icon.svg"
               width={48}
               height={48}
               alt="facebook"
-              className="sm:w-16 ease-in-out duration-200"
+              className="sm:w-16 ease-in-out duration-200 hover:scale-105"
             />
           </Link>
-          <Link href="/">
+          <Link href="https://www.instagram.com" target="_blank">
             <Image
               src="/bottom-section/ig-icon.svg"
               width={48}
               height={48}
               alt="instagram"
-              className="sm:w-16 ease-in-out duration-200"
+              className="sm:w-16 ease-in-out duration-200 hover:scale-105"
             />
           </Link>
-          <Link href="/">
+          <Link href="https://www.x.com" target="_blank">
             <Image
               src="/bottom-section/tw-icon.svg"
               width={48}
               height={48}
               alt="twitter"
-              className="sm:w-16 ease-in-out duration-200"
+              className="sm:w-16 ease-in-out duration-200 hover:scale-105"
             />
           </Link>
         </div>

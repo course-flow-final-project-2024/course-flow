@@ -1,11 +1,14 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import FileUpload from "./file-upload";
 import { supabase } from "../../../../lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { validateFormInput } from "./form-validation";
+import { LessonDataContext } from "@/pages/admin/add-course";
 
 const AdminAddCourseForm = () => {
+  const lessons = useContext(LessonDataContext);
+  console.log(lessons, "count ", lessons.lesson.length);
   const inputStyle =
     "border border-[#D6D9E4] p-3 pr-4 rounded-[8px] outline-none";
 
@@ -60,6 +63,11 @@ const AdminAddCourseForm = () => {
 
     if (Object.keys(validateError).length > 0) {
       setErrors(validateError);
+      return;
+    }
+
+    if (lessons.lesson.length < 1) {
+      alert("Please create at less one lesson before create course.");
       return;
     }
 
@@ -173,6 +181,7 @@ const AdminAddCourseForm = () => {
           <button
             type="submit"
             className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg"
+            hidden
           >
             Submit
           </button>

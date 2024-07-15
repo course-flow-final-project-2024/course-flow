@@ -34,7 +34,7 @@ const AdminCoursesList = () => {
   useEffect(() => {
     async function getCourseData() {
       try {
-        const result = await axios.get(`/api/courses/course`, {
+        const result = await axios.get(`/api/courses/get`, {
           params: {
             search: title,
             currentPage: currentPage,

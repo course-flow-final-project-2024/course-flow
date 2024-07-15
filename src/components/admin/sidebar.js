@@ -6,7 +6,7 @@ const AdminSidebar = () => {
     <>
       <div
         id="sidebar"
-        className="flex flex-col gap-10 w-[16vw] h-full border-r border-gray-400 bg-white"
+        className="flex flex-col gap-10 min-w-60 h-full border-r border-gray-400 bg-white"
       >
         <div
           id="sidebar-header"

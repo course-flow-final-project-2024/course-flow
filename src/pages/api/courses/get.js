@@ -5,8 +5,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { search, currentPage: rawCurrentPage, limit } = req.query;
+  const { search, currentPage: rawCurrentPage, limit: rawLimit } = req.query;
+
   const currentPage = parseInt(rawCurrentPage, 10) || 1;
+  const limit = parseInt(rawLimit, 10) || 12;
   const offset = (currentPage - 1) * limit;
 
   let coursesQuery = supabase
@@ -18,9 +20,14 @@ export default async function handler(req, res) {
     coursesQuery = coursesQuery.ilike("course_name", `%${search}%`);
   }
 
-  const totalCourse = await coursesQuery;
-  const totalItems = totalCourse.data.length;
-  console.log(totalCourse.data.length);
+  const { data: totalCourse, error: totalCourseError } = await coursesQuery;
+  if (totalCourseError) {
+    return res.status(500).json({
+      message: "Server could not read courses due to database connection",
+    });
+  }
+
+  const totalItems = totalCourse.length;
 
   if (totalItems === 0) {
     return res
@@ -28,12 +35,10 @@ export default async function handler(req, res) {
       .json({ courses: [], totalItems: 0, totalPages: 0, currentPage });
   }
 
-  let { data: courses, error } = await coursesQuery.range(
-    offset,
-    offset + limit - 1
-  );
+  let paginatedQuery = coursesQuery.range(offset, offset + limit - 1);
+  const { data: courses, error: paginatedError } = await paginatedQuery;
 
-  if (error) {
+  if (paginatedError) {
     return res.status(500).json({
       message: "Server could not read courses due to database connection",
     });

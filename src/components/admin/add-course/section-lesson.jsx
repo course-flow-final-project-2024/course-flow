@@ -1,12 +1,10 @@
 import { AdminLessonList } from "@/components/admin/add-course/lesson-table";
 import Button from "@/utils/button";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 
-export function AdminLessonSection() {
-  const [lesson, setLesson] = useState([]);
-
+export function AdminLessonSection({ lesson, setLesson }) {
   const getLessonData = async () => {
     try {
       const result = await axios.get(`/api/lessons/get`);

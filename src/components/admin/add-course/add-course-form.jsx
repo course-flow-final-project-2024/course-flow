@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
-import FileUpload2 from "./file-upload-test";
+import FileUpload from "./file-upload";
 import { supabase } from "../../../../lib/supabase";
 import { v4 as uuidv4 } from "uuid";
+import { validateFormInput } from "./form-validation";
 
 const AdminAddCourseForm = () => {
   const inputStyle =
@@ -13,7 +14,8 @@ const AdminAddCourseForm = () => {
     trailer: null,
     attachment: null,
   });
-  console.log(files);
+
+  const [errors, setErrors] = useState({});
 
   const uploadFile = async (file, folder) => {
     const uniqueFileName = `${uuidv4()}_${file.name}`;
@@ -28,7 +30,7 @@ const AdminAddCourseForm = () => {
         alert("Error uploading file.");
         return;
       }
-      console.log("File details:", data);
+
       const url = supabase.storage
         .from("course")
         .getPublicUrl(`${folder}/${uniqueFileName}`);
@@ -42,6 +44,25 @@ const AdminAddCourseForm = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
+    const formData = new FormData(event.target);
+    const formInput = {
+      course_name: formData.get("course_name"),
+      price: parseFloat(formData.get("price")),
+      duration: parseFloat(formData.get("duration")),
+      summary: formData.get("summary"),
+      detail: formData.get("detail"),
+      course_image: null,
+      video_trailer: null,
+      attach_file: null,
+    };
+
+    const validateError = validateFormInput(formInput, files);
+
+    if (Object.keys(validateError).length > 0) {
+      setErrors(validateError);
+      return;
+    }
+
     try {
       const coverImageUrl = await uploadFile(files.coverImage, "cover_images");
       const trailerUrl = await uploadFile(files.trailer, "trailers");
@@ -49,33 +70,13 @@ const AdminAddCourseForm = () => {
         ? await uploadFile(files.attachment, "attachments")
         : null;
 
-      const formData = new FormData(event.target);
-      const formInput = {
-        course_name: formData.get("course_name"),
-        price: parseFloat(formData.get("price")),
-        duration: parseFloat(formData.get("duration")),
-        summary: formData.get("summary"),
-        detail: formData.get("detail"),
-        course_image: coverImageUrl,
-        video_trailer: trailerUrl,
-        attach_file: attachmentUrl || null,
-      };
+      formInput.course_image = coverImageUrl;
+      formInput.video_trailer = trailerUrl;
+      formInput.attach_file = attachmentUrl || null;
 
       console.log("forminput", formInput);
 
-      const result = await axios.post(
-        `/api/courses/post`,
-        formInput,
-        {
-          headers: {
-            "Content-Type": "application/json", // Ensure JSON content type
-          },
-        }
-        // {
-        //   headers: { "Content-Type": "multipart/form-data" },
-        // }
-      );
-
+      const result = await axios.post(`/api/courses/post`, formInput);
       console.log("result", result.data);
     } catch (error) {
       console.error(
@@ -90,10 +91,15 @@ const AdminAddCourseForm = () => {
       <div className=" bg-white min-w-[1120px] w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">
         <form onSubmit={onSubmit} className="flex flex-col gap-10">
           <div className="flex flex-col gap-1 w-full">
-            <label>Course name *</label>
+            <div className="flex gap-2">
+              <label>Course name *</label>
+              {errors.course_name && (
+                <span className="text-red-500">{errors.course_name}</span>
+              )}
+            </div>
             <input
               name="course_name"
-              required
+              //required
               type="text"
               placeholder="Place Holder"
               className={inputStyle}
@@ -101,10 +107,15 @@ const AdminAddCourseForm = () => {
           </div>
           <div className="flex gap-10">
             <div className="flex flex-col gap-1 w-full">
-              <label>Price *</label>
+              <div className="flex gap-2">
+                <label>Price *</label>
+                {errors.price && (
+                  <span className="text-red-500">{errors.price}</span>
+                )}
+              </div>
               <input
                 name="price"
-                required
+                //required
                 type="number"
                 placeholder="Place Holder"
                 className={inputStyle}
@@ -112,10 +123,15 @@ const AdminAddCourseForm = () => {
               />
             </div>
             <div className="flex grow flex-col gap-1 w-full">
-              <label>Total learning time *</label>
+              <div className="flex gap-2">
+                <label>Total learning time *</label>
+                {errors.duration && (
+                  <span className="text-red-500">{errors.duration}</span>
+                )}
+              </div>
               <input
                 name="duration"
-                required
+                //required
                 type="number"
                 placeholder="Place Holder"
                 className={inputStyle}
@@ -123,10 +139,15 @@ const AdminAddCourseForm = () => {
             </div>
           </div>
           <div className="flex flex-col gap-1 w-full">
-            <label>Course summary *</label>
+            <div className="flex gap-2">
+              <label>Course summary *</label>
+              {errors.summary && (
+                <span className="text-red-500">{errors.summary}</span>
+              )}
+            </div>
             <textarea
               name="summary"
-              required
+              //required
               type="text"
               placeholder="Place Holder"
               rows={2}
@@ -134,10 +155,15 @@ const AdminAddCourseForm = () => {
             />
           </div>
           <div className="flex flex-col gap-1 w-full">
-            <label>Course detail *</label>
+            <div className="flex gap-2">
+              <label>Course detail *</label>
+              {errors.detail && (
+                <span className="text-red-500">{errors.detail}</span>
+              )}
+            </div>
             <textarea
               name="detail"
-              required
+              //required
               type="text"
               placeholder="Place Holder"
               rows={7}
@@ -151,7 +177,7 @@ const AdminAddCourseForm = () => {
             Submit
           </button>
 
-          <FileUpload2 onFilesChange={setFiles} />
+          <FileUpload onFilesChange={setFiles} errors={errors} />
         </form>
       </div>
     </div>

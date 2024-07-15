@@ -20,7 +20,6 @@ export default async function handler(req, res) {
 
   const totalCourse = await coursesQuery;
   const totalItems = totalCourse.data.length;
-  console.log(totalCourse.data.length);
 
   if (totalItems === 0) {
     return res

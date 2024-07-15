@@ -28,12 +28,6 @@ export default async function handler(req, res) {
       .json({ courses: [], totalItems: 0, totalPages: 0, currentPage });
   }
 
-  if (totalItems === 0) {
-    return res
-      .status(200)
-      .json({ courses: [], totalItems: 0, totalPages: 0, currentPage });
-  }
-
   let { data: courses, error } = await coursesQuery.range(
     offset,
     offset + limit - 1

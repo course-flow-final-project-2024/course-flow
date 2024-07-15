@@ -24,7 +24,7 @@ export default function CourseCard({
           boxShadow="2px 2px 12px 0 rgba(0, 0, 0, 0.08)"
         >
           <Image
-            src={course_image}
+            src={course_image ? course_image : "/logo/CourseFlowLogo.svg"}
             alt={course_name}
             borderTopRadius="8px"
             height="240px"

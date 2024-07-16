@@ -36,7 +36,6 @@ export default function Course() {
         });
 
         setCourse(result.data.courses);
-        console.log({ title });
 
         if (currentPage > result.data.totalPages) {
           setCurrentPage(result.data.totalPages);

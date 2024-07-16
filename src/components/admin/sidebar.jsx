@@ -3,6 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 
 const AdminSidebar = () => {
+  const handleLogOut = async () => {
+    console.log("logout");
+    try {
+      const response = await axios.post("/api/auth/logout");
+      localStorage.removeItem("user");
+
+      return;
+    } catch (err) {
+      return {
+        message: "Server could not logout",
+      };
+    }
+  };
   return (
     <>
       <div
@@ -59,7 +72,9 @@ const AdminSidebar = () => {
               width={24}
               height={24}
             />
-            <h3>Log out</h3>
+            <h3 role="button" onClick={handleLogOut}>
+              Log out
+            </h3>
           </div>
         </div>
       </div>

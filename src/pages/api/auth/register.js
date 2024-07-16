@@ -1,4 +1,4 @@
-import { supabase } from "../../../lib/supabase";
+import { supabase } from "../../../../lib/supabase";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -25,9 +25,7 @@ export default async function handler(req, res) {
 
     const { error: insertError } = await supabase
       .from("users")
-      .insert([
-        { name, birthday, education_bg, email, password },
-      ]);
+      .insert([{ name, birthday, education_bg, email, password }]);
 
     if (insertError) {
       return res.status(400).json({ error: insertError.message });

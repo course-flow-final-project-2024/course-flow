@@ -8,7 +8,6 @@ import React, { useState } from "react";
 import Button from "@/utils/button";
 import { useRouter } from "next/router";
 
-
 function RegistrationForm() {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -57,15 +56,14 @@ function RegistrationForm() {
       setEmail("");
       setPassword();
       setError("");
-      
+
       router.push("/login");
-      
+
       console.log(" User registered successfully:", data.user);
     } catch (error) {
       setError("Registration failed. Please try again later.");
       console.error("Error registering user", error);
     }
-      
   };
 
   const isValidEmail = (email) => {
@@ -149,7 +147,7 @@ function RegistrationForm() {
         />
       </label>
       {error && <FormErrorMessage>{error}</FormErrorMessage>}
-      <Button text="Log in" style="primary" />
+      <Button text="Register" style="primary" />
     </form>
   );
 }

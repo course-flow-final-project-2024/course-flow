@@ -1,4 +1,4 @@
-import { supabase } from "../../../lib/supabase";
+import { supabase } from "../../../../lib/supabase";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -12,7 +12,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("email, password")
@@ -23,13 +22,13 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: "Name not found" });
     }
 
-
     if (password !== user.password) {
       return res.status(401).json({ error: "Incorrect password" });
     }
 
-    
-    return res.status(200).json({ message: "Login successful", user: { name, email: user.email } });
+    return res
+      .status(200)
+      .json({ message: "Login successful", user: { name, email: user.email } });
   } catch (error) {
     console.error("Error signing in:", error.message);
     return res.status(500).json({ error: "Failed to sign in" });

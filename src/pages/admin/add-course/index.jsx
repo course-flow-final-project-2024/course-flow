@@ -7,6 +7,12 @@ export const LessonDataContext = createContext();
 
 export default function AddNewCourse() {
   const [lesson, setLesson] = useState([]);
+  const [started, setStarted] = useState(false);
+
+  const handleCreateClick = () => {
+    setStarted(true);
+    console.log("index", started);
+  };
 
   return (
     <React.Fragment>
@@ -16,8 +22,11 @@ export default function AddNewCourse() {
             <AdminSidebar />
           </div>
           <div className="flex flex-col w-full bg-gray-100">
-            <AdminCreatingHeader section="Add Course" />
-            <AdminAddCourseForm />
+            <AdminCreatingHeader
+              section="Add Course"
+              onClick={handleCreateClick}
+            />
+            <AdminAddCourseForm started={started} />
             <AdminLessonSection lesson={lesson} setLesson={setLesson} />
           </div>
         </div>

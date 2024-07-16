@@ -122,8 +122,11 @@ const AdminCoursesList = () => {
                     <Td>{startIndex + index + 1}</Td>
                     <Td>
                       <Image
-                        // src={item.course_image}
-                        src="/logo/CourseFlowLogo.svg"
+                        src={
+                          item.course_image
+                            ? item.course_image
+                            : "/logo/CourseFlowLogo.svg"
+                        }
                         alt="course-image"
                         boxSize={47}
                       />

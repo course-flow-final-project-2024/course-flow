@@ -2,64 +2,74 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ section }) => {
+  let courseBg = null;
+  let assignmentBg = null;
+  let logOutBg = null;
+  if (section === "course") {
+    courseBg = "bg-[#F1F2F6]";
+  } else if (section === "assignment") {
+    assignmentBg = "bg-[#F1F2F6]";
+  } else if (section === "log out") {
+    logOutBg = "bg-[#F1F2F6]";
+  }
   return (
     <>
       <div
         id="sidebar"
-        className="flex flex-col gap-10 min-w-60 h-full border-r border-gray-400 bg-white"
+        className="flex flex-col gap-10 min-w-60 border-r border-[#D6D9E4] bg-white"
       >
         <div
           id="sidebar-header"
-          className="flex flex-col gap-6 h-[131px] p-6 pt-10  items-center justify-center"
+          className="flex flex-col gap-6 p-6 pt-10  items-center justify-center"
         >
           <Image
             src="/logo/CourseFlowLogo.svg"
-            alt="course flow logo"
+            alt="CourseFlow logo"
             width={174}
             height={19}
           />
-          <p className="text-[16px] text-gray-700">Admin Panel Control</p>
+          <p className="text-[16px] text-[#646D89]">Admin Panel Control</p>
         </div>
-        <div id="sidebar-menu" className="flex flex-col h-[540px] ">
+        <div id="sidebar-menu" className="flex flex-col min-h-[540px] ">
           <Link href="/admin/courses">
             <div
-              id="course"
-              className="flex gap-4 px-6 py-4 hover:bg-gray-200 active:bg-gray-300 focus:bg-gray-200"
+              className={`flex gap-4 px-6 py-4 hover:bg-[#F6F7FC] active:bg-[#F1F2F6] ${courseBg}`}
             >
               <Image
-                src="/icons/book.svg"
+                src="/icons/admin/book.svg"
                 alt="Course Icon"
                 width={24}
                 height={24}
               />
-              <h3 className="text-gray-800 text-[16px] ">Course</h3>
+              <h3 className="text-[#424C6B] text-[16px] ">Course</h3>
             </div>
           </Link>
           <Link href="/admin/assignments">
             <div
-              id="assignment"
-              className="flex gap-4 px-6 py-4 hover:bg-gray-200 active:bg-gray-300 focus:bg-gray-200"
+              className={`flex gap-4 px-6 py-4 hover:bg-[#F6F7FC] active:bg-[#F1F2F6] ${assignmentBg}`}
             >
               <Image
-                src="/icons/copy.svg"
+                src="/icons/admin/copy.svg"
                 alt="Assignment Icon"
                 width={24}
                 height={24}
               />
-              <h3 className="text-gray-800 text-[16px] w-full ">Assignment</h3>
+              <h3 className="text-[#424C6B] text-[16px] w-full">Assignment</h3>
             </div>
           </Link>
         </div>
         <div>
-          <div className="flex gap-4 px-6 py-4 hover:bg-gray-200 active:bg-gray-300 focus:bg-gray-200">
+          <div
+            className={`flex gap-4 px-6 py-4 hover:bg-[#F6F7FC] active:bg-[#F1F2F6] ${logOutBg}`}
+          >
             <Image
-              src="/icons/logout.svg"
+              src="/icons/admin/logout.svg"
               alt="Assignment Icon"
               width={24}
               height={24}
             />
-            <h3>Log out</h3>
+            <h3 className="text-[#424C6B] text-[16px] w-full">Log out</h3>
           </div>
         </div>
       </div>

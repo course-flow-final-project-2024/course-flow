@@ -1,3 +1,4 @@
+import Button from "@/utils/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
@@ -18,8 +19,8 @@ const AdminListingHeader = ({ section, action, href }) => {
     replace(`${pathname}?${params.toString()}`);
   };
   return (
-    <div className="flex items-center gap-4 h-[92px] px-10 py-4 border-b border-gray-400 bg-white">
-      <h3 className="w-full font-medium text-[24px] text-gray-900 ">
+    <div className="flex items-center gap-4 h-[92px] px-10 py-4 border-b border-[#D6D9E4] bg-white">
+      <h3 className="w-full font-medium text-[24px] text-[#2A2E3F] ">
         {section}
       </h3>
       <div className="flex h-[60px] gap-[16px] ">
@@ -40,10 +41,11 @@ const AdminListingHeader = ({ section, action, href }) => {
             defaultValue={searchParams.get("title")?.toString()}
           />
         </div>
+
         <Link href={href} className="text-white font-extrabold text-center">
-          <button className=" bg-blue-600 w-[172px] h-[60px] rounded-xl hover:bg-blue-800 active:bg-blue-600 focus:bg-blue-800 cursor-pointer">
-            {action}
-          </button>
+          <div className="flex w-[172px]">
+            <Button style="primary" height="60px" text={action} />
+          </div>
         </Link>
       </div>
     </div>

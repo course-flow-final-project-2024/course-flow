@@ -1,16 +1,9 @@
 import Link from "next/link";
+import commaNumber from "comma-number";
 
 function SideCourseCard({ courseData }) {
-  const calculatePriceWithComma = (price) => {
-    const priceStr = (price * 36).toString();
-    if (priceStr.length > 2) {
-      return priceStr.slice(0, 1) + "," + priceStr.slice(1);
-    }
-    return priceStr;
-  };
-
-  const calculatedPrice =
-    courseData.length > 0 && calculatePriceWithComma(courseData[0].price);
+  const formattedPrice =
+    courseData.length > 0 && commaNumber(courseData[0].price);
 
   return (
     <div className="w-full h-max shadow-lg py-8 px-6 flex flex-col gap-6 rounded-lg sticky top-10 ">
@@ -24,7 +17,7 @@ function SideCourseCard({ courseData }) {
         </span>
       </div>
       <h3 className="w-full h-max font-medium md:text-xl xl:text-2xl text-[#646D89]">
-        THB {calculatedPrice}
+        THB {formattedPrice}
       </h3>
       <div className="border-t-[1px] flex flex-col gap-4 pt-8">
         <Link

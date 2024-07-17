@@ -7,19 +7,13 @@ import {
   AccordionIcon,
   Box,
 } from "@chakra-ui/react";
+import commaNumber from "comma-number";
 
 function BottomCourseCard({ courseData }) {
   const [isClient, setIsClient] = useState(false);
-  const calculatePriceWithComma = (price) => {
-    const priceStr = (price * 36).toString();
-    if (priceStr.length > 2) {
-      return priceStr.slice(0, 1) + "," + priceStr.slice(1);
-    }
-    return priceStr;
-  };
 
-  const calculatedPrice =
-    courseData.length > 0 && calculatePriceWithComma(courseData[0].price);
+  const formattedPrice =
+    courseData.length > 0 && commaNumber(courseData[0].price);
 
   useEffect(() => {
     setIsClient(true);
@@ -55,7 +49,7 @@ function BottomCourseCard({ courseData }) {
                       </span>
                     </AccordionPanel>
                     <span className="block text-[#646D89] sm:text-lg">
-                      THB {calculatedPrice}
+                      THB {formattedPrice}
                     </span>
                   </div>
                   <div className="w-full h-10 flex flex-row gap-2">

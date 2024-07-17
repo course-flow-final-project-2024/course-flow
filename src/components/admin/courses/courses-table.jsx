@@ -86,94 +86,112 @@ const AdminCoursesList = () => {
 
   return (
     <Box>
-      <div>
-        <TableContainer borderRadius="lg">
-          <Table
-            variant="simple"
-            //tablelayout="fixed"
-            minwidth="1120px"
-            width="100%"
-            className="table-fixed"
-          >
-            <Thead>
-              <Tr bg="gray.200" color="gray.700" height="41px">
-                <Th width="30px"></Th>
-                <Th width="96px">Image</Th>
-                <Th width="300px">Course Name</Th>
-                <Th width="100px">Lesson</Th>
-                <Th width="100px">Price</Th>
-                <Th width="187px">Created date</Th>
-                <Th width="187px">Updated date</Th>
-                <Th width="120px">Action</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {course.length > 0 ? (
-                course.map((item, index) => (
-                  <Tr
-                    bg="white"
-                    color="black"
-                    height="88px"
-                    borderbuttom="1px"
-                    borderColor="gray.200"
-                    align="center"
-                    key={index}
-                  >
-                    <Td>{startIndex + index + 1}</Td>
-                    <Td>
-                      <Image
-                        src={
-                          item.course_image
-                            ? item.course_image
-                            : "/logo/CourseFlowLogo.svg"
-                        }
-                        alt="course-image"
-                        boxSize={47}
-                      />
-                    </Td>
-                    <Td align="start" whiteSpace="normal">
-                      {item.course_name}
-                    </Td>
-                    <Td>{item.lessons[0].count} Lessons</Td>
-                    <Td>{item.price}</Td>
-                    <Td>{dateFormat(item.created_at)}</Td>
-                    <Td>{dateFormat(item.updated_at)}</Td>
-                    <Td>
-                      <Flex gap={2} align="center" justify="center">
-                        <Image src="/icons/delete.svg" alt="delete icon" />
-                        <Image src="/icons/edit.svg" alt="edit icon" />
-                      </Flex>
-                    </Td>
-                  </Tr>
-                ))
-              ) : (
-                <Tr>
-                  <Td colSpan="8" align="center">
-                    No courses found.
+      <TableContainer borderRadius="lg">
+        <Table
+          variant="simple"
+          minwidth="1120px"
+          width="100%"
+          className="table-fixed"
+        >
+          <Thead>
+            <Tr bg="gray.200" color="#424C6B" height="41px">
+              <Th width="48px"></Th>
+              <Th width="96px" align="start" pl="16px" fontWeight="normal">
+                Image
+              </Th>
+              <Th width="268px" align="start" pl="16px" fontWeight="normal">
+                Course Name
+              </Th>
+              <Th width="105px" align="start" pl="16px" fontWeight="normal">
+                Lesson
+              </Th>
+              <Th width="105px" align="start" pl="16px" fontWeight="normal">
+                Price
+              </Th>
+              <Th width="188px" align="start" pl="16px" fontWeight="normal">
+                Created date
+              </Th>
+              <Th width="190px" align="start" pl="16px" fontWeight="normal">
+                Updated date
+              </Th>
+              <Th width="120px" align="center" fontWeight="normal">
+                Action
+              </Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {course.length > 0 ? (
+              course.map((item, index) => (
+                <Tr
+                  bg="white"
+                  color="black"
+                  height="88px"
+                  align="start"
+                  key={index}
+                  className="border-b border-[#F1F2F6]"
+                >
+                  <Td align="center">{startIndex + index + 1}</Td>
+                  <Td pl="16px">
+                    <Image
+                      src={
+                        item.course_image
+                          ? item.course_image
+                          : "/logo/CourseFlowLogo.svg"
+                      }
+                      alt="course-image"
+                      width="64px"
+                      height="47px"
+                      style={{
+                        objectFit: "contain",
+                      }}
+                    />
+                  </Td>
+                  <Td pl="16px" pr="16px" whiteSpace="normal">
+                    {item.course_name}
+                  </Td>
+                  <Td pl="16px">{item.lessons[0].count} Lessons</Td>
+                  <Td pl="16px">
+                    {item.price.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    })}
+                  </Td>
+                  <Td pl="16px">{dateFormat(item.created_at)}</Td>
+                  <Td pl="16px">{dateFormat(item.updated_at)}</Td>
+                  <Td>
+                    <Flex gap={2} align="start" justify="center">
+                      <Image src="/icons/delete.svg" alt="delete icon" />
+                      <Image src="/icons/edit.svg" alt="edit icon" />
+                    </Flex>
                   </Td>
                 </Tr>
-              )}
-            </Tbody>
-          </Table>
-        </TableContainer>
-        <Box
-          sx={{
-            margin: "10px 0px 30px 0px",
-            display: "flex",
-            justifyContent: "center",
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan="8" align="center">
+                  No courses found.
+                </Td>
+              </Tr>
+            )}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <Box
+        sx={{
+          margin: "10px 0px 30px 0px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Pagination
+          count={pagination.page}
+          variant="outlined"
+          shape="rounded"
+          color="primary"
+          onChange={(_, page) => {
+            setCurrentPage(page);
           }}
-        >
-          <Pagination
-            count={pagination.page}
-            variant="outlined"
-            shape="rounded"
-            color="primary"
-            onChange={(_, page) => {
-              setCurrentPage(page);
-            }}
-          />
-        </Box>
-      </div>
+        />
+      </Box>
     </Box>
   );
 };

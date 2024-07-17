@@ -11,6 +11,7 @@ export default function FileUpload({ onFilesChange, errors }) {
     const updatedFiles = { ...files, [fileType]: event.target.files[0] };
     setFiles(updatedFiles);
     onFilesChange(updatedFiles);
+    event.target.value = "";
   };
 
   const handleRemoveFile = (fileType) => {
@@ -23,8 +24,7 @@ export default function FileUpload({ onFilesChange, errors }) {
   return (
     <>
       <div className="flex flex-col gap-1 w-full">
-        {/* coverImage */}
-        <div className="flex gap-2">
+        <div className="cover-image flex gap-2">
           <label htmlFor="img-upload">Cover image *</label>
           {errors.coverImage && (
             <span className="text-red-500">{errors.coverImage}</span>
@@ -36,7 +36,6 @@ export default function FileUpload({ onFilesChange, errors }) {
           type="file"
           accept="image/*"
           hidden
-          //required
           onChange={(event) => handleFileChange(event, "coverImage")}
         />
         {files.coverImage ? (
@@ -68,8 +67,8 @@ export default function FileUpload({ onFilesChange, errors }) {
           </label>
         )}
       </div>
-      {/* trailer */}
-      <div className="flex flex-col gap-1 w-full">
+
+      <div className="trailer flex flex-col gap-1 w-full">
         <div className="flex gap-2">
           <label htmlFor="trailer-upload">Video Trailer *</label>
           {errors.trailer && (
@@ -82,7 +81,6 @@ export default function FileUpload({ onFilesChange, errors }) {
           type="file"
           accept="video/*"
           hidden
-          //required
           onChange={(event) => handleFileChange(event, "trailer")}
         />
         {files.trailer ? (
@@ -96,7 +94,7 @@ export default function FileUpload({ onFilesChange, errors }) {
               type="video/mp4"
               className="h-full w-full rounded-2xl"
             >
-              Your browser does not support the video tag.
+              Your browser does not support video display.
             </video>
             <button
               className="rounded-full bg-[#9B2FAC] w-4 h-4 text-center text-white text-[8px]  top-[6px] right-[6px] absolute"
@@ -118,9 +116,9 @@ export default function FileUpload({ onFilesChange, errors }) {
           </label>
         )}
       </div>
-      {/* attachment */}
-      <div className="flex flex-col gap-1 w-full">
-        <label>Attach file (Optional) *</label>
+
+      <div className="attachment flex flex-col gap-1 w-full">
+        <label>Attach file (Optional)</label>
         <input
           id="attchment-upload"
           name="attachment"

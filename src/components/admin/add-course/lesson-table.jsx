@@ -13,11 +13,12 @@ import {
 
 export function AdminLessonList({ lesson }) {
   const handleDelete = () => {
-    return "Deleted";
+    console.log("Deleted");
+    return;
   };
 
   return (
-    <TableContainer rounded={"8px"}>
+    <TableContainer rounded={"8px"} marginBottom={"30px"}>
       <Table variant={"simple"} width={"full"}>
         <Thead background={"#E4E6ED"} textColor={"#424C6B"} fontSize={14}>
           <Tr height={"41px"}>

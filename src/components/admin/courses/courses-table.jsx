@@ -130,7 +130,7 @@ const AdminCoursesList = () => {
                   key={index}
                   className="border-b border-[#F1F2F6]"
                 >
-                  <Td pl="16px">{startIndex + index + 1}</Td>
+                  <Td align="center">{startIndex + index + 1}</Td>
                   <Td pl="16px">
                     <Image
                       src={

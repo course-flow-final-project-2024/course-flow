@@ -1,48 +1,80 @@
 import Image from "next/image";
+import React, { useState } from "react";
+import Button from "@/utils/button";
+import { Box, Modal } from "@mui/material";
 
 function CommonModalBox(props) {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
-    <div className="w-[528px] h-[212px] flex flex-col shadow-[2px_2px_12px_0_rgba(64,50,133,0.12)] ">
-      <div className="w-full h-[56px] bg-white px-6 py-2 flex flex-row border-b-[1px] border-[#E4E6ED] ">
-        <span className="font-normal text-xl w-full">Confirmation</span>
-        <button onClick={props.closeBox}>
-          <Image
-            src="icons/grey-cross.svg"
-            height={10}
-            width={10}
-            alt="cross"
-            className="active:scale-[0.5] ease-in-out duration-100 hover:scale-[1.2] "
-          />
-        </button>
-      </div>
-      <div className="w-full h-full bg-white p-6 gap-6 flex flex-col">
-        <div className="w-full h-max text-[#646D89] text-left text-base font-normal ">
-          {props.AlertMessage}
-        </div>
-        <div className="w-full h-max flex flex-row gap-6">
-          <button
-            onClick={props.leftOnClick}
-            className="w-max h-full px-8 py-[18px] border-[1px] border-[#F47E20] rounded-lg bg-white text-[#F47E20] text-base font-bold hover:border-[#FBAA1C] hover:text-[#FBAA1C] active:border-[#F47E20] active:text-[#F47E20] ease-in-out duration-100"
+    <React.Fragment>
+      <div className="flex">
+        <Button style="primary" text={props.text} onClick={handleOpen} />
+        <Modal open={open}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="100vh"
           >
-            {props.leftText}
-          </button>
-          <button
-            onClick={props.rightOnClick}
-            className="w-max h-full px-8 py-[18px] rounded-lg bg-[#2F5FAC] text-white text-base font-bold hover:bg-[#5483D0]  active:bg-[#183056] ease-in-out duration-100 "
-          >
-            {props.rightText}
-          </button>
-        </div>
+            <Box
+              bgcolor={"white"}
+              width={{ xs: "350px", sm: "528px" }}
+              height={{ sm: "212px" }}
+              borderRadius={"30px"}
+              border={"1px"}
+              borderColor={"#C8CCDB"}
+            >
+              <div>
+                <div className="flex justify-between items-center h-14 px-6 py-2 border-b-[1px]">
+                  <p className="text-xl">Confirmation</p>
+                  <Image
+                    src="icons/grey-cross.svg"
+                    height={20}
+                    width={20}
+                    alt="cross"
+                    onClick={handleClose}
+                    className="active:scale-[0.5] ease-in-out duration-100 hover:scale-[1.2] "
+                  />
+                </div>
+                <div className="p-6">
+                  <p className=" text-[#646D89]">{props.AlertMessage}</p>
+                  <div className="sm:flex sm:gap-4 mt-6">
+                    <div className="flex">
+                      <Button
+                        style="secondary"
+                        text={props.leftText}
+                        onClick={props.leftOnClick}
+                        customStyle="py-[18px] px-8"
+                      />
+                    </div>
+                    <div className="flex sm:mt-0 mt-4">
+                      <Button
+                        style="primary"
+                        text={props.rightText}
+                        onClick={props.rightOnClick}
+                        customStyle="py-[18px] px-8"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Box>
+          </Box>
+        </Modal>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 
 export default CommonModalBox;
 
-// <CommonModalBox closeBox="" AlertMessage="" leftOnClick="" leftText="" rightOnClick="" rightText="" />
+// <CommonModalBox text="" AlertMessage="" leftOnClick="" leftText="" rightOnClick="" rightText="" />
 
-// props.closeBox = onClick event ที่เอาไว้กดปิด modal ทิ้ง (เขียนเอง)
+// props.text = text ของปุ่ม modal
 
 // props.AlertMessage = คำถามบนกล่อง modal ("Are you sure to.... ?")
 

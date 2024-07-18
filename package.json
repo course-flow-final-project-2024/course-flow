@@ -17,6 +17,8 @@
     "@emotion/react": "^11.11.4",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.5",
+    "@mui/joy": "^5.0.0-beta.48",
+    "@mui/material": "^5.16.4",
     "@mui/material-nextjs": "^5.15.11",
     "@next-auth/supabase-adapter": "^0.2.1",
     "@radix-ui/react-slot": "^1.1.0",
@@ -37,6 +39,8 @@
     "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
+    "react-input-mask": "^2.0.4",
+    "react-text-mask": "^5.5.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7"
   },

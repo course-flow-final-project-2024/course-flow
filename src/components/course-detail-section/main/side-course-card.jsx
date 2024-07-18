@@ -1,3 +1,4 @@
+import PaymentCard from "@/components/payment/payment-card";
 import Link from "next/link";
 
 function SideCourseCard({ courseData }) {
@@ -39,6 +40,7 @@ function SideCourseCard({ courseData }) {
         >
           Subscribe This Course
         </Link>
+        <PaymentCard />
       </div>
     </div>
   );

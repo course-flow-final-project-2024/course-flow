@@ -85,14 +85,10 @@ const AdminAddCourseForm = ({ isLoading, setIsLoading }) => {
       formInput.video_trailer = trailerUrl;
       formInput.attach_file = attachmentUrl || null;
 
-      console.log(formInput);
-
       const result = await axios.post(`/api/courses/post`, formInput);
-      console.log("result", result.data, result.status);
 
       if (result.status === 200) {
         router.push("/admin/courses");
-        alert("Course created successfully!");
         setIsLoading(false);
       }
     } catch (error) {

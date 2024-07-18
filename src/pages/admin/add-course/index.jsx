@@ -10,7 +10,6 @@ export const LessonDataContext = createContext();
 export default function AddNewCourse() {
   const [lesson, setLesson] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  console.log(isLoading);
 
   return (
     <LessonDataContext.Provider value={{ lesson, setLesson }}>

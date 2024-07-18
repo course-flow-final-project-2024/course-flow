@@ -27,8 +27,6 @@ function CourseDetail() {
     }
   }, [courseId]);
 
-  console.log(courseData);
-
   return (
     <div className="w-full h-max">
       <Navbar />

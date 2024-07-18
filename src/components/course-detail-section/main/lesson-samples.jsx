@@ -41,7 +41,7 @@ function LessonSamples({ courseData }) {
                 </h2>
                 <AccordionPanel pt={3} pl={12}>
                   {lesson.sub_lessons.map((subLesson) => (
-                    <li className="list-none" key={subLesson.sub_lesson_id}>
+                    <li className="list-disc" key={subLesson.sub_lesson_id}>
                       {subLesson.sub_lesson_title}
                     </li>
                   ))}

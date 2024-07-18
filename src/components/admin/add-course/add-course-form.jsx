@@ -1,10 +1,11 @@
 import axios from "axios";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { supabase } from "../../../../lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { validateFormInput } from "./form-validation";
 import { LessonDataContext } from "@/pages/admin/add-course";
 import AddCourseInput from "./add-course-input";
+import FileUpload from "./file-upload";
 import { useRouter } from "next/router";
 
 const AdminAddCourseForm = ({ isLoading, setIsLoading }) => {

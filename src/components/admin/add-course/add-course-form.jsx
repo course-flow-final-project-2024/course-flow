@@ -6,7 +6,6 @@ import { validateFormInput } from "./form-validation";
 import { LessonDataContext } from "@/pages/admin/add-course";
 import AddCourseInput from "./add-course-input";
 import { useRouter } from "next/router";
-import { Spinner } from "@chakra-ui/react";
 
 const AdminAddCourseForm = ({ isLoading, setIsLoading }) => {
   const { lesson } = useContext(LessonDataContext);
@@ -47,7 +46,8 @@ const AdminAddCourseForm = ({ isLoading, setIsLoading }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading;
+    setIsLoading(true);
+
     const formData = new FormData(event.target);
     formInput = {
       course_name: formData.get("course_name"),
@@ -85,12 +85,14 @@ const AdminAddCourseForm = ({ isLoading, setIsLoading }) => {
       formInput.video_trailer = trailerUrl;
       formInput.attach_file = attachmentUrl || null;
 
+      console.log(formInput);
+
       const result = await axios.post(`/api/courses/post`, formInput);
       console.log("result", result.data, result.status);
 
       if (result.status === 200) {
-        alert("Course created successfully!");
         router.push("/admin/courses");
+        alert("Course created successfully!");
         setIsLoading(false);
       }
     } catch (error) {

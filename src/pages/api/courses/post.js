@@ -1,5 +1,4 @@
 import { supabase } from "../../../../lib/supabase";
-
 import { z } from "zod";
 
 const schema = z.object({
@@ -12,7 +11,7 @@ const schema = z.object({
     .positive({ message: "Duration must be a positive number" }),
   summary: z
     .string()
-    .max(100, { message: "Summary should be at most 100 characters" }),
+    .max(60, { message: "Summary should be at most 100 characters" }),
   detail: z
     .string()
     .max(1500, { message: "Detail should be at most 1,500 characters" }),
@@ -28,7 +27,6 @@ export default async function handler(req, res) {
 
   try {
     const validatedData = schema.safeParse(req.body);
-    console.log(validatedData);
 
     const { data, error } = await supabase
       .from("courses")
@@ -50,7 +48,7 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({
-      message: " Course has been created successfully",
+      message: "Course has been created successfully",
       data: data[0],
     });
   } catch (error) {

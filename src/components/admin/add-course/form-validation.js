@@ -20,8 +20,8 @@ export const validateFormInput = (formInput, files) => {
 
   if (!formInput.summary) {
     errors.summary = "Please enter course summary.";
-  } else if (formInput.length > 100) {
-    errors.summary = "Course summary should be at most 100 characters.";
+  } else if (formInput.summary.length > 60) {
+    errors.summary = "Course summary should be at most 60 characters.";
   }
 
   if (!formInput.detail) {

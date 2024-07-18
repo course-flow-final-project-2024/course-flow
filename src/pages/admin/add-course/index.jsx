@@ -14,7 +14,7 @@ export default function AddNewCourse() {
 
   return (
     <LessonDataContext.Provider value={{ lesson, setLesson }}>
-      {!isLoading ? (
+      {isLoading ? (
         <>
           <div className="flex flex-col justify-center items-center gap-10 w-full min-h-screen bg-white opacity-90 absolute z-10">
             <Spinner

@@ -1,11 +1,15 @@
 import CourseCard from "@/components/courses/course-card";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 function OtherCourses() {
   const [allCourseData, setAllCourseData] = useState([]);
   const [errorStatus, setErrorStatus] = useState(null);
   const [randomCourses, setRandomCourses] = useState([]);
+
+  const router = useRouter();
+  const { courseId } = router.query;
 
   let fetchCoursesData = async () => {
     try {
@@ -27,7 +31,10 @@ function OtherCourses() {
       let randomIndices = [];
       while (randomIndices.length < 3) {
         let randomIndex = Math.floor(Math.random() * allCourseData.length);
-        if (!randomIndices.includes(randomIndex)) {
+        if (
+          !randomIndices.includes(randomIndex) &&
+          !randomIndices.includes(courseId)
+        ) {
           randomIndices.push(randomIndex);
         }
       }
@@ -37,7 +44,7 @@ function OtherCourses() {
 
   useEffect(() => {
     getRandomCourses();
-  }, [allCourseData]);
+  }, [allCourseData, courseId]);
 
   return (
     <div className="w-full h-max px-4 py-10 bg-[#F6F7FC] lg:px-69">
@@ -45,7 +52,7 @@ function OtherCourses() {
         <span className="font-medium text-2xl text-center">
           Other Interesting Course
         </span>
-        <div className="w-full h-max flex flex-col items-center lg:flex-row lg:justify-center lg:gap-6 overflow-scroll ">
+        <div className="w-full h-max flex flex-col items-center lg:flex-row lg:justify-center lg:gap-6 max-[1150px]:overflow-x-scroll ">
           {randomCourses.length > 0 ? (
             randomCourses.map((index) => {
               const course = allCourseData[index];

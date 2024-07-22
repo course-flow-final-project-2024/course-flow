@@ -32,7 +32,7 @@ function CommonModalBox(props) {
                 <div className="flex justify-between items-center h-14 px-6 py-2 border-b-[1px]">
                   <p className="text-xl">Confirmation</p>
                   <Image
-                    src="icons/grey-cross.svg"
+                    src="/icons/grey-cross.svg"
                     height={20}
                     width={20}
                     alt="cross"

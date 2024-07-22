@@ -1,3 +1,4 @@
+import CommonModalBox from "@/utils/common-modal";
 import Link from "next/link";
 
 function SideCourseCard({ courseData }) {
@@ -33,12 +34,14 @@ function SideCourseCard({ courseData }) {
         >
           Get in Desire Course
         </Link>
-        <Link
-          href="/login"
-          className="h-[max] py-4 rounded-xl bg-[#2F5FAC] text-white active:bg-[#183056] hover:bg-[#5483D0] focus:ring-2 ring-violet-300 text-sm font-bold ease-in-out duration-200 text-center"
-        >
-          Subscribe This Course
-        </Link>
+        <CommonModalBox
+          text="Subscribe This Course"
+          AlertMessage="Do you sure to subscribe Service Design Essentials Course?"
+          leftText="No, I don't"
+          rightText="Yes, I want to subscribe"
+          leftOnClick=""
+          rightOnClick=""
+        />
       </div>
     </div>
   );

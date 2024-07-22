@@ -23,13 +23,13 @@ function PayMentForm({ setOpen }) {
   return (
     <React.Fragment>
       <div className="mx-8 mt-3 rounded-[10px] border-[1px]">
-        <div className="grid grid-cols-2 items-center h-8 bg-[#ffd792] rounded-t-[10px] border-b-[1px] text-center text-[16px] font-normal cursor-pointer">
+        <div className="grid grid-cols-2 items-center h-12 bg-[#ffd792] rounded-t-[10px] border-b-[1px] text-center text-[16px] font-normal cursor-pointer">
           <button
             className={`${
               selectedMethod === "credit"
-                ? "bg-[#fdc057] rounded-tl-[10px] border-[#fdc057]"
+                ? "bg-[#FBAA1C] rounded-tl-[10px] border-[#FBAA1C]"
                 : "border-gray-300"
-            }, border-r-[0.5px], h-full`}
+            }, border-r-[0.5px], !h-full, py-3`}
             onClick={() => setSelectedMethod("credit")}
           >
             Credit Card
@@ -37,9 +37,9 @@ function PayMentForm({ setOpen }) {
           <button
             className={`${
               selectedMethod === "qr"
-                ? "bg-[#fdc057] rounded-tr-[10px] border-[#fdc057]"
+                ? "bg-[#FBAA1C] rounded-tr-[10px] border-[#FBAA1C]"
                 : "border-gray-300"
-            }, border-l-[0.5px], h-full`}
+            }, border-l-[0.5px], !h-full, py-3`}
             onClick={() => setSelectedMethod("qr")}
           >
             QR Code
@@ -116,33 +116,33 @@ function PayMentForm({ setOpen }) {
         )}
       </div>
       {selectedMethod === "credit" && (
-        <div className="flex justify-evenly my-4 h-12">
-          <div className="flex justify-evenly w-28 p-1 h-12">
+        <div className="flex justify-end mx-8 my-6 h-[60px] gap-3">
+          <div className="flex justify-end w-full">
             <Button
               style="secondary"
-              text="Back"
+              text="Cancel"
               onClick={handleClose}
-              customStyle="!h-10"
+              // customStyle="!h-10"
             />
           </div>
-          <div className="flex justify-evenly w-28 p-1">
+          <div className="flex justify-end w-full">
             <Button
               style="primary"
-              text="Pay"
+              text="Confirm"
               onClick={handlePay}
-              customStyle="!h-10"
+              // customStyle="!h-10"
             />
           </div>
         </div>
       )}
       {selectedMethod === "qr" && (
-        <div className="flex justify-evenly my-4 h-12">
-          <div className="flex justify-evenly w-28 p-1">
+        <div className="flex justify-end mx-8 my-4 h-[60px]">
+          <div className="flex justify-end w-32">
             <Button
               style="secondary"
-              text="Back"
+              text="Cancel"
               onClick={handleClose}
-              customStyle="!h-10"
+              // customStyle="!h-10"
             />
           </div>
         </div>

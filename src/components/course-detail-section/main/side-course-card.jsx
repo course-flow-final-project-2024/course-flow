@@ -34,13 +34,7 @@ function SideCourseCard({ courseData }) {
         >
           Get in Desire Course
         </Link>
-        <Link
-          href="/login"
-          className="h-[max] py-4 rounded-xl bg-[#2F5FAC] text-white active:bg-[#183056] hover:bg-[#5483D0] focus:ring-2 ring-violet-300 text-sm font-bold ease-in-out duration-200 text-center"
-        >
-          Subscribe This Course
-        </Link>
-        <PaymentCard />
+        <PaymentCard courseData={courseData} />
       </div>
     </div>
   );

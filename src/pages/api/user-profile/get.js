@@ -5,17 +5,27 @@ export default async function getProfile(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { email } = req.query;
+  const { token } = req.query;
 
-  if (!email) {
+  if (!token) {
     return res.status(400).json({ error: "Not authorized" });
   }
 
   try {
+    const { data: session, error: sessionError } = await supabase
+      .from("loginsession")
+      .select("user_email")
+      .eq("sessionId", token)
+      .single();
+
+    if (sessionError) {
+      throw new Error(sessionError);
+    }
+
     const { data: user, error: userError } = await supabase
       .from("users")
-      .select("email, name, image_user")
-      .eq("email", email)
+      .select("*")
+      .eq("email", session.user_email)
       .single();
 
     if (userError || !user) {
@@ -24,7 +34,14 @@ export default async function getProfile(req, res) {
 
     return res.status(200).json({
       message: "Get profile successful",
-      user: { name: user.name, image: user.image_user },
+      user: {
+        name: user.name,
+        image: user.image_user,
+        birthday: user.birthday,
+        education: user.education_bg,
+        id: user.user_id,
+        email: user.email,
+      },
     });
   } catch (error) {
     console.error("Error signing in:", error.message);

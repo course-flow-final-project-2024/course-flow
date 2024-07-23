@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function PageDecoration() {
   return (
-    <div className=" absolute w-full sm:h-[190px] h-[157px] overflow-hidden z-[-999]">
+    <div className=" absolute w-full sm:h-[190px] h-[157px] overflow-hidden z-0">
       <Image
         src="/icons/dec-blue-circle.svg"
         alt="dec-blue-circle icon"

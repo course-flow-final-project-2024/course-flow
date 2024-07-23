@@ -8,6 +8,8 @@ import {
   Box,
 } from "@chakra-ui/react";
 import commaNumber from "comma-number";
+import CommonModalBox from "@/utils/common-modal";
+import Button from "@/utils/button";
 
 function BottomCourseCard({ courseData }) {
   const [isClient, setIsClient] = useState(false);
@@ -53,12 +55,10 @@ function BottomCourseCard({ courseData }) {
                     </span>
                   </div>
                   <div className="w-full h-10 flex flex-row gap-2">
-                    <button className="grow h-max p-2 rounded-xl bg-white text-orange-500 border-[1.5px] border-orange-500 active:bg-gray-100 hover:text-[#FBAA1C] hover:border-[#FBAA1C] focus:ring-2 ring-violet-300 text-sm font-bold ease-in-out duration-200 ">
-                      Get in Desire Course
-                    </button>
-                    <button className="grow h-max p-2 rounded-xl bg-[#2F5FAC] text-white  active:bg-[#183056] hover:bg-[#5483D0] focus:ring-2 ring-violet-300 text-sm font-bold ease-in-out duration-200">
-                      Subscribe This Course
-                    </button>
+                    <div className="w-1/2">
+                      <Button style="secondary" text="Get in Desire Course" />
+                      <Button style="primary" text="Subscribe This Course" />
+                    </div>
                   </div>
                 </div>
               </Box>

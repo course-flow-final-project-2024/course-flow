@@ -29,6 +29,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --progress-bg: linear-gradient(109.54deg, #95beff 18.21%, #0040e6 95.27%);
   }
 
   .dark {
@@ -72,4 +73,17 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.progress-bar::-moz-progress-bar {
+  border-radius: var(--rounded-box, 1rem /* 16px */);
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-in, oklch(var(--in) / var(--tw-bg-opacity)));
+}
+.progress-bar:indeterminate {
+  --progress-color: var(--fallback-in, oklch(var(--in) / 1));
+}
+.progress-bar::-webkit-progress-value {
+  --tw-bg-opacity: 1;
+  background-image: var(--progress-bg);
 }

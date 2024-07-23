@@ -32,7 +32,7 @@ export default function SearchCourse({ searchParams }) {
         />
         <input
           placeholder="Search..."
-          className="outline-none sm:w-[300px] w-[290px]"
+          className="outline-none sm:w-[300px] w-[290px] z-10"
           onChange={(e) => {
             handleSearch(e.target.value);
           }}

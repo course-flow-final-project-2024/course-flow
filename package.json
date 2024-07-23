@@ -20,7 +20,7 @@
     "@next-auth/supabase-adapter": "^0.2.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@supabase/ssr": "^0.4.0",
-    "@supabase/supabase-js": "^2.44.3",
+    "@supabase/supabase-js": "^2.44.4",
     "@zeit/next-css": "^1.0.1",
     "antd": "^5.19.1",
     "axios": "^1.7.2",

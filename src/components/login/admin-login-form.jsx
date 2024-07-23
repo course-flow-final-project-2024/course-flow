@@ -19,7 +19,7 @@ function AdminLogInForm() {
     setError(null);
 
     try {
-      const response = await fetch("/api/adminlogin", {
+      const response = await fetch("/api/auth/adminlogin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,12 +29,12 @@ function AdminLogInForm() {
       const data = await response.json();
       console.log("Response Data:", data);
 
-      if (!response.ok || !data.user) {
+      if (!response.ok || !data.token) {
         setError("Failed to sign in. Please check your credentials.");
         return;
       }
 
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", JSON.stringify(data.token));
 
       router.push("/admin/courses");
     } catch (error) {

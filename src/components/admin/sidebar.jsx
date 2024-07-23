@@ -1,6 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/router";
+
 
 const AdminSidebar = ({ section }) => {
   let courseBg = null;
@@ -13,7 +16,26 @@ const AdminSidebar = ({ section }) => {
   } else if (section === "log out") {
     logOutBg = "bg-[#F1F2F6]";
   }
+const router = useRouter();
+
+  const handleLogOut = async () => {
+    console.log("logout");
+    try {
+      const token = await JSON.parse(localStorage.getItem("token"))
+      const response = await axios.post("/api/auth/logout", {token});
+      localStorage.removeItem("token");
+      router.push("/admin/login")
+      return;
+    } catch (err) {
+      console.log("logout err", err)
+      return {
+        message: "Server could not logout",
+      };
+    }
+  };
+  
   return (
+    
     <>
       <div
         id="sidebar"
@@ -68,8 +90,9 @@ const AdminSidebar = ({ section }) => {
               alt="Assignment Icon"
               width={24}
               height={24}
-            />
-            <h3 className="text-[#424C6B] text-[16px] w-full">Log out</h3>
+            /
+
+            <h3 className="text-[#424C6B] text-[16px] w-full" role="button"  onClick={handleLogOut}>Log out</h3>
           </div>
         </div>
       </div>

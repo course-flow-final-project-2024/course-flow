@@ -9,13 +9,14 @@ function Navbar() {
   const [username, setUsername] = useState(null);
   const [userImage, setUserImage] = useState(null);
   const getUserProfile = async (email, auth) => {
-    const token = JSON.parse(localStorage.getItem("token")) ?? "[]";
-
+    const token = JSON.parse(localStorage.getItem("token"));
+    if (token === null) {
+      return;
+    }
     try {
       const result = await axios.get("/api/user-profile/get", {
         params: { token },
       });
-      console.log(result);
       setUsername(result.data.user.name);
       setUserImage(result.data.user.image);
       return;
@@ -27,7 +28,7 @@ function Navbar() {
   };
   const handleLogOut = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem("token")) ?? "[]";
+      const token = JSON.parse(localStorage.getItem("token"));
       const response = await axios.post("/api/auth/logout", { token });
       localStorage.removeItem("token");
       setUsername(null);

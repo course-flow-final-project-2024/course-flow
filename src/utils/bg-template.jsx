@@ -7,14 +7,14 @@ function BackgroundTemplate() {
         width={33}
         height={117}
         alt="vector-8"
-        className="absolute z-10 top-0 md:top-[0%] right-0 min-[426px]:w-[90px] min-[426px]:h-[310px] md:w-[175px] md:h-[620px]  "
+        className="absolute z-10 top-0 md:top-[0%] right-0 min-[426px]:w-[90px] md:w-[175px] h-auto"
       />
       <Image
         src="/vector/login-page/Vector-9.svg"
         width={30}
         height={108}
         alt="vector-9"
-        className="absolute z-10 bottom-0 left-0 md:left-[-2%] min-[426px]:w-[60px] min-[426px]:h-[210px] md:w-[115px] md:h-[420px] "
+        className="absolute z-10 bottom-0 left-0 md:left-[-2%] min-[426px]:w-[60px] md:w-[115px] h-auto "
       />
       <Image
         src="/vector/login-page/Ellipse 4.svg"

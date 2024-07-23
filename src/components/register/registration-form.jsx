@@ -1,9 +1,4 @@
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  Input,
-} from "@chakra-ui/react";
+import { FormErrorMessage } from "@chakra-ui/react";
 import React, { useState } from "react";
 import Button from "@/utils/button";
 import { useRouter } from "next/router";
@@ -72,7 +67,7 @@ function RegistrationForm() {
 
   return (
     <form className="form-control w-full gap-8" onSubmit={handleOnSubmit}>
-      <label className="form-control grow" isValid={!!error}>
+      <label className="form-control grow" isInvalid={!!error}>
         <div className="label">
           <span className="label-text text-base font-normal">Name</span>
         </div>

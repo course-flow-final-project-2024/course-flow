@@ -1,16 +1,22 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 const AdminSidebar = () => {
+  const router = useRouter();
+
   const handleLogOut = async () => {
     console.log("logout");
     try {
-      const response = await axios.post("/api/auth/logout");
-      localStorage.removeItem("user");
-
+      const token = await JSON.parse(localStorage.getItem("token"))
+      const response = await axios.post("/api/auth/logout", {token});
+      localStorage.removeItem("token");
+      router.push("/admin/login")
       return;
     } catch (err) {
+      console.log("logout err", err)
       return {
         message: "Server could not logout",
       };

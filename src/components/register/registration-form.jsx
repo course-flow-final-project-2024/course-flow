@@ -54,7 +54,7 @@ function RegistrationForm() {
       setBirthday("");
       setEducation_bg("");
       setEmail("");
-      setPassword();
+      setPassword("");
       setError("");
 
       router.push("/login");

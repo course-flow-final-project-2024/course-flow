@@ -9,17 +9,11 @@ function Navbar() {
   const [username, setUsername] = useState(null);
   const [userImage, setUserImage] = useState(null);
   const getUserProfile = async (email, auth) => {
-    const userInfo = JSON.parse(localStorage.getItem("user")) ?? "[]";
-    const status = userInfo.aud ?? "Unauthenticated";
-    if (status !== "authenticated") {
-      setUsername(null);
-      setUserImage(null);
-      return;
-    }
-    const userEmail = userInfo.email;
+    const token = JSON.parse(localStorage.getItem("token")) ?? "[]";
+    
     try {
-      const result = await axios.get(`/api/navbar/get`, {
-        params: { email: userEmail },
+      const result = await axios.get("/api/auth/getuser-profile", {
+        params: { token },
       });
       setUsername(result.data.user.name);
       setUserImage(result.data.user.image);
@@ -31,13 +25,16 @@ function Navbar() {
     }
   };
   const handleLogOut = async () => {
+   
     try {
-      const response = await axios.post("/api/auth/logout");
-      localStorage.removeItem("user");
+      const token = JSON.parse(localStorage.getItem("token")) ?? "[]";
+      const response = await axios.post("/api/auth/logout", {token});
+      localStorage.removeItem("token");
       setUsername(null);
       setUserImage(null);
       return;
     } catch (err) {
+      console.log("handle logout err", err)
       return {
         message: "Server could not logout",
       };

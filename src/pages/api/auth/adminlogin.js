@@ -26,9 +26,11 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: "Incorrect password" });
     }
 
+    const session = await supabase.from("loginsession").insert({user_email: user.email}).select()
+
     return res
       .status(200)
-      .json({ message: "Login successful", user: { name, email: user.email } });
+      .json({ message: "Login successful", token: session.data[0].sessionId });
   } catch (error) {
     console.error("Error signing in:", error.message);
     return res.status(500).json({ error: "Failed to sign in" });

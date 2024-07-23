@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 
 function LessonSamples({ courseData }) {
+  console.log(courseData[0]);
   return (
     <div className="w-full h-max flex flex-col gap-2">
       <h3 className="w-full h-max text-left font-medium text-2xl lg:text-3xl ">

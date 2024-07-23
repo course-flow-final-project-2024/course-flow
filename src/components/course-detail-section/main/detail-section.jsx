@@ -7,7 +7,7 @@ function TopContent() {
   return (
     <div className="w-full h-max flex flex-col gap-4 ">
       <Link href="/courses" className="w-max flex flex-row gap-2 py-1 px-2 ">
-        <Image src="course-detail/left-arrow.svg" width={16} height={16} />
+        <Image src="/course-detail/left-arrow.svg" width={16} height={16} />
         <span className="w-max h-max font-bold text-[#2F5FAC]">Back</span>
       </Link>
       <div className="w-full h-max object-cover ">

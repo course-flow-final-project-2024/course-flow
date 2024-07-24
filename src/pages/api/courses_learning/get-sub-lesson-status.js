@@ -4,7 +4,9 @@ export default async function getSubLessonStatus(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
+
   const { userId, courseId } = req.query;
+
   try {
     const { data: courses, error } = await supabase
       .from("user_courses")

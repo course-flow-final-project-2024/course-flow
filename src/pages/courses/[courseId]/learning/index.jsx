@@ -95,7 +95,10 @@ function CourseLearning() {
       <div className="w-full h-max">
         <Navbar />
         <div className="w-full h-full flex flex-col sm:flex-row sm:justify-center max-[640px]:items-center ">
-          <CoursesProgress />
+          <CoursesProgress
+            courseData={courseData}
+            setCourseData={setCourseData}
+          />
           <CoursesContent />
         </div>
         <ActionBar />

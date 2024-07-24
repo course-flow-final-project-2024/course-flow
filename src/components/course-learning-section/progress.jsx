@@ -27,6 +27,34 @@ function CoursesProgress() {
       : 0;
   };
 
+  const calculateProgress = (lessons) => {
+    let totalSubLessons = 0;
+    let completedSubLessons = 0;
+
+    lessons.forEach((lesson) => {
+      lesson.sub_lessons.forEach((subLesson) => {
+        totalSubLessons++;
+        if (
+          subLesson.user_lessons.some((item) => item.sub_lesson_status_id === 1)
+        ) {
+          completedSubLessons++;
+        }
+      });
+    });
+
+    return totalSubLessons > 0
+      ? (completedSubLessons / totalSubLessons) * 100
+      : 0;
+  };
+
+  useEffect(() => {
+    if (courseData.length > 0) {
+      const course = courseData[0].courses;
+      const progressValue = calculateProgress(course.lessons);
+      setProgress(progressValue);
+    }
+  }, [courseData]);
+
   useEffect(() => {
     if (courseData.length > 0) {
       const course = courseData[0].courses;

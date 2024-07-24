@@ -95,13 +95,13 @@ function CourseLearning() {
       <div className="w-full h-max">
         <Navbar />
         <div className="w-full h-full flex flex-col sm:flex-row sm:justify-center max-[640px]:items-center ">
-          <CoursesProgress
-            courseData={courseData}
-            setCourseData={setCourseData}
-          />
+          <CoursesProgress />
           <CoursesContent />
         </div>
-        <ActionBar />
+        <ActionBar
+          onNextLesson={handleNextLesson}
+          onPreviousLesson={handlePreviousLesson}
+        />
         <CommonFooter />
       </div>
     </CoursesDataContext.Provider>

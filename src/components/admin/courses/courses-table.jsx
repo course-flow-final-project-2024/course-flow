@@ -15,6 +15,7 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { Pagination } from "@mui/material";
 import CommonModalBox from "@/utils/admin-common-modal";
+import Link from "next/link";
 
 const AdminCoursesList = () => {
   const [course, setCourse] = useState([]);
@@ -202,7 +203,9 @@ const AdminCoursesList = () => {
                         rightOnClick={handleClose}
                         crossClick={handleClose}
                       />
-                      <Image src="/icons/edit.svg" alt="edit icon" />
+                      <Link href={`/admin/courses/edit/${item.course_id}`}>
+                        <Image src="/icons/edit.svg" alt="edit icon" />
+                      </Link>
                     </Flex>
                   </Td>
                 </Tr>

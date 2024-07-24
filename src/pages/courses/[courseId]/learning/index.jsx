@@ -9,19 +9,37 @@ export const CoursesDataContext = createContext();
 
 function CourseLearning() {
   const [courseData, setCourseData] = useState([]);
+  const [currentSubLessonIndex, setCurrentSubLessonIndex] = useState(0);
+
+  const handleNextLesson = () => {
+    setCurrentSubLessonIndex((prevIndex) => prevIndex + 1);
+  };
+
+  const handlePreviousLesson = () => {
+    setCurrentSubLessonIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : 0
+    );
+  };
 
   return (
-    <CoursesDataContext.Provider value={{ courseData, setCourseData }}>
+    <CoursesDataContext.Provider
+      value={{
+        courseData,
+        setCourseData,
+        currentSubLessonIndex,
+        setCurrentSubLessonIndex,
+      }}
+    >
       <div className="w-full h-max">
         <Navbar />
         <div className="w-full h-full flex flex-col sm:flex-row sm:justify-center max-[640px]:items-center ">
-          <CoursesProgress
-            courseData={courseData}
-            setCourseData={setCourseData}
-          />
+          <CoursesProgress />
           <CoursesContent />
         </div>
-        <ActionBar />
+        <ActionBar
+          onNextLesson={handleNextLesson}
+          onPreviousLesson={handlePreviousLesson}
+        />
         <CommonFooter />
       </div>
     </CoursesDataContext.Provider>

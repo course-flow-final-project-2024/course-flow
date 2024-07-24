@@ -7,12 +7,16 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { lesson_info } from "./mock-data";
+import { useContext } from "react";
+import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 
 function LessonAccordion() {
+  const { courseData } = useContext(CoursesDataContext);
+
   return (
     <div className="w-full h-max sm:max-h-[900px] sm:overflow-y-scroll flex flex-col gap-2 ">
       {lesson_info.map((lesson, index) => (
-        <Accordion defaultIndex={[0]} allowMultiple>
+        <Accordion defaultIndex={[0]} allowMultiple key={index}>
           <AccordionItem key={lesson.lesson_id}>
             <h2>
               <AccordionButton px="0">

@@ -10,12 +10,39 @@ import {
 import commaNumber from "comma-number";
 import CommonModalBox from "@/utils/common-modal";
 import Button from "@/utils/button";
+import { useRouter } from "next/router";
 
 function BottomCourseCard({ courseData }) {
   const [isClient, setIsClient] = useState(false);
+  const [openDesireCourseModal, setOpenDesireCourseModal] = useState(false);
+  const [openSubscribeModal, setOpenSubscribeModal] = useState(false);
 
   const formattedPrice =
     courseData.length > 0 && commaNumber(courseData[0].price);
+
+  const router = useRouter();
+
+  function loginStatusCheck() {
+    const userInfo = JSON.parse(localStorage.getItem("token"));
+    if (userInfo) {
+      return true;
+    } else {
+      router.push("/login");
+      return false;
+    }
+  }
+
+  function handleGetInDesireCourseClick() {
+    if (loginStatusCheck()) {
+      setOpenDesireCourseModal(true);
+    }
+  }
+
+  function handleSubscribeClick() {
+    if (loginStatusCheck()) {
+      setOpenSubscribeModal(true);
+    }
+  }
 
   useEffect(() => {
     setIsClient(true);
@@ -54,11 +81,50 @@ function BottomCourseCard({ courseData }) {
                       THB {formattedPrice}
                     </span>
                   </div>
-                  <div className="w-full h-10 flex flex-row gap-2">
-                    <div className="w-1/2">
-                      <Button style="secondary" text="Get in Desire Course" />
-                      <Button style="primary" text="Subscribe This Course" />
-                    </div>
+                  <div className="w-full h-10 flex flex-row gap-2 ">
+                    <Button
+                      style="secondary"
+                      text="Get in Desire Course"
+                      customStyle="h-max grow-1"
+                      onClick={handleGetInDesireCourseClick}
+                    />
+
+                    <Button
+                      style="primary"
+                      text="Subscribe This Course"
+                      customStyle="h-max grow-1"
+                      onClick={handleSubscribeClick}
+                    />
+                    <CommonModalBox
+                      open={openDesireCourseModal}
+                      setOpen={setOpenDesireCourseModal}
+                      text="Get in Desire Course"
+                      AlertMessage={`Do you want to add ${
+                        courseData.length > 0 && courseData[0].course_name
+                      } to your desire course?`}
+                      leftText="No, I don't"
+                      rightText="Yes, Add it"
+                      leftOnClick={() => setOpenDesireCourseModal(false)}
+                      rightOnClick={() => {
+                        setOpenDesireCourseModal(false);
+                      }}
+                      style="secondary"
+                    />
+                    <CommonModalBox
+                      open={openSubscribeModal}
+                      setOpen={setOpenSubscribeModal}
+                      text="Subscribe This Course"
+                      AlertMessage={`Do you want to subscribe to ${
+                        courseData.length > 0 && courseData[0].course_name
+                      } Course?`}
+                      leftText="No, I don't"
+                      rightText="Yes, I want to subscribe"
+                      leftOnClick={() => setOpenSubscribeModal(false)}
+                      rightOnClick={() => {
+                        setOpenSubscribeModal(false);
+                      }}
+                      style="primary"
+                    />
                   </div>
                 </div>
               </Box>

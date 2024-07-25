@@ -6,7 +6,7 @@ function NavbarDropdown(prop) {
 
   return (
     <>
-      <div className="dropdown dropdown-bottom ">
+      <div className="dropdown dropdown-bottom max-[640px]:dropdown-end">
         <div
           tabIndex={0}
           role="button"

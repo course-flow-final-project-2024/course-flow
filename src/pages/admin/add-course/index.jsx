@@ -1,13 +1,15 @@
 import AdminSidebar from "@/components/admin/sidebar.jsx";
 import AdminCreatingHeader from "@/components/admin/header/creating-page";
 import { AdminLessonSection } from "@/components/admin/add-course/section-lesson";
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import AdminAddCourseForm from "@/components/admin/add-course/add-course-form";
 import { Spinner } from "@chakra-ui/react";
+import { AddCourseContext } from "@/pages/_app";
 
 export const LessonDataContext = createContext();
 
 export default function AddNewCourse() {
+  const { course, setCourse } = useContext(AddCourseContext);
   const [lesson, setLesson] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 

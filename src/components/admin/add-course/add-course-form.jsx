@@ -3,26 +3,17 @@ import React, { useState, useContext, useEffect } from "react";
 import { supabase } from "../../../../lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { validateFormInput } from "./form-validation";
-import { LessonDataContext } from "@/pages/admin/add-course";
 import AddCourseInput from "./add-course-input";
 import FileUpload from "./file-upload";
 import { useRouter } from "next/router";
+import { AddCourseContext } from "@/pages/_app";
+import { Flashlight } from "lucide-react";
 
-const AdminAddCourseForm = ({ isLoading, setIsLoading }) => {
-  const { lesson } = useContext(LessonDataContext);
-  const [files, setFiles] = useState({
-    coverImage: null,
-    trailer: null,
-    attachment: null,
-  });
+const AdminAddCourseForm = ({ setIsLoading }) => {
+  const { course, setCourse } = useContext(AddCourseContext);
   const [errors, setErrors] = useState({});
-
   const router = useRouter();
-  let formInput = {};
-
-  useEffect(() => {
-    validateFormInput(formInput, files);
-  }, [formInput, files]);
+  console.log("after create clicked", course);
 
   const uploadFile = async (file, folder) => {
     const uniqueFileName = `${uuidv4()}_${file.name}`;
@@ -47,46 +38,58 @@ const AdminAddCourseForm = ({ isLoading, setIsLoading }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
 
+    setIsLoading(true);
     const formData = new FormData(event.target);
-    formInput = {
+    const updatedCourse = {
+      ...course,
       course_name: formData.get("course_name"),
       price: parseFloat(formData.get("price")),
       duration: parseFloat(formData.get("duration")),
       summary: formData.get("summary"),
       detail: formData.get("detail"),
-      course_image: null,
-      video_trailer: null,
-      attach_file: null,
     };
+    setCourse(updatedCourse);
 
-    const validateError = validateFormInput(formInput, files);
+    const validateError = validateFormInput(updatedCourse);
 
     if (Object.keys(validateError).length > 0) {
       setErrors(validateError);
       setIsLoading(false);
+      alert("Please complete all required fields before creating the course.");
       return;
+    } else {
+      setErrors({});
     }
 
-    if (lesson.length < 1) {
+    if (course.lessons.length < 1) {
+      setIsLoading(false);
       alert("Please create at least one lesson before creating the course.");
       return;
     }
 
     try {
       setIsLoading(true);
-      const coverImageUrl = await uploadFile(files.coverImage, "cover_images");
-      const trailerUrl = await uploadFile(files.trailer, "trailers");
-      const attachmentUrl = files.attachment
-        ? await uploadFile(files.attachment, "attachments")
+      const coverImageUrl = await uploadFile(
+        updatedCourse.course_image,
+        "cover_images"
+      );
+      const trailerUrl = await uploadFile(
+        updatedCourse.video_trailer,
+        "trailers"
+      );
+      const attachmentUrl = updatedCourse.attach_file
+        ? await uploadFile(updatedCourse.attach_file, "attachments")
         : null;
+      const updatedWithUrl = {
+        ...updatedCourse,
+        course_image: coverImageUrl,
+        video_trailer: trailerUrl,
+        attach_file: attachmentUrl,
+      };
+      setCourse(updatedWithUrl);
 
-      formInput.course_image = coverImageUrl;
-      formInput.video_trailer = trailerUrl;
-      formInput.attach_file = attachmentUrl || null;
-
-      const result = await axios.post(`/api/courses/post`, formInput);
+      const result = await axios.post(`/api/courses/post`, updatedWithUrl);
 
       if (result.status === 200) {
         router.push("/admin/courses");
@@ -110,7 +113,7 @@ const AdminAddCourseForm = ({ isLoading, setIsLoading }) => {
           className="flex flex-col gap-10"
         >
           <AddCourseInput errors={errors} />
-          <FileUpload onFilesChange={setFiles} errors={errors} />
+          <FileUpload errors={errors} />
         </form>
       </div>
     </div>

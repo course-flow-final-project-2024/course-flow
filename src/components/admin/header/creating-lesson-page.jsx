@@ -6,7 +6,7 @@ const AdminLessonHeader = ({ section, course_name, lesson_name }) => {
   const router = useRouter();
 
   const handleOnClick = () => {
-    router.push("/admin/courses");
+    router.push("/admin/add-course");
   };
 
   const handleArrowOnClick = () => {
@@ -48,7 +48,7 @@ const AdminLessonHeader = ({ section, course_name, lesson_name }) => {
           style="primary"
           height="60px"
           type="submit"
-          form="add-course"
+          form="add-lesson"
         />
       </div>
     </div>

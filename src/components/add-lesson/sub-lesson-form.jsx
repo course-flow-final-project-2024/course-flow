@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useState } from "react";
 
 export default function AdminSubLessonForm({
   index,
@@ -7,7 +8,11 @@ export default function AdminSubLessonForm({
   setSubLessons,
 }) {
   const handleDeleteSubLesson = (index) => {
-    setSubLessons(subLessons.filter((_, i) => i !== index));
+    if (subLessons.length > 1) {
+      const updatedSubLessons = [...subLessons];
+      updatedSubLessons.splice(index, 1);
+      setSubLessons(updatedSubLessons);
+    }
   };
 
   const handleSubLessonChange = (index, field, value) => {
@@ -15,6 +20,27 @@ export default function AdminSubLessonForm({
     newSubLessons[index][field] = value;
     setSubLessons(newSubLessons);
   };
+
+  const handleFileChange = (event, index) => {
+    const updatedSubLessons = [...subLessons];
+    updatedSubLessons[index].video = event.target.files[0];
+    setSubLessons(updatedSubLessons);
+    event.target.value = "";
+  };
+
+  const handleRemoveFile = (index) => {
+    const updatedSubLessons = [...subLessons];
+    updatedSubLessons[index].video = null;
+    setSubLessons(updatedSubLessons);
+  };
+
+  let subLessonDeleteButton;
+  if (subLessons.length > 1) {
+    subLessonDeleteButton = "font-bold text-[#2F5FAC]";
+  } else {
+    subLessonDeleteButton = "font-bold text-[#C8CCDB] cursor-not-allowed";
+  }
+
   return (
     <div className="rounded-lg p-[24px_16px_24px_16px] bg-[#F6F7FC] border border-[#E4E6ED]">
       <div className="flex flex-row justify-between items-start">
@@ -27,6 +53,7 @@ export default function AdminSubLessonForm({
             <div className="flex flex-col gap-1">
               <p>Sub-lesson name *</p>
               <input
+                name="lesson_name"
                 type="text"
                 className="w-full h-12 p-3 border rounded-lg outline-none"
                 value={subLesson.name}
@@ -37,33 +64,52 @@ export default function AdminSubLessonForm({
             </div>
             <div className="flex flex-col gap-1">
               <p>Video *</p>
-              <label
-                className="flex flex-col justify-center items-center w-[160px] h-[160px] p-3 border rounded-lg bg-[#F1F2F6] cursor-pointer outline-none"
-                htmlFor={`subLessonVideo${index}`}
-              >
-                {subLesson.video ? (
-                  subLesson.video.name
-                ) : (
+              {subLessons[index].video !== null ? (
+                <div className="sublesson-vdo-preview w-[160px] h-[160px] relative border rounded-lg bg-[#F1F2F6] flex justify-center items-center">
+                  <video
+                    controls
+                    src={URL.createObjectURL(subLessons[index].video)}
+                    type="video/mp4"
+                    className="h-full w-full rounded-2xl"
+                  >
+                    Your browser does not support video display.
+                  </video>
+                  <button
+                    className="rounded-full bg-[#9B2FAC] w-4 h-4 text-center text-white text-[8px]  top-[6px] right-[6px] absolute"
+                    onClick={() => {
+                      handleRemoveFile(index);
+                    }}
+                    aria-label="Remove cover image"
+                  >
+                    X
+                  </button>
+                </div>
+              ) : (
+                <label
+                  className="flex flex-col justify-center items-center w-[160px] h-[160px] p-3 border rounded-lg bg-[#F1F2F6] cursor-pointer outline-none"
+                  htmlFor={`subLessonVideo${index}`}
+                >
                   <div className="flex flex-col items-center text-[#5483D0] font-medium text-sm">
                     <span className="text-xl">+</span>
                     <span>Upload Video</span>
                   </div>
-                )}
-              </label>
+                </label>
+              )}
               <input
                 id={`subLessonVideo${index}`}
                 type="file"
-                className="hidden"
-                onChange={(e) =>
-                  handleSubLessonChange(index, "video", e.target.files[0])
-                }
+                accept="video/*"
+                hidden
+                onChange={(e) => handleFileChange(e, index)}
               />
             </div>
           </div>
         </div>
         <button
-          className="font-bold text-[#C8CCDB]"
-          onClick={() => handleDeleteSubLesson(index)}
+          className={subLessonDeleteButton}
+          onClick={() => {
+            handleDeleteSubLesson(index);
+          }}
         >
           Delete
         </button>

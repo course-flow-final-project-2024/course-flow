@@ -1,12 +1,15 @@
+import { AddCourseContext } from "@/pages/_app";
 import Button from "@/utils/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { useContext } from "react";
 
 const AdminListingHeader = ({ section, action, href }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const { course, setCourse } = useContext(AddCourseContext);
 
   const handleSearch = (text) => {
     const params = new URLSearchParams(searchParams);
@@ -17,6 +20,21 @@ const AdminListingHeader = ({ section, action, href }) => {
       params.delete("title");
     }
     replace(`${pathname}?${params.toString()}`);
+  };
+
+  const handleCreateClick = () => {
+    const initialCourseState = {
+      course_name: "",
+      price: "",
+      duration: "",
+      summary: "",
+      detail: "",
+      course_image: null,
+      video_trailer: null,
+      attach_file: null,
+      lessons: [],
+    };
+    setCourse(initialCourseState);
   };
   return (
     <div className="flex items-center gap-4 h-[92px] px-10 py-4 border-b border-[#D6D9E4] bg-white">
@@ -44,7 +62,12 @@ const AdminListingHeader = ({ section, action, href }) => {
 
         <Link href={href} className="text-white font-extrabold text-center">
           <div className="flex w-[172px]">
-            <Button style="primary" height="60px" text={action} />
+            <Button
+              style="primary"
+              height="60px"
+              text={action}
+              onClick={handleCreateClick}
+            />
           </div>
         </Link>
       </div>

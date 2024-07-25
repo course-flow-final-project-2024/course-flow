@@ -24,7 +24,7 @@ export function AdminLessonSection({ lesson, setLesson }) {
     <div className=" px-10 pt-[30px] pb-20">
       <div className="flex justify-between items-center">
         <h3 className="text-2xl font-medium">Lesson</h3>
-        <Link href="/admin/add-lesson">
+        <Link href={`/admin/add-lesson`}>
           <Button
             text="+ Add Lesson"
             style="primary"

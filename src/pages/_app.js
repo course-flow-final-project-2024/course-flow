@@ -3,6 +3,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { AppCacheProvider } from "@mui/material-nextjs/v13-pagesRouter";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Roboto } from "next/font/google";
+import { createContext, useState } from "react";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -15,12 +16,28 @@ const theme = createTheme({
     fontFamily: roboto.style.fontFamily,
   },
 });
+
+export const AddCourseContext = createContext();
+
 export default function App({ Component, pageProps }) {
+  const [course, setCourse] = useState({
+    course_name: "",
+    price: "",
+    duration: "",
+    summary: "",
+    detail: "",
+    course_image: null,
+    video_trailer: null,
+    attach_file: null,
+    lessons: [],
+  });
   return (
     <ChakraProvider>
       <AppCacheProvider {...pageProps}>
         <ThemeProvider theme={theme}>
-          <Component {...pageProps} />
+          <AddCourseContext.Provider value={{ course, setCourse }}>
+            <Component {...pageProps} />
+          </AddCourseContext.Provider>
         </ThemeProvider>
       </AppCacheProvider>
     </ChakraProvider>

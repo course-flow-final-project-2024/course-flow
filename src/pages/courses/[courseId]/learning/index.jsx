@@ -32,7 +32,7 @@ function CourseLearning() {
           : subLesson
       )
     );
-  };
+  }, []);
 
   const setSubLessonPlayStatus = (subLessonId, isPlaying, isEnded) => {
     setSubLessonStatus((prevStatus) => ({
@@ -98,10 +98,7 @@ function CourseLearning() {
           <CoursesProgress />
           <CoursesContent />
         </div>
-        <ActionBar
-          onNextLesson={handleNextLesson}
-          onPreviousLesson={handlePreviousLesson}
-        />
+        <ActionBar />
         <CommonFooter />
       </div>
     </CoursesDataContext.Provider>

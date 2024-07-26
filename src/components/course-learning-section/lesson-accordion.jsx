@@ -44,6 +44,12 @@ function LessonAccordion({ onRendered }) {
     }
   }, [courseData, onRendered]);
 
+  const handleOnClick = (id) => {
+    const newIndex = subLessonData.findIndex(
+      (subLesson) => subLesson.sub_lesson_id === id
+    );
+    setCurrentSubLessonIndex(newIndex);
+  };
   if (!courseData || courseData.length === 0) {
     return <div></div>;
   }

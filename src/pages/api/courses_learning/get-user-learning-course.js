@@ -1,6 +1,6 @@
 import { supabase } from "../../../../lib/supabase";
 
-export default async function getSubLessonStatus(req, res) {
+export default async function getUserLearningCourse(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -11,7 +11,7 @@ export default async function getSubLessonStatus(req, res) {
     const { data: courses, error } = await supabase
       .from("user_courses")
       .select(
-        "course_id, courses(course_name, detail, summary, lessons (lesson_id, lesson_title, sub_lessons(sub_lesson_title, sub_lesson_video, user_lessons(sub_lesson_status_id))))"
+        "course_id, courses(course_name, detail, summary, lessons (lesson_id, lesson_title, sub_lessons(sub_lesson_id, lesson_id, sub_lesson_title, sub_lesson_video, user_lessons(sub_lesson_status_id))))"
       )
       .eq("course_id", courseId, "user_id", userId, "payment_status_id", "1");
 

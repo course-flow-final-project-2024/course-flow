@@ -3,7 +3,6 @@ import AdminCreatingHeader from "@/components/admin/header/creating-page";
 import { AdminLessonSection } from "@/components/admin/add-course/section-lesson";
 import { createContext, useState } from "react";
 import AdminAddCourseForm from "@/components/admin/add-course/add-course-form";
-import { Spinner } from "@chakra-ui/react";
 
 export const LessonDataContext = createContext();
 

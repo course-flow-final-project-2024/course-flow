@@ -8,21 +8,32 @@ import {
 } from "@chakra-ui/react";
 import { useContext } from "react";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
+import StatusImage from "./select-status-image";
 
 function LessonAccordion() {
-  const { courseData } = useContext(CoursesDataContext);
+  const {
+    courseData,
+    lessonData,
+    subLessonData,
+    currentLessonIndex,
+    currentSubLessonId,
+    setCurrentSubLessonIndex,
+  } = useContext(CoursesDataContext);
 
+  const handleOnClick = (id) => {
+    const newIndex = subLessonData.findIndex(
+      (subLesson) => subLesson.sub_lesson_id === id
+    );
+    setCurrentSubLessonIndex(newIndex);
+  };
   if (!courseData || courseData.length === 0) {
     return <div>Loading...</div>;
   }
-
-  const lessons = courseData[0].courses.lessons;
-
   return (
     <div className="w-full h-max sm:max-h-[900px] sm:overflow-y-scroll flex flex-col gap-2 ">
-      {lessons.map((lesson, index) => (
-        <Accordion defaultIndex={[0]} allowMultiple key={index}>
-          <AccordionItem>
+      <Accordion defaultIndex={[currentLessonIndex]} allowMultiple>
+        {lessonData.map((lesson, index) => (
+          <AccordionItem key={lesson.lesson_id}>
             <h2>
               <AccordionButton px="0">
                 <Box
@@ -35,7 +46,7 @@ function LessonAccordion() {
                   paddingY={3}
                 >
                   <div className="w-full flex flex-row items-center gap-6">
-                    <span className="text-[#646D89]">0{index + 1}</span>
+                    <span className="text-[#646D89]">{index + 1}</span>
                     <span className="w-full lg:text-2xl">
                       <span>{lesson.lesson_title}</span>
                     </span>
@@ -44,16 +55,36 @@ function LessonAccordion() {
                 </Box>
               </AccordionButton>
             </h2>
-            <AccordionPanel pt={3} pl={12}>
+            <AccordionPanel pt={3}>
               {lesson.sub_lessons.map((subLesson) => (
-                <li className="list-none" key={subLesson.sub_lesson_title}>
-                  {subLesson.sub_lesson_title}
+                <li
+                  className="list-none "
+                  key={subLesson.sub_lesson_id}
+                  role="button"
+                  onClick={() => handleOnClick(subLesson.sub_lesson_id)}
+                >
+                  <div
+                    className={
+                      subLesson.sub_lesson_id === currentSubLessonId
+                        ? "w-full h-12 px-2 py-3  flex flex-row gap-4 items-center bg-[#F6F7FC]"
+                        : "w-full h-12 px-2 py-3  flex flex-row gap-4 items-center hover:bg-[#F6F7FC]"
+                    }
+                  >
+                    <span>
+                      {StatusImage(
+                        subLesson.user_lessons[0].sub_lesson_status_id
+                      )}
+                    </span>
+                    <div className="text-base font-normal text-[#646D89] flex items-center">
+                      {subLesson.sub_lesson_title}
+                    </div>
+                  </div>
                 </li>
               ))}
             </AccordionPanel>
           </AccordionItem>
-        </Accordion>
-      ))}
+        ))}
+      </Accordion>
     </div>
   );
 }

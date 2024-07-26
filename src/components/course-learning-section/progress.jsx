@@ -1,30 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import LessonAccordion from "./lesson-accordion";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
-import axios from "axios";
 
 function CoursesProgress() {
-  const { courseData, setCourseData } = useContext(CoursesDataContext);
+  const { courseData } = useContext(CoursesDataContext);
   const [progress, setProgress] = useState(0);
-
-  const getCourseData = async () => {
-    try {
-      const result = await axios.get(
-        `/api/courses_learning/get-sub-lesson-status`,
-        {
-          params: {
-            userId: 17,
-            courseId: 5,
-          },
-        }
-      );
-      setCourseData(result.data.courses);
-    } catch (error) {
-      return {
-        message: "Server could not read courses due to database connection",
-      };
-    }
-  };
 
   const calculateProgress = (lessons) => {
     let totalSubLessons = 0;
@@ -53,10 +33,6 @@ function CoursesProgress() {
       setProgress(progressValue);
     }
   }, [courseData]);
-
-  useEffect(() => {
-    getCourseData();
-  }, []);
 
   const course = courseData.length > 0 ? courseData[0].courses : "Loading...";
 

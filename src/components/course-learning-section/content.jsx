@@ -3,16 +3,18 @@ import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import { useContext } from "react";
 
 function CoursesContent() {
-  const { courseData, currentSubLessonIndex } = useContext(CoursesDataContext);
+  const {
+    courseData,
+    subLessonData,
+    currentSubLessonIndex,
+    setCurrentSubLessonId,
+  } = useContext(CoursesDataContext);
 
   if (!courseData || courseData.length === 0) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
-
-  const lessons = courseData[0].courses.lessons;
-  const subLessons = lessons.flatMap((lesson) => lesson.sub_lessons);
-  const currentSubLesson = subLessons[currentSubLessonIndex];
-
+  const currentSubLesson = subLessonData[currentSubLessonIndex];
+  setCurrentSubLessonId(currentSubLesson.sub_lesson_id);
   return (
     <main className="w-full max-w-3xl h-full px-4 py-4 mt-[4%] flex flex-col gap-8">
       <h3 className="Course_Title text-2xl font-medium">

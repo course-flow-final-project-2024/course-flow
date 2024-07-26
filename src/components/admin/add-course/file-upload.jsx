@@ -4,9 +4,7 @@ import { useContext, useState } from "react";
 export default function FileUpload({ errors }) {
   const { course, setCourse } = useContext(AddCourseContext);
   const [files, setFiles] = useState({
-    course_image: null,
-    video_trailer: null,
-    attach_file: null,
+    ...course,
   });
 
   const handleFileChange = (event, fileType) => {

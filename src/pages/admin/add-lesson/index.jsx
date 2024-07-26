@@ -15,7 +15,6 @@ export default function AddNewLesson() {
     router.push("/admin/add-course");
   };
 
-  console.log("Submitted Lesson Data:", lesson);
   return (
     <React.Fragment>
       <div className="flex flex-grow w-full mx-auto h-full relative">

@@ -13,7 +13,6 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
   const { course, setCourse } = useContext(AddCourseContext);
   const [errors, setErrors] = useState({});
   const router = useRouter();
-  console.log("after create clicked", course);
 
   const uploadFile = async (file, folder) => {
     const uniqueFileName = `${uuidv4()}_${file.name}`;
@@ -38,20 +37,20 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-
     setIsLoading(true);
-    const formData = new FormData(event.target);
-    const updatedCourse = {
-      ...course,
-      course_name: formData.get("course_name"),
-      price: parseFloat(formData.get("price")),
-      duration: parseFloat(formData.get("duration")),
-      summary: formData.get("summary"),
-      detail: formData.get("detail"),
-    };
-    setCourse(updatedCourse);
+    console.log("1", course);
+    // const formData = new FormData(event.target);
+    // const updatedCourse = {
+    //   ...course,
+    //   course_name: formData.get("course_name"),
+    //   price: parseFloat(formData.get("price")),
+    //   duration: parseFloat(formData.get("duration")),
+    //   summary: formData.get("summary"),
+    //   detail: formData.get("detail"),
+    // };
+    // setCourse(updatedCourse);
 
-    const validateError = validateFormInput(updatedCourse);
+    const validateError = validateFormInput(course);
 
     if (Object.keys(validateError).length > 0) {
       setErrors(validateError);
@@ -71,18 +70,15 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
     try {
       setIsLoading(true);
       const coverImageUrl = await uploadFile(
-        updatedCourse.course_image,
+        course.course_image,
         "cover_images"
       );
-      const trailerUrl = await uploadFile(
-        updatedCourse.video_trailer,
-        "trailers"
-      );
-      const attachmentUrl = updatedCourse.attach_file
-        ? await uploadFile(updatedCourse.attach_file, "attachments")
+      const trailerUrl = await uploadFile(course.video_trailer, "trailers");
+      const attachmentUrl = course.attach_file
+        ? await uploadFile(course.attach_file, "attachments")
         : null;
       const updatedWithUrl = {
-        ...updatedCourse,
+        ...course,
         course_image: coverImageUrl,
         video_trailer: trailerUrl,
         attach_file: attachmentUrl,

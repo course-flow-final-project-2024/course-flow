@@ -10,11 +10,11 @@ export const LessonDataContext = createContext();
 
 export default function AddNewCourse() {
   const { course, setCourse } = useContext(AddCourseContext);
-  const [lesson, setLesson] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <LessonDataContext.Provider value={{ lesson, setLesson }}>
+    <>
       {isLoading ? (
         <>
           <div className="flex flex-col justify-center items-center gap-10 w-full min-h-screen bg-white opacity-90 absolute z-10">
@@ -36,7 +36,7 @@ export default function AddNewCourse() {
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
               />
-              <AdminLessonSection lesson={lesson} setLesson={setLesson} />
+              <AdminLessonSection />
             </div>
           </div>
         </>
@@ -49,10 +49,10 @@ export default function AddNewCourse() {
               isLoading={isLoading}
               setIsLoading={setIsLoading}
             />
-            <AdminLessonSection lesson={lesson} setLesson={setLesson} />
+            <AdminLessonSection />
           </div>
         </div>
       )}
-    </LessonDataContext.Provider>
+    </>
   );
 }

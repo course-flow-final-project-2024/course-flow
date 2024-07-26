@@ -1,6 +1,7 @@
 import Button from "@/utils/button";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { handleLessonSubmit } from "@/components/add-lesson/lesson-form";
 
 const AdminLessonHeader = ({ section, course_name, lesson_name }) => {
   const router = useRouter();

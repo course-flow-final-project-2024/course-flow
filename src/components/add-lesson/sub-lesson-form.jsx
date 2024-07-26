@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 export default function AdminSubLessonForm({
   index,
@@ -7,12 +7,11 @@ export default function AdminSubLessonForm({
   subLessons,
   setSubLessons,
 }) {
-  const handleDeleteSubLesson = (index) => {
+  const handleDeleteSubLesson = (event, index) => {
     if (subLessons.length > 1) {
-      const updatedSubLessons = [...subLessons];
-      updatedSubLessons.splice(index, 1);
-      setSubLessons(updatedSubLessons);
+      setSubLessons(subLessons.filter((_, i) => i !== index));
     }
+    event.preventDefault();
   };
 
   const handleSubLessonChange = (index, field, value) => {
@@ -107,8 +106,8 @@ export default function AdminSubLessonForm({
         </div>
         <button
           className={subLessonDeleteButton}
-          onClick={() => {
-            handleDeleteSubLesson(index);
+          onClick={(e) => {
+            handleDeleteSubLesson(e, index);
           }}
         >
           Delete

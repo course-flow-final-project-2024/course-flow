@@ -1,28 +1,54 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "@/utils/button";
 import AdminSubLessonForm from "@/components/add-lesson/sub-lesson-form";
 import { AddCourseContext } from "@/pages/_app";
 
-export default function AdminLessonForm({ onSubmit }) {
+import { useRouter } from "next/router";
+
+export default function AdminLessonForm() {
   const { course, setCourse } = useContext(AddCourseContext);
   const [subLessons, setSubLessons] = useState([{ name: "", video: null }]);
   const [lesson, setLesson] = useState({
-    lesson_name: null,
-    subLessons: subLessons,
+    lesson_name: "",
+    subLessons: [],
   });
-  function handleLessonSubmit(e) {
-    e.preventDefault();
-    const lessonInput = new FormData(e.target);
-    const updatedLesson = {
-      subLessons: subLessons,
-      lesson_name: lessonInput.get("lesson_name"),
-    };
-    setLesson(updatedLesson);
-    onSubmit(updatedLesson);
-  }
+  const router = useRouter();
 
-  const handleAddSubLesson = () => {
+  // function handleLessonSubmit(e) {
+  //   e.preventDefault();
+  //   const lessonInput = new FormData(e.target);
+  //   const updatedLesson = {
+  //     subLessons: subLessons,
+  //     lesson_name: lessonInput.get("lesson_name"),
+  //   };
+  //   setLesson(updatedLesson);
+  //   onSubmit(updatedLesson);
+  // }
+
+  const handleLessonNameChange = (e) => {
+    const input = e.target.value;
+    const updatedLesson = { ...lesson, lesson_name: input };
+    setLesson(updatedLesson);
+    // const updatedLessons = [...course.lessons, lesson];
+    // setCourse({ ...course, lessons: updatedLessons });
+  };
+
+  const handleAddSubLesson = (e) => {
+    e.preventDefault();
     setSubLessons([...subLessons, { name: "", video: null }]);
+  };
+  // console.log("lesson", lesson);
+  // console.log("subLessons", subLessons);
+  // console.log("course", course);
+
+  const handleLessonSubmit = (e) => {
+    e.preventDefault();
+    const updatedLesson = { ...lesson, subLessons: subLessons };
+    console.log("submit", updatedLesson);
+    const updatedLessons = course.lessons.push(updatedLesson);
+    const updatedCourse = { ...course, lesson: updatedLessons };
+    setCourse(updatedCourse);
+    router.push("/admin/add-course");
   };
 
   return (
@@ -34,6 +60,9 @@ export default function AdminLessonForm({ onSubmit }) {
             name="lesson_name"
             type="text"
             className="w-full h-12 p-3 border rounded-lg outline-none"
+            onChange={(e) => {
+              handleLessonNameChange(e);
+            }}
           />
         </div>
         <div className="border-t border-[#D6D9E4]"></div>

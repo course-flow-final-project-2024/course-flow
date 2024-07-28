@@ -33,6 +33,7 @@ function Navbar() {
       localStorage.removeItem("token");
       setUsername(null);
       setUserImage(null);
+      window.location.reload();
       return;
     } catch (err) {
       console.log("handle logout err", err);

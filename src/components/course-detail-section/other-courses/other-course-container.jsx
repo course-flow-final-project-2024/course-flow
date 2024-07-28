@@ -22,10 +22,6 @@ function OtherCourses() {
     }
   };
 
-  useEffect(() => {
-    fetchCoursesData();
-  }, []);
-
   const getRandomCourses = () => {
     if (allCourseData.length > 0) {
       let randomIndices = [];
@@ -41,6 +37,10 @@ function OtherCourses() {
       setRandomCourses(randomIndices);
     }
   };
+
+  useEffect(() => {
+    fetchCoursesData();
+  }, []);
 
   useEffect(() => {
     getRandomCourses();

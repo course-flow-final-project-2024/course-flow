@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import LessonSamples from "./lesson-samples";
 import SideCourseCard from "./side-course-card";
+import { CourseDetailContext } from "@/pages/courses/[courseId]";
+import { useContext } from "react";
 
 function TopContent() {
   return (
@@ -22,29 +24,31 @@ function TopContent() {
     </div>
   );
 }
-function CourseDetail({ courseData }) {
+function CourseDetail() {
+  const context = useContext(CourseDetailContext);
   return (
     <div className="w-full h-max flex flex-col gap-4">
       <h3 className="w-full h-max text-left font-medium text-2xl lg:text-3xl ">
         Course Detail
       </h3>
       <div className="w-full h-max text-sm text-[#646D89] lg:text-base">
-        {courseData.length > 0 && courseData[0].detail}
+        {context.courseData.length > 0 && context.courseData[0].detail}
       </div>
     </div>
   );
 }
 
-function MainDetail({ courseData }) {
+function MainDetail() {
+  const context = useContext(CourseDetailContext);
   return (
     <div className="lg:flex h-max min-h-max lg:flex-row p-4 pb-10 flex flex-col gap-8 sm:px-12 ease-in-out duration-200 xl:px-40 min-[1800px]:px-96 ">
       <div className="w-full h-max flex flex-col gap-8 ">
-        <TopContent courseData={courseData} />
-        <CourseDetail courseData={courseData} />
-        <LessonSamples courseData={courseData} />
+        <TopContent />
+        <CourseDetail courseData={context.courseData} />
+        <LessonSamples courseData={context.courseData} />
       </div>
       <div className="max-lg:hidden w-[50%] flex-grow t-12 relative pt-12">
-        <SideCourseCard courseData={courseData} />
+        <SideCourseCard courseData={context.courseData} />
       </div>
     </div>
   );

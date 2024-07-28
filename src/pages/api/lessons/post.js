@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   try {
     const lessons = req.body.lessons;
-    const course_id = req.body.course_id;
+    const courseId = req.body.course_id;
 
     const results = await Promise.all(
       lessons.map(async (item) => {
@@ -19,16 +19,12 @@ export default async function handler(req, res) {
               created_at: new Date(),
               updated_at: new Date(),
               user_id: 1,
-              course_id: course_id,
+              course_id: courseId,
             },
           ])
           .select();
 
         if (error) {
-          //   return res.status(500).json({
-          //     message:
-          //       "Server could not create course due to database connection",
-          //   });
           console.error(error);
         }
         return data;

@@ -7,6 +7,7 @@ import AddCourseInput from "./add-course-input";
 import FileUpload from "./file-upload";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
+import { promise } from "zod";
 
 const AdminAddCourseForm = ({ setIsLoading }) => {
   const { course, setCourse } = useContext(AddCourseContext);
@@ -86,16 +87,51 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
           `/api/lessons/post`,
           lessons
         );
-        console.log("lesson result", lessonsUplodedResult.data.data);
 
-        // if (lessonsUplodedResult.status === 200) {
-        //   const uploadedLesson = (lessonsUplodedResult.data.data =
-        //     course.lessons.map((item) => {
-        //       if(item.lesson_name === uploadedLesson.lesson)
-        //     }));
-        // }
-        router.push("/admin/courses");
-        setIsLoading(false);
+        if (lessonsUplodedResult.status === 200) {
+          const uploadedLesson = lessonsUplodedResult.data.data.reduce(
+            (acc, item) => {
+              const lessonTitle = item[0].lesson_title;
+              acc[lessonTitle] = item[0].lesson_id;
+              return acc;
+            },
+            {}
+          );
+
+          const subLessonUploadedResults = await Promise.all(
+            course.lessons.map(async (item) => {
+              const lessonId = uploadedLesson[item.lesson_name];
+              const subLessonsWithUrls = await Promise.all(
+                item.subLessons.map(async (item) => {
+                  const subLessonUrl = await uploadFile(
+                    item.video,
+                    "sub-lessons"
+                  );
+                  return {
+                    ...item,
+                    video: subLessonUrl,
+                    lesson_id: lessonId,
+                  };
+                })
+              );
+
+              const subLessonUploadedResult = await axios.post(
+                `/api/sub-lesson/post`,
+                subLessonsWithUrls
+              );
+              return subLessonUploadedResult;
+            })
+          );
+
+          const allSuccessful = subLessonUploadedResults.every(
+            (result) => result.status === 200
+          );
+
+          if (allSuccessful) {
+            router.push("/admin/courses");
+            setIsLoading(false);
+          }
+        }
       }
     } catch (error) {
       console.error(
@@ -105,8 +141,6 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
       setIsLoading(false);
     }
   };
-
-  console.log("course", course);
 
   return (
     <div className="p-10">

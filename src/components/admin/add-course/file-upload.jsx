@@ -1,5 +1,4 @@
 import { AddCourseContext } from "@/pages/_app";
-import { FileQuestion } from "lucide-react";
 import { useContext, useState } from "react";
 
 export default function FileUpload({ errors }) {

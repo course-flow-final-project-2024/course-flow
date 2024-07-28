@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Button from "@/utils/button";
 import AdminSubLessonForm from "@/components/add-lesson/sub-lesson-form";
 import { AddCourseContext } from "@/pages/_app";
-
 import { useRouter } from "next/router";
+import { validateLessonInput, validateSubLessons } from "./form-validate";
 
 export default function AdminLessonForm() {
   const { course, setCourse } = useContext(AddCourseContext);
@@ -12,37 +12,41 @@ export default function AdminLessonForm() {
     lesson_name: "",
     subLessons: [],
   });
-  const router = useRouter();
+  const [validatedLesson, setValidatedLesson] = useState({});
 
-  // function handleLessonSubmit(e) {
-  //   e.preventDefault();
-  //   const lessonInput = new FormData(e.target);
-  //   const updatedLesson = {
-  //     subLessons: subLessons,
-  //     lesson_name: lessonInput.get("lesson_name"),
-  //   };
-  //   setLesson(updatedLesson);
-  //   onSubmit(updatedLesson);
-  // }
+  const router = useRouter();
 
   const handleLessonNameChange = (e) => {
     const input = e.target.value;
+    const validateInput = validateLessonInput(input);
+    setValidatedLesson(validateInput);
+
     const updatedLesson = { ...lesson, lesson_name: input };
     setLesson(updatedLesson);
-    // const updatedLessons = [...course.lessons, lesson];
-    // setCourse({ ...course, lessons: updatedLessons });
   };
 
   const handleAddSubLesson = (e) => {
     e.preventDefault();
     setSubLessons([...subLessons, { name: "", video: null }]);
   };
-  // console.log("lesson", lesson);
-  // console.log("subLessons", subLessons);
-  // console.log("course", course);
 
   const handleLessonSubmit = (e) => {
     e.preventDefault();
+
+    const validateLessonName = validateLessonInput(lesson.lesson_name);
+    setValidatedLesson(validateLessonName);
+
+    const validatedSubLessons = validateSubLessons(subLessons);
+
+    const hasInvalidSubLesson = validatedSubLessons.some(
+      (item) => item.name !== "" || item.video !== ""
+    );
+
+    if (Object.keys(validateLessonName).length > 0 || hasInvalidSubLesson) {
+      alert("Please complete all required fields before creating the lesson.");
+      return;
+    }
+
     const updatedLesson = { ...lesson, subLessons: subLessons };
     const updatedLessons = course.lessons.push(updatedLesson);
     const updatedCourse = { ...course, lesson: updatedLessons };
@@ -54,11 +58,18 @@ export default function AdminLessonForm() {
     <div className="m-[40px_40px_70px_40px] p-[40px_100px_60px_100px] rounded-2xl bg-white">
       <form id="add-lesson" onSubmit={handleLessonSubmit}>
         <div className="flex flex-col gap-1 mb-10">
-          <p>Lesson Name *</p>
+          <div className="flex gap-2">
+            <p>Lesson Name *</p>
+            {validatedLesson && (
+              <p className="text-red-500"> {validatedLesson.name}</p>
+            )}
+          </div>
+
           <input
             name="lesson_name"
             type="text"
             className="w-full h-12 p-3 border rounded-lg outline-none"
+            placeholder="please enter lesson name"
             onChange={(e) => {
               handleLessonNameChange(e);
             }}

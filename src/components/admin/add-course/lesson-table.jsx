@@ -78,7 +78,7 @@ export function AdminLessonList() {
                 </Td>
                 <Td textAlign={"center"}>{index + 1}</Td>
                 <Td paddingX={3}>{item.lesson_name}</Td>
-                <Td isNumeric paddingX={3}>
+                <Td isNumeric paddingX={10}>
                   {item.subLessons.length}
                 </Td>
                 <Td>

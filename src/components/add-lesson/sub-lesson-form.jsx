@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { useState, useContext } from "react";
+import { useState } from "react";
+import { validateSubLessons } from "./form-validate";
 
 export default function AdminSubLessonForm({
   index,
@@ -7,30 +8,36 @@ export default function AdminSubLessonForm({
   subLessons,
   setSubLessons,
 }) {
+  const [localValidate, setLocalValidate] = useState([{ name: "" }]);
+
   const handleDeleteSubLesson = (event, index) => {
+    event.preventDefault();
     if (subLessons.length > 1) {
       setSubLessons(subLessons.filter((_, i) => i !== index));
     }
-    event.preventDefault();
   };
 
   const handleSubLessonChange = (index, field, value) => {
     const newSubLessons = [...subLessons];
     newSubLessons[index][field] = value;
     setSubLessons(newSubLessons);
+    validateInput(newSubLessons);
   };
 
   const handleFileChange = (event, index) => {
     const updatedSubLessons = [...subLessons];
     updatedSubLessons[index].video = event.target.files[0];
     setSubLessons(updatedSubLessons);
+    console.log("files", updatedSubLessons);
     event.target.value = "";
+    validateInput(updatedSubLessons);
   };
 
   const handleRemoveFile = (index) => {
     const updatedSubLessons = [...subLessons];
     updatedSubLessons[index].video = null;
     setSubLessons(updatedSubLessons);
+    validateInput(updatedSubLessons);
   };
 
   let subLessonDeleteButton;
@@ -39,6 +46,11 @@ export default function AdminSubLessonForm({
   } else {
     subLessonDeleteButton = "font-bold text-[#C8CCDB] cursor-not-allowed";
   }
+
+  const validateInput = (subLesson) => {
+    const validatedSubLessons = validateSubLessons(subLesson);
+    setLocalValidate(validatedSubLessons);
+  };
 
   return (
     <div className="rounded-lg p-[24px_16px_24px_16px] bg-[#F6F7FC] border border-[#E4E6ED]">
@@ -50,11 +62,17 @@ export default function AdminSubLessonForm({
           </div>
           <div className="flex flex-col w-[60%] gap-6">
             <div className="flex flex-col gap-1">
-              <p>Sub-lesson name *</p>
+              <div className="flex gap-2 flex-wrap">
+                <p>Sub-lesson name *</p>
+                {localValidate[index] && (
+                  <p className="text-red-500">{localValidate[index].name}</p>
+                )}
+              </div>
               <input
                 name="lesson_name"
                 type="text"
                 className="w-full h-12 p-3 border rounded-lg outline-none"
+                placeholder="Please enter sub-lesson"
                 value={subLesson.name}
                 onChange={(e) =>
                   handleSubLessonChange(index, "name", e.target.value)
@@ -62,7 +80,12 @@ export default function AdminSubLessonForm({
               />
             </div>
             <div className="flex flex-col gap-1">
-              <p>Video *</p>
+              <div className="flex gap-2 flex-wrap">
+                <p>Video *</p>
+                {localValidate[index] && (
+                  <p className="text-red-500">{localValidate[index].video}</p>
+                )}
+              </div>
               {subLessons[index].video !== null ? (
                 <div className="sublesson-vdo-preview w-[160px] h-[160px] relative border rounded-lg bg-[#F1F2F6] flex justify-center items-center">
                   <video

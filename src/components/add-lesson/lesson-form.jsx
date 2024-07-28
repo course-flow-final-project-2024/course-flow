@@ -44,7 +44,6 @@ export default function AdminLessonForm() {
   const handleLessonSubmit = (e) => {
     e.preventDefault();
     const updatedLesson = { ...lesson, subLessons: subLessons };
-    console.log("submit", updatedLesson);
     const updatedLessons = course.lessons.push(updatedLesson);
     const updatedCourse = { ...course, lesson: updatedLessons };
     setCourse(updatedCourse);

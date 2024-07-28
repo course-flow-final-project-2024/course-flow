@@ -6,8 +6,6 @@ export default function AddCourseInput({ errors }) {
   const inputStyle =
     "border border-[#D6D9E4] p-3 pr-4 rounded-[8px] outline-none h-auto";
 
-  console.log(course);
-
   return (
     <>
       <div className="flex flex-col gap-1 w-full">
@@ -45,7 +43,7 @@ export default function AddCourseInput({ errors }) {
             step="0.01"
             value={course.price}
             onChange={(e) => {
-              const input = e.target.value;
+              const input = Number(e.target.value);
               setCourse({ ...course, price: input });
             }}
           />
@@ -64,7 +62,7 @@ export default function AddCourseInput({ errors }) {
             className={inputStyle}
             value={course.duration}
             onChange={(e) => {
-              const input = e.target.value;
+              const input = Number(e.target.value);
               setCourse({ ...course, duration: input });
             }}
           />

@@ -22,7 +22,6 @@ export function AdminLessonList() {
 
   const lessons = course.lessons;
 
-  console.log("table", course);
   return (
     <TableContainer rounded={"8px"} marginBottom={"30px"}>
       <Table variant={"simple"} width={"full"}>

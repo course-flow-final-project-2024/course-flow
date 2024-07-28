@@ -7,7 +7,6 @@ import AddCourseInput from "./add-course-input";
 import FileUpload from "./file-upload";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
-import { Flashlight } from "lucide-react";
 
 const AdminAddCourseForm = ({ setIsLoading }) => {
   const { course, setCourse } = useContext(AddCourseContext);
@@ -38,17 +37,6 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
   const onSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    console.log("1", course);
-    // const formData = new FormData(event.target);
-    // const updatedCourse = {
-    //   ...course,
-    //   course_name: formData.get("course_name"),
-    //   price: parseFloat(formData.get("price")),
-    //   duration: parseFloat(formData.get("duration")),
-    //   summary: formData.get("summary"),
-    //   detail: formData.get("detail"),
-    // };
-    // setCourse(updatedCourse);
 
     const validateError = validateFormInput(course);
 
@@ -85,9 +73,27 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
       };
       setCourse(updatedWithUrl);
 
-      const result = await axios.post(`/api/courses/post`, updatedWithUrl);
+      const courseUplaodedResult = await axios.post(
+        `/api/courses/post`,
+        updatedWithUrl
+      );
 
-      if (result.status === 200) {
+      if (courseUplaodedResult.status === 200) {
+        const courseId = courseUplaodedResult.data.data.course_id;
+        const lessons = { ...course, course_id: courseId };
+
+        const lessonsUplodedResult = await axios.post(
+          `/api/lessons/post`,
+          lessons
+        );
+        console.log("lesson result", lessonsUplodedResult.data.data);
+
+        // if (lessonsUplodedResult.status === 200) {
+        //   const uploadedLesson = (lessonsUplodedResult.data.data =
+        //     course.lessons.map((item) => {
+        //       if(item.lesson_name === uploadedLesson.lesson)
+        //     }));
+        // }
         router.push("/admin/courses");
         setIsLoading(false);
       }
@@ -100,9 +106,11 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
     }
   };
 
+  console.log("course", course);
+
   return (
     <div className="p-10">
-      <div className=" bg-white min-w-[1120px] w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">
+      <div className=" bg-white  w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">
         <form
           id="add-course"
           onSubmit={onSubmit}

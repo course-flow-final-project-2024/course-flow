@@ -1,11 +1,10 @@
 import { AddCourseContext } from "@/pages/_app";
+import { FileQuestion } from "lucide-react";
 import { useContext, useState } from "react";
 
 export default function FileUpload({ errors }) {
   const { course, setCourse } = useContext(AddCourseContext);
-  const [files, setFiles] = useState({
-    ...course,
-  });
+  const [files, setFiles] = useState({});
 
   const handleFileChange = (event, fileType) => {
     const file = event.target.files[0];

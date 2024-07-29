@@ -7,7 +7,6 @@ import AddCourseInput from "./add-course-input";
 import FileUpload from "./file-upload";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
-import { promise } from "zod";
 
 const AdminAddCourseForm = ({ setIsLoading }) => {
   const { course, setCourse } = useContext(AddCourseContext);

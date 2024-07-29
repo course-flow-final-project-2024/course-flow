@@ -1,8 +1,6 @@
 import { AdminLessonList } from "@/components/admin/add-course/lesson-table";
 import Button from "@/utils/button";
-import Link from "next/link";
-import { useContext, useEffect } from "react";
-import axios from "axios";
+import { useContext } from "react";
 import { AddCourseContext } from "@/pages/_app";
 import { useRouter } from "next/router";
 

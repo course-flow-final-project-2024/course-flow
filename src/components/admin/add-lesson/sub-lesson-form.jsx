@@ -28,7 +28,6 @@ export default function AdminSubLessonForm({
     const updatedSubLessons = [...subLessons];
     updatedSubLessons[index].video = event.target.files[0];
     setSubLessons(updatedSubLessons);
-    console.log("files", updatedSubLessons);
     event.target.value = "";
     validateInput(updatedSubLessons);
   };

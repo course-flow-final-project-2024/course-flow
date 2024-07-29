@@ -43,8 +43,12 @@ export default function AddCourseInput({ errors }) {
             step="0.01"
             value={course.price}
             onChange={(e) => {
-              const input = Number(e.target.value);
-              setCourse({ ...course, price: input });
+              if (!e.target.value) {
+                setCourse({ ...course, price: "" });
+              } else {
+                const input = Number(e.target.value);
+                setCourse({ ...course, price: input });
+              }
             }}
           />
         </div>
@@ -62,8 +66,12 @@ export default function AddCourseInput({ errors }) {
             className={inputStyle}
             value={course.duration}
             onChange={(e) => {
-              const input = Number(e.target.value);
-              setCourse({ ...course, duration: input });
+              if (!e.target.value) {
+                setCourse({ ...course, duration: "" });
+              } else {
+                const input = Number(e.target.value);
+                setCourse({ ...course, duration: input });
+              }
             }}
           />
         </div>

@@ -1,26 +1,36 @@
 import { AddCourseContext } from "@/pages/_app";
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 
 export default function FileUpload({ errors }) {
   const { course, setCourse } = useContext(AddCourseContext);
-  const [files, setFiles] = useState({});
+
+  useEffect(() => {
+    if (!course.files) {
+      setCourse({
+        ...course,
+        files: { course_image: null, video_trailer: null, attach_file: null },
+      });
+    }
+  }, []);
 
   const handleFileChange = (event, fileType) => {
     const file = event.target.files[0];
-    const updatedCourse = { ...course, [fileType]: file };
+    const updatedCourse = {
+      ...course,
+      [fileType]: file,
+      files: { ...course.files, [fileType]: file },
+    };
     setCourse(updatedCourse);
-    const updatedFile = { ...files, [fileType]: file };
-    setFiles(updatedFile);
     event.target.value = "";
   };
 
   const handleRemoveFile = (fileType) => {
-    const updatedCourse = { ...course };
+    const updatedCourse = {
+      ...course,
+    };
     delete updatedCourse[fileType];
+    delete updatedCourse.files[fileType];
     setCourse(updatedCourse);
-    const updatedFiles = { ...files };
-    delete updatedFiles[fileType];
-    setFiles(updatedFiles);
   };
 
   return (
@@ -40,14 +50,14 @@ export default function FileUpload({ errors }) {
           hidden
           onChange={(event) => handleFileChange(event, "course_image")}
         />
-        {files.course_image ? (
+        {course.files?.course_image ? (
           <div
             className="image-preview w-60
               h-60 relative flex justify-center items-center rounded-[8px] bg-[#F6F7FC] overflow-hidden"
           >
             <img
-              src={URL.createObjectURL(files.course_image)}
-              alt={files.course_image.name}
+              src={URL.createObjectURL(course.files.course_image)}
+              alt={course.files.course_image.name}
             />
             <button
               className="rounded-full bg-[#9B2FAC] w-4 h-4 text-center text-white text-[8px]  top-[6px] right-[6px] absolute"
@@ -85,14 +95,14 @@ export default function FileUpload({ errors }) {
           hidden
           onChange={(event) => handleFileChange(event, "video_trailer")}
         />
-        {files.video_trailer ? (
+        {course.files?.video_trailer ? (
           <div
             className="trailer-preview w-60
                 h-60 relative bg-[#F6F7FC] flex justify-center items-center rounded-[8px]"
           >
             <video
               controls
-              src={URL.createObjectURL(files.video_trailer)}
+              src={URL.createObjectURL(course.files.video_trailer)}
               type="video/mp4"
               className="h-full w-full rounded-2xl"
             >
@@ -129,9 +139,9 @@ export default function FileUpload({ errors }) {
           onChange={(event) => handleFileChange(event, "attach_file")}
           hidden
         />
-        {files.attach_file ? (
+        {course.files?.attach_file ? (
           <div className="ttachment-preview w-fit h-10 relative bg-[#F6F7FC] flex justify-center items-center rounded-[8px] px-3 pr-10">
-            <p className="text-xs">{files.attach_file.name}</p>
+            <p className="text-xs">{course.files.attach_file.name}</p>
             <button
               className="rounded-full bg-[#9B2FAC] w-4 h-4 text-center text-white text-[8px]  top-[6px] right-[6px] absolute"
               onClick={() => {

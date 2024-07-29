@@ -1,21 +1,23 @@
 import AdminSidebar from "@/components/admin/sidebar.jsx";
 import AdminCreatingHeader from "@/components/admin/header/creating-page";
 import { AdminLessonSection } from "@/components/admin/add-course/section-lesson";
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import AdminAddCourseForm from "@/components/admin/add-course/add-course-form";
 import { Spinner } from "@chakra-ui/react";
+import { AddCourseContext } from "@/pages/_app";
 
 export const LessonDataContext = createContext();
 
 export default function AddNewCourse() {
-  const [lesson, setLesson] = useState([]);
+  const { course, setCourse } = useContext(AddCourseContext);
+
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <LessonDataContext.Provider value={{ lesson, setLesson }}>
+    <>
       {isLoading ? (
         <>
-          <div className="flex flex-col justify-center items-center gap-10 w-full min-h-screen bg-white opacity-90 absolute z-10">
+          <div className="flex flex-col justify-start items-center gap-10 w-full min-h-screen h-full bg-white opacity-90 absolute z-10">
             <Spinner
               thickness="4px"
               speed="0.9s"
@@ -23,6 +25,7 @@ export default function AddNewCourse() {
               color="blue.500"
               width="50px"
               height="50px"
+              marginTop="300px"
             />
             <p className="opacity-100">Course is being created...</p>
           </div>
@@ -34,7 +37,7 @@ export default function AddNewCourse() {
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
               />
-              <AdminLessonSection lesson={lesson} setLesson={setLesson} />
+              <AdminLessonSection />
             </div>
           </div>
         </>
@@ -47,10 +50,10 @@ export default function AddNewCourse() {
               isLoading={isLoading}
               setIsLoading={setIsLoading}
             />
-            <AdminLessonSection lesson={lesson} setLesson={setLesson} />
+            <AdminLessonSection />
           </div>
         </div>
       )}
-    </LessonDataContext.Provider>
+    </>
   );
 }

@@ -1,6 +1,11 @@
+import { AddCourseContext } from "@/pages/_app";
+import { useContext } from "react";
+
 export default function AddCourseInput({ errors }) {
+  const { course, setCourse } = useContext(AddCourseContext);
   const inputStyle =
     "border border-[#D6D9E4] p-3 pr-4 rounded-[8px] outline-none h-auto";
+
   return (
     <>
       <div className="flex flex-col gap-1 w-full">
@@ -15,6 +20,11 @@ export default function AddCourseInput({ errors }) {
           type="text"
           placeholder="Please enter course name"
           className={inputStyle}
+          value={course.course_name}
+          onChange={(e) => {
+            const input = e.target.value;
+            setCourse({ ...course, course_name: input });
+          }}
         />
       </div>
       <div className="flex gap-10">
@@ -31,6 +41,15 @@ export default function AddCourseInput({ errors }) {
             placeholder="Please enter course price"
             className={inputStyle}
             step="0.01"
+            value={course.price}
+            onChange={(e) => {
+              if (!e.target.value) {
+                setCourse({ ...course, price: "" });
+              } else {
+                const input = Number(e.target.value);
+                setCourse({ ...course, price: input });
+              }
+            }}
           />
         </div>
         <div className="flex grow flex-col gap-1 w-full">
@@ -45,6 +64,15 @@ export default function AddCourseInput({ errors }) {
             type="number"
             placeholder="Please enter total learning time"
             className={inputStyle}
+            value={course.duration}
+            onChange={(e) => {
+              if (!e.target.value) {
+                setCourse({ ...course, duration: "" });
+              } else {
+                const input = Number(e.target.value);
+                setCourse({ ...course, duration: input });
+              }
+            }}
           />
         </div>
       </div>
@@ -61,6 +89,11 @@ export default function AddCourseInput({ errors }) {
           placeholder="Please enter course summary"
           rows={2}
           className={inputStyle}
+          value={course.summary}
+          onChange={(e) => {
+            const input = e.target.value;
+            setCourse({ ...course, summary: input });
+          }}
         />
       </div>
       <div className="flex flex-col gap-1 w-full">
@@ -76,6 +109,11 @@ export default function AddCourseInput({ errors }) {
           placeholder="Please enter course detail"
           rows={7}
           className={inputStyle}
+          value={course.detail}
+          onChange={(e) => {
+            const input = e.target.value;
+            setCourse({ ...course, detail: input });
+          }}
         />
       </div>
     </>

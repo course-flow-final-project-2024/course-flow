@@ -1,24 +1,36 @@
-import { useState } from "react";
+import { AddCourseContext } from "@/pages/_app";
+import { useContext, useEffect } from "react";
 
-export default function FileUpload({ onFilesChange, errors }) {
-  const [files, setFiles] = useState({
-    coverImage: null,
-    trailer: null,
-    attachment: null,
-  });
+export default function FileUpload({ errors }) {
+  const { course, setCourse } = useContext(AddCourseContext);
+
+  useEffect(() => {
+    if (!course.files) {
+      setCourse({
+        ...course,
+        files: { course_image: null, video_trailer: null, attach_file: null },
+      });
+    }
+  }, []);
 
   const handleFileChange = (event, fileType) => {
-    const updatedFiles = { ...files, [fileType]: event.target.files[0] };
-    setFiles(updatedFiles);
-    onFilesChange(updatedFiles);
+    const file = event.target.files[0];
+    const updatedCourse = {
+      ...course,
+      [fileType]: file,
+      files: { ...course.files, [fileType]: file },
+    };
+    setCourse(updatedCourse);
     event.target.value = "";
   };
 
   const handleRemoveFile = (fileType) => {
-    const updatedFiles = { ...files };
-    delete updatedFiles[fileType];
-    setFiles(updatedFiles);
-    onFilesChange(updatedFiles);
+    const updatedCourse = {
+      ...course,
+    };
+    delete updatedCourse[fileType];
+    delete updatedCourse.files[fileType];
+    setCourse(updatedCourse);
   };
 
   return (
@@ -36,21 +48,21 @@ export default function FileUpload({ onFilesChange, errors }) {
           type="file"
           accept="image/*"
           hidden
-          onChange={(event) => handleFileChange(event, "coverImage")}
+          onChange={(event) => handleFileChange(event, "course_image")}
         />
-        {files.coverImage ? (
+        {course.files?.course_image ? (
           <div
             className="image-preview w-60
               h-60 relative flex justify-center items-center rounded-[8px] bg-[#F6F7FC] overflow-hidden"
           >
             <img
-              src={URL.createObjectURL(files.coverImage)}
-              alt={files.coverImage.name}
+              src={URL.createObjectURL(course.files.course_image)}
+              alt={course.files.course_image.name}
             />
             <button
               className="rounded-full bg-[#9B2FAC] w-4 h-4 text-center text-white text-[8px]  top-[6px] right-[6px] absolute"
               onClick={() => {
-                handleRemoveFile("coverImage");
+                handleRemoveFile("course_image");
               }}
               aria-label="Remove cover image"
             >
@@ -71,7 +83,7 @@ export default function FileUpload({ onFilesChange, errors }) {
       <div className="trailer flex flex-col gap-1 w-full">
         <div className="flex gap-2">
           <label htmlFor="trailer-upload">Video Trailer *</label>
-          {errors.trailer && (
+          {errors?.trailer && (
             <span className="text-red-500">{errors.trailer}</span>
           )}
         </div>
@@ -81,16 +93,16 @@ export default function FileUpload({ onFilesChange, errors }) {
           type="file"
           accept="video/*"
           hidden
-          onChange={(event) => handleFileChange(event, "trailer")}
+          onChange={(event) => handleFileChange(event, "video_trailer")}
         />
-        {files.trailer ? (
+        {course.files?.video_trailer ? (
           <div
             className="trailer-preview w-60
                 h-60 relative bg-[#F6F7FC] flex justify-center items-center rounded-[8px]"
           >
             <video
               controls
-              src={URL.createObjectURL(files.trailer)}
+              src={URL.createObjectURL(course.files.video_trailer)}
               type="video/mp4"
               className="h-full w-full rounded-2xl"
             >
@@ -99,7 +111,7 @@ export default function FileUpload({ onFilesChange, errors }) {
             <button
               className="rounded-full bg-[#9B2FAC] w-4 h-4 text-center text-white text-[8px]  top-[6px] right-[6px] absolute"
               onClick={() => {
-                handleRemoveFile("trailer");
+                handleRemoveFile("video_trailer");
               }}
               aria-label="Remove cover image"
             >
@@ -124,16 +136,16 @@ export default function FileUpload({ onFilesChange, errors }) {
           name="attachment"
           type="file"
           accept="*/*"
-          onChange={(event) => handleFileChange(event, "attachment")}
+          onChange={(event) => handleFileChange(event, "attach_file")}
           hidden
         />
-        {files.attachment ? (
+        {course.files?.attach_file ? (
           <div className="ttachment-preview w-fit h-10 relative bg-[#F6F7FC] flex justify-center items-center rounded-[8px] px-3 pr-10">
-            <p className="text-xs">{files.attachment.name}</p>
+            <p className="text-xs">{course.files.attach_file.name}</p>
             <button
               className="rounded-full bg-[#9B2FAC] w-4 h-4 text-center text-white text-[8px]  top-[6px] right-[6px] absolute"
               onClick={() => {
-                handleRemoveFile("attachment");
+                handleRemoveFile("attach_file");
               }}
               aria-label="Remove attachments"
             >

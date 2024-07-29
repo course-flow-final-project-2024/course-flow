@@ -10,12 +10,17 @@ import {
   TableContainer,
   Flex,
 } from "@chakra-ui/react";
+import { useContext } from "react";
+import { AddCourseContext } from "@/pages/_app";
 
-export function AdminLessonList({ lesson }) {
+export function AdminLessonList() {
+  const { course } = useContext(AddCourseContext);
   const handleDelete = () => {
     console.log("Deleted");
     return;
   };
+
+  const lessons = course.lessons;
 
   return (
     <TableContainer rounded={"8px"} marginBottom={"30px"}>
@@ -46,13 +51,13 @@ export function AdminLessonList({ lesson }) {
             </Th>
           </Tr>
         </Thead>
-        {lesson.map((item, index) => {
+        {lessons.map((item, index) => {
           return (
             <Tbody
               fontSize={16}
               textColor={"#000"}
               backgroundColor={"#fff"}
-              key={index + item.lesson_title}
+              key={index + item.lesson_name}
             >
               <Tr height={"88px"} borderBottom={"1px"} borderColor={"#F1F2F6"}>
                 <Td>
@@ -72,9 +77,9 @@ export function AdminLessonList({ lesson }) {
                   </Flex>
                 </Td>
                 <Td textAlign={"center"}>{index + 1}</Td>
-                <Td paddingX={3}>{item.lesson_title}</Td>
-                <Td isNumeric paddingX={3}>
-                  {item.sub_lessons[0].count}
+                <Td paddingX={3}>{item.lesson_name}</Td>
+                <Td isNumeric paddingX={10}>
+                  {item.subLessons.length}
                 </Td>
                 <Td>
                   <Flex

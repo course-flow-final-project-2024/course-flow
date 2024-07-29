@@ -27,7 +27,6 @@ export default async function handler(req, res) {
 
   try {
     const validatedData = schema.safeParse(req.body);
-
     const { data, error } = await supabase
       .from("courses")
       .insert([
@@ -44,6 +43,7 @@ export default async function handler(req, res) {
       console.error(error);
       return res.status(500).json({
         message: "Server could not create course due to database connection",
+        error: error,
       });
     }
 

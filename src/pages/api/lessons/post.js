@@ -1,4 +1,11 @@
 import { supabase } from "../../../../lib/supabase";
+import { z } from "zod";
+
+const schema = z.object({
+  lesson_name: z
+    .string()
+    .max(60, { message: "Lesson name should be at most 60 characters" }),
+});
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -11,11 +18,12 @@ export default async function handler(req, res) {
 
     const results = await Promise.all(
       lessons.map(async (item) => {
+        const validatedData = schema.safeParse(item);
         const { data, error } = await supabase
           .from("lessons")
           .insert([
             {
-              lesson_title: item.lesson_name,
+              lesson_title: validatedData.data.lesson_name,
               created_at: new Date(),
               updated_at: new Date(),
               user_id: 1,

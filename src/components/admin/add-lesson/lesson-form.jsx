@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import Button from "@/utils/button";
-import AdminSubLessonForm from "@/components/add-lesson/sub-lesson-form";
+import AdminSubLessonForm from "@/components/admin/add-lesson/sub-lesson-form";
 import { AddCourseContext } from "@/pages/_app";
 import { useRouter } from "next/router";
 import { validateLessonInput, validateSubLessons } from "./form-validate";

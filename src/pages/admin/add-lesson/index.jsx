@@ -1,7 +1,7 @@
 import AdminSidebar from "@/components/admin/sidebar";
 import React, { useState, useContext } from "react";
 import AdminLessonHeader from "@/components/admin/header/creating-lesson-page";
-import AdminLessonForm from "@/components/add-lesson/lesson-form";
+import AdminLessonForm from "@/components/admin/add-lesson/lesson-form";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
 

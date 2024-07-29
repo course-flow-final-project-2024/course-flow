@@ -10,20 +10,38 @@ import {
   TableContainer,
   Flex,
 } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AddCourseContext } from "@/pages/_app";
+import axios from "axios";
+import CommonModalBox from "@/utils/admin-common-modal";
 
-export function AdminLessonList() {
+export function AdminEditLessonList() {
   const { course, setCourse } = useContext(AddCourseContext);
+  const [open, setOpen] = useState(false);
+  const lessons = course.lessons;
 
-  const handleDelete = async (index) => {
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleDelete = async (id, index) => {
+    // try {
+    //   await axios.delete(`/api/lessons/delete`, {
+    //     data: { lesson_id: id },
+    //   });
     const updatedCourse = { ...course };
     updatedCourse.lessons.splice(index, 1);
     setCourse(updatedCourse);
     handleClose();
+    // } catch (error) {
+    //   return {
+    //     message: "Server could not delete lesson due to database connection",
+    //   };
+    // }
   };
-
-  const lessons = course.lessons;
 
   return (
     <TableContainer rounded={"8px"} marginBottom={"30px"}>
@@ -60,7 +78,7 @@ export function AdminLessonList() {
               fontSize={16}
               textColor={"#000"}
               backgroundColor={"#fff"}
-              key={index + item.lesson_name}
+              key={index + item.lesson_title}
             >
               <Tr height={"88px"} borderBottom={"1px"} borderColor={"#F1F2F6"}>
                 <Td>
@@ -80,9 +98,9 @@ export function AdminLessonList() {
                   </Flex>
                 </Td>
                 <Td textAlign={"center"}>{index + 1}</Td>
-                <Td paddingX={3}>{item.lesson_name}</Td>
+                <Td paddingX={3}>{item.lesson_title}</Td>
                 <Td isNumeric paddingX={10}>
-                  {item.subLessons.length}
+                  {item.sub_lessons.length}
                 </Td>
                 <Td>
                   <Flex
@@ -96,11 +114,25 @@ export function AdminLessonList() {
                       width={24}
                       height={24}
                       onClick={() => {
-                        handleDelete(index);
+                        handleOpen();
                       }}
                       className=" cursor-pointer"
                     />
-                    <Link href="/">
+                    <CommonModalBox
+                      open={open}
+                      AlertMessage="Are you sure you want to delete this lesson?"
+                      leftText="Yes, I want to delete this lesson"
+                      rightText="No, keep it"
+                      leftOnClick={() => {
+                        console.log(item.lesson_id, index);
+                        handleDelete(item.lesson_id);
+                      }}
+                      rightOnClick={handleClose}
+                      crossClick={handleClose}
+                    />
+                    <Link
+                      href={`/admin/courses/${course.course_id}/lesson/${item.lesson_id}`}
+                    >
                       <Image
                         src="/icons/edit.svg"
                         alt="edit Icon"

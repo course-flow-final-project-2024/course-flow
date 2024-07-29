@@ -5,7 +5,7 @@ import axios from "axios";
 import AdminEditingHeader from "@/components/admin/header/editing-page";
 import AdminSidebar from "@/components/admin/sidebar";
 import AdminEditCourseForm from "@/components/admin/edit-course/edit-course-form";
-import { AdminLessonSection } from "@/components/admin/add-course/section-lesson";
+import { AdminEditLessonSection } from "@/components/admin/edit-course/section-lesson";
 
 export default function EditCourse() {
   const router = useRouter();
@@ -45,8 +45,8 @@ export default function EditCourse() {
 
           <div className="bg-[#F6F7FC] p-10 w-full h-full">
             <AdminEditCourseForm />
-            {/* <AdminLessonSection /> */}
           </div>
+          <AdminEditLessonSection />
         </div>
       </div>
     </>

@@ -104,7 +104,7 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
                 item.subLessons.map(async (item) => {
                   const subLessonUrl = await uploadFile(
                     item.video,
-                    "sub-lessons"
+                    "sub_lessons"
                   );
                   return {
                     ...item,

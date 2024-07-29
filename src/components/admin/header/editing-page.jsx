@@ -5,7 +5,7 @@ import Image from "next/image";
 const AdminEditingHeader = (props) => {
   const router = useRouter();
 
-  const handleOnClick = () => {
+  const handleCancelClick = () => {
     router.push("/admin/courses");
   };
 
@@ -16,12 +16,14 @@ const AdminEditingHeader = (props) => {
         width={24}
         height={24}
         alt="arrow-back-icon"
+        onClick={handleCancelClick}
+        className=" cursor-pointer"
       />
       <div className="flex justify-start items-center gap-[8px] grow">
         <h3 className="font-medium text-[24px] text-[#9AA1B9] ">
           {props.section}
         </h3>
-        <h3 className=" font-medium text-[24px] text-black tracking-[-2%] min-w-[300px]">
+        <h3 className="font-medium text-[24px] text-black tracking-[-2%] min-w-[300px]">
           `{props.courseTitle}`
         </h3>
       </div>
@@ -30,7 +32,7 @@ const AdminEditingHeader = (props) => {
           text="Cancel"
           style="secondary"
           height="60px"
-          onClick={handleOnClick}
+          onClick={handleCancelClick}
         />
         <Button
           text={props.action}

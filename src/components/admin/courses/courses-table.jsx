@@ -203,7 +203,7 @@ const AdminCoursesList = () => {
                         rightOnClick={handleClose}
                         crossClick={handleClose}
                       />
-                      <Link href={`/admin/courses/edit/${item.course_id}`}>
+                      <Link href={`/admin/courses/${item.course_id}`}>
                         <Image src="/icons/edit.svg" alt="edit icon" />
                       </Link>
                     </Flex>

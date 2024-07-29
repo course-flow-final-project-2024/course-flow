@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { useState } from "react";
-import { validateSubLessons } from "./form-validate";
+import { validateSubLessons } from "../add-lesson/form-validate";
 
-export default function AdminSubLessonForm({
+export default function AdminEditSubLessonForm({
   index,
   subLesson,
   subLessons,
@@ -72,7 +72,7 @@ export default function AdminSubLessonForm({
                 type="text"
                 className="w-full h-12 p-3 border rounded-lg outline-none"
                 placeholder="Please enter sub-lesson"
-                value={subLesson.name}
+                value={subLesson.sub_lesson_title}
                 onChange={(e) =>
                   handleSubLessonChange(index, "name", e.target.value)
                 }
@@ -89,7 +89,7 @@ export default function AdminSubLessonForm({
                 <div className="sublesson-vdo-preview w-[160px] h-[160px] relative border rounded-lg bg-[#F1F2F6] flex justify-center items-center">
                   <video
                     controls
-                    src={URL.createObjectURL(subLessons[index].video)}
+                    src={subLesson.sub_lesson_video}
                     type="video/mp4"
                     className="h-full w-full rounded-2xl"
                   >

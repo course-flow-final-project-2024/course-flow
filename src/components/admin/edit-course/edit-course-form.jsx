@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState, useContext } from "react";
 // import { supabase } from "../../../../lib/supabase";
 // import { v4 as uuidv4 } from "uuid";

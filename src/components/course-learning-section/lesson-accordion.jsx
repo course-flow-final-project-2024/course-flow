@@ -31,7 +31,7 @@ function LessonAccordion() {
   }
   return (
     <div className="w-full h-max sm:max-h-[900px] sm:overflow-y-scroll flex flex-col gap-2 ">
-      <Accordion defaultIndex={[currentLessonIndex]} allowMultiple>
+      <Accordion index={[currentLessonIndex]} allowMultiple>
         {lessonData.map((lesson, index) => (
           <AccordionItem key={lesson.lesson_id}>
             <h2>

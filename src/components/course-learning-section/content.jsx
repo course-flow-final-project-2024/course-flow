@@ -21,13 +21,12 @@ function CoursesContent() {
         {currentSubLesson.sub_lesson_title}
       </h3>
       <div className="video_trailer w-full">
-        <Image
-          src="/course-detail/mock-video.svg"
-          // src={currentSubLesson.sub_lesson_video}
+        <video
+          src={currentSubLesson.sub_lesson_video}
           width={343}
           height={214}
-          alt={currentSubLesson.sub_lesson_title}
-          className="object-cover w-full"
+          controls
+          className="object-cover w-full rounded-lg"
         />
       </div>
       <div className="Assgiment_past h-[260px] border-[1px] border-black"></div>

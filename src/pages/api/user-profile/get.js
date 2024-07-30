@@ -4,9 +4,24 @@ export default async function getProfile(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-  const payload = await validationToken(req, res);
+
+  const { token } = req.query;
+
+  if (!token) {
+    return res.status(400).json({ error: "Not authorized" });
+  }
 
   try {
+    const { data: session, error: sessionError } = await supabase
+      .from("loginsession")
+      .select("user_email")
+      .eq("sessionId", token)
+      .single();
+
+    if (sessionError) {
+      throw new Error(sessionError);
+    }
+
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("*")
@@ -29,7 +44,9 @@ export default async function getProfile(req, res) {
       },
     });
   } catch (error) {
-    console.error("Error signing in:", error.message);
+   
+    console.error("Error signing in:", util.inspect(error.message, {showHidden: false, depth: null, colors: true}));
+
     return res.status(500).json({ error: "Failed to sign in" });
   }
 }

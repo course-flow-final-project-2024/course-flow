@@ -36,10 +36,12 @@
     "lucide-react": "^0.407.0",
     "next": "^14.2.5",
     "next-auth": "^4.24.7",
+    "nodemailer": "^6.9.14",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
+    "uuidv4": "^6.2.13",
     "zod": "^3.23.8"
   },
   "devDependencies": {

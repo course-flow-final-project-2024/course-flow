@@ -10,6 +10,8 @@ function Navbar() {
   const router = useRouter();
   const [username, setUsername] = useState(null);
   const [userImage, setUserImage] = useState(null);
+  const router = useRouter();
+
   const getUserProfile = async (email, auth) => {
     const hasToken = Boolean(localStorage.getItem("token"));
     const hasUserInfo = Boolean(sessionStorage.getItem("user"));

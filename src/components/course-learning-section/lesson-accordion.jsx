@@ -18,6 +18,7 @@ function LessonAccordion() {
     currentLessonIndex,
     currentSubLessonId,
     setCurrentSubLessonIndex,
+    subLessonStatus,
   } = useContext(CoursesDataContext);
 
   const handleOnClick = (id) => {
@@ -26,9 +27,11 @@ function LessonAccordion() {
     );
     setCurrentSubLessonIndex(newIndex);
   };
+
   if (!courseData || courseData.length === 0) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="w-full h-max sm:max-h-[900px] sm:overflow-y-scroll flex flex-col gap-2 ">
       <Accordion index={[currentLessonIndex]} allowMultiple>
@@ -56,31 +59,47 @@ function LessonAccordion() {
               </AccordionButton>
             </h2>
             <AccordionPanel pt={3}>
-              {lesson.sub_lessons.map((subLesson) => (
-                <li
-                  className="list-none "
-                  key={subLesson.sub_lesson_id}
-                  role="button"
-                  onClick={() => handleOnClick(subLesson.sub_lesson_id)}
-                >
-                  <div
-                    className={
-                      subLesson.sub_lesson_id === currentSubLessonId
-                        ? "w-full h-12 px-2 py-3  flex flex-row gap-4 items-center bg-[#F6F7FC]"
-                        : "w-full h-12 px-2 py-3  flex flex-row gap-4 items-center hover:bg-[#F6F7FC]"
-                    }
+              {lesson.sub_lessons.map((subLesson) => {
+                const { isPlaying, isEnded } =
+                  subLessonStatus[subLesson.sub_lesson_id] || {};
+                const defaultStatusImage = StatusImage(
+                  subLesson.user_lessons[0].sub_lesson_status_id
+                );
+
+                let statusImage;
+
+                if (isPlaying) {
+                  statusImage = isEnded ? StatusImage(1) : StatusImage(2);
+                } else {
+                  statusImage = StatusImage(3);
+                }
+
+                return (
+                  <li
+                    className="list-none "
+                    key={subLesson.sub_lesson_id}
+                    role="button"
+                    onClick={() => handleOnClick(subLesson.sub_lesson_id)}
                   >
-                    <span>
-                      {StatusImage(
-                        subLesson.user_lessons[0].sub_lesson_status_id
-                      )}
-                    </span>
-                    <div className="text-base font-normal text-[#646D89] flex items-center">
-                      {subLesson.sub_lesson_title}
+                    <div
+                      className={
+                        subLesson.sub_lesson_id === currentSubLessonId
+                          ? "w-full h-12 px-2 py-3  flex flex-row gap-4 items-center bg-[#F6F7FC]"
+                          : "w-full h-12 px-2 py-3  flex flex-row gap-4 items-center hover:bg-[#F6F7FC]"
+                      }
+                    >
+                      <span>
+                        {subLessonStatus[subLesson.sub_lesson_id]
+                          ? statusImage
+                          : defaultStatusImage}
+                      </span>
+                      <div className="text-base font-normal text-[#646D89] flex items-center">
+                        {subLesson.sub_lesson_title}
+                      </div>
                     </div>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </AccordionPanel>
           </AccordionItem>
         ))}

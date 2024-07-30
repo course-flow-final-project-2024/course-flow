@@ -17,6 +17,29 @@ function CourseLearning() {
   const [currentSubLessonId, setCurrentSubLessonId] = useState(0);
   const [subLessonsLenght, setSubLessonsLenght] = useState(0);
   const [currentSubLessonIndex, setCurrentSubLessonIndex] = useState(0);
+  const [subLessonStatus, setSubLessonStatus] = useState({});
+
+  const updateSubLessonStatus = (subLessonId, status) => {
+    setSubLessonData((prevData) =>
+      prevData.map((subLesson) =>
+        subLesson.sub_lesson_id === subLessonId
+          ? {
+              ...subLesson,
+              user_lessons: [
+                { ...subLesson.user_lessons[0], sub_lesson_status_id: status },
+              ],
+            }
+          : subLesson
+      )
+    );
+  };
+
+  const setSubLessonPlayStatus = (subLessonId, isPlaying, isEnded) => {
+    setSubLessonStatus((prevStatus) => ({
+      ...prevStatus,
+      [subLessonId]: { isPlaying, isEnded },
+    }));
+  };
 
   const valueInContext = {
     courseData,
@@ -30,6 +53,9 @@ function CourseLearning() {
     setCurrentSubLessonId,
     currentSubLessonIndex,
     setCurrentSubLessonIndex,
+    updateSubLessonStatus,
+    subLessonStatus,
+    setSubLessonPlayStatus,
   };
 
   useEffect(() => {

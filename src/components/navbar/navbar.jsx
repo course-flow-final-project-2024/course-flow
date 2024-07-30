@@ -4,10 +4,13 @@ import LoginButton from "./login-button.jsx";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import NavbarDropdown from "./dropdown.jsx";
+import { useRouter } from 'next/router';
 
 function Navbar() {
   const [username, setUsername] = useState(null);
   const [userImage, setUserImage] = useState(null);
+  const router = useRouter();
+
   const getUserProfile = async (email, auth) => {
     const token = JSON.parse(localStorage.getItem("token"));
     if (token === null) {
@@ -15,8 +18,9 @@ function Navbar() {
     }
     try {
       const result = await axios.get("/api/user-profile/get", {
-        params: { token },
+        headers: { Authorization: token },
       });
+      
       setUsername(result.data.user.name);
       setUserImage(result.data.user.image);
       return;
@@ -33,7 +37,7 @@ function Navbar() {
       localStorage.removeItem("token");
       setUsername(null);
       setUserImage(null);
-      return;
+      router.push("/");
     } catch (err) {
       console.log("handle logout err", err);
       return {

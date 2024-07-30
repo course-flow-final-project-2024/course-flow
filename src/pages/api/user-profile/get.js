@@ -1,11 +1,13 @@
-import { supabase } from "../../../../lib/supabase";
+const util = require('util')
+
+import { supabase } from "./../../../../lib/supabase";
 
 export default async function getProfile(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { token } = req.query;
+  const  token  = req.headers.authorization;
 
   if (!token) {
     return res.status(400).json({ error: "Not authorized" });
@@ -17,8 +19,9 @@ export default async function getProfile(req, res) {
       .select("user_email")
       .eq("sessionId", token)
       .single();
-
+      console.log("Session Data:", session);
     if (sessionError) {
+      console.log("sessionError", sessionError)
       throw new Error(sessionError);
     }
 
@@ -44,7 +47,9 @@ export default async function getProfile(req, res) {
       },
     });
   } catch (error) {
-    console.error("Error signing in:", error.message);
+   
+    console.error("Error signing in:", util.inspect(error.message, {showHidden: false, depth: null, colors: true}));
+
     return res.status(500).json({ error: "Failed to sign in" });
   }
 }

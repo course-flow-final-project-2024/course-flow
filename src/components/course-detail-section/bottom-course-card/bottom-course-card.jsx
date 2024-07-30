@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -7,27 +7,12 @@ import {
   AccordionIcon,
   Box,
 } from "@chakra-ui/react";
+import { CourseDetailContext } from "@/pages/courses/[courseId]";
+import CourseCardAddAndRemove from "../buttons-and-modal/buttons";
 
-function BottomCourseCard({ courseData }) {
-  const [isClient, setIsClient] = useState(false);
-  const calculatePriceWithComma = (price) => {
-    const priceStr = (price * 36).toString();
-    if (priceStr.length > 2) {
-      return priceStr.slice(0, 1) + "," + priceStr.slice(1);
-    }
-    return priceStr;
-  };
-
-  const calculatedPrice =
-    courseData.length > 0 && calculatePriceWithComma(courseData[0].price);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return null;
-  }
+function BottomCourseCard() {
+  const context = useContext(CourseDetailContext);
+  const courseData = context.courseData;
 
   return (
     <div className="w-full h-28 relative bg-[#183056] lg:hidden">
@@ -55,16 +40,13 @@ function BottomCourseCard({ courseData }) {
                       </span>
                     </AccordionPanel>
                     <span className="block text-[#646D89] sm:text-lg">
-                      THB {calculatedPrice}
+                      {context.userCourseStatus === "bought"
+                        ? null
+                        : `THB ${context.formattedPrice}`}
                     </span>
                   </div>
-                  <div className="w-full h-10 flex flex-row gap-2">
-                    <button className="grow h-max p-2 rounded-xl bg-white text-orange-500 border-[1.5px] border-orange-500 active:bg-gray-100 hover:text-[#FBAA1C] hover:border-[#FBAA1C] focus:ring-2 ring-violet-300 text-sm font-bold ease-in-out duration-200 ">
-                      Get in Desire Course
-                    </button>
-                    <button className="grow h-max p-2 rounded-xl bg-[#2F5FAC] text-white  active:bg-[#183056] hover:bg-[#5483D0] focus:ring-2 ring-violet-300 text-sm font-bold ease-in-out duration-200">
-                      Subscribe This Course
-                    </button>
+                  <div className="w-full h-10 flex flex-row gap-2 ">
+                    <CourseCardAddAndRemove customStyle="h-max grow-1" />
                   </div>
                 </div>
               </Box>

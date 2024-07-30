@@ -1,17 +1,10 @@
-import CommonModalBox from "@/utils/common-modal";
-import Link from "next/link";
+import { useContext } from "react";
+import { CourseDetailContext } from "@/pages/courses/[courseId]";
+import CourseCardAddAndRemove from "../buttons-and-modal/buttons";
 
-function SideCourseCard({ courseData }) {
-  const calculatePriceWithComma = (price) => {
-    const priceStr = (price * 36).toString();
-    if (priceStr.length > 2) {
-      return priceStr.slice(0, 1) + "," + priceStr.slice(1);
-    }
-    return priceStr;
-  };
-
-  const calculatedPrice =
-    courseData.length > 0 && calculatePriceWithComma(courseData[0].price);
+function SideCourseCard() {
+  const context = useContext(CourseDetailContext);
+  const courseData = context.courseData;
 
   return (
     <div className="w-full h-max shadow-lg py-8 px-6 flex flex-col gap-6 rounded-lg sticky top-10 ">
@@ -25,24 +18,12 @@ function SideCourseCard({ courseData }) {
         </span>
       </div>
       <h3 className="w-full h-max font-medium md:text-xl xl:text-2xl text-[#646D89]">
-        THB {calculatedPrice}
+        {context.userCourseStatus === "bought"
+          ? null
+          : `THB ${context.formattedPrice}`}
       </h3>
-      <div className="border-t-[1px] flex flex-col gap-4 pt-8">
-        <Link
-          href="/login"
-          className="h-max py-4 rounded-xl bg-white text-[#F47E20]  border-[1px] border-orange-500 active:bg-gray-100 hover:text-[#FBAA1C] hover:border-[#FBAA1C] focus:ring-2 ring-violet-300   text-sm font-bold ease-in-out duration-200 text-center"
-        >
-          Get in Desire Course
-        </Link>
-        <CommonModalBox
-          text="Subscribe This Course"
-          AlertMessage="Do you sure to subscribe Service Design Essentials Course?"
-          leftText="No, I don't"
-          rightText="Yes, I want to subscribe"
-          leftOnClick=""
-          rightOnClick=""
-        />
-      </div>
+      <CourseCardAddAndRemove />
+      <div className="border-t-[1px] flex flex-col gap-4 pt-8"></div>
     </div>
   );
 }

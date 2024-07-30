@@ -1,19 +1,15 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import Button from "@/utils/button";
 import { Box, Modal } from "@mui/material";
 
 function CommonModalBox(props) {
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => props.setOpen(false);
 
   return (
     <React.Fragment>
       <div className="flex">
-        <Button style="primary" text={props.text} onClick={handleOpen} />
-        <Modal open={open}>
+        <Modal open={props.open}>
           <Box
             display="flex"
             justifyContent="center"
@@ -22,8 +18,8 @@ function CommonModalBox(props) {
           >
             <Box
               bgcolor={"white"}
-              width={{ xs: "350px", sm: "528px" }}
-              height={{ sm: "212px" }}
+              width={{ xs: "max-content", sm: "max-content" }}
+              height={{ sm: "max-content" }}
               borderRadius={"30px"}
               border={"1px"}
               borderColor={"#C8CCDB"}
@@ -37,7 +33,7 @@ function CommonModalBox(props) {
                     width={20}
                     alt="cross"
                     onClick={handleClose}
-                    className="active:scale-[0.5] ease-in-out duration-100 hover:scale-[1.2] "
+                    className="active:scale-[0.8] duration-100 hover:scale-[1.05] "
                   />
                 </div>
                 <div className="p-6">
@@ -48,7 +44,7 @@ function CommonModalBox(props) {
                         style="secondary"
                         text={props.leftText}
                         onClick={props.leftOnClick}
-                        customStyle="py-[18px] px-8"
+                        customStyle="py-[18px] px-8 "
                       />
                     </div>
                     <div className="flex sm:mt-0 mt-4">

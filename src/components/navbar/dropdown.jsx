@@ -6,7 +6,7 @@ function NavbarDropdown(prop) {
 
   return (
     <>
-      <div className="dropdown dropdown-bottom ">
+      <div className="dropdown dropdown-bottom max-[640px]:dropdown-end">
         <div
           tabIndex={0}
           role="button"
@@ -33,16 +33,16 @@ function NavbarDropdown(prop) {
           className="dropdown-content menu bg-base-100 rounded-box z-50 w-52 p-2 shadow text-sm font-medium text-[#646D89]"
         >
           <li>
-            <a>Profile</a>
+            <a href="/user-profile">Profile</a>
           </li>
           <li>
-            <a>My Courses</a>
+            <a href="/my-courses">My Courses</a>
           </li>
           <li>
-            <a>My Assignment</a>
+            <a href="/my-assignments">My Assignment</a>
           </li>
           <li>
-            <a>My Desire Courses</a>
+            <a href="/desired-courses">My Desire Courses</a>
           </li>
           <hr />
           <li>

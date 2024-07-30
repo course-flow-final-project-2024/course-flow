@@ -4,8 +4,10 @@ import LoginButton from "./login-button.jsx";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import NavbarDropdown from "./dropdown.jsx";
+import { useRouter } from "next/router.js";
 
 function Navbar() {
+  const router = useRouter();
   const [username, setUsername] = useState(null);
   const [userImage, setUserImage] = useState(null);
   const getUserProfile = async (email, auth) => {
@@ -33,6 +35,7 @@ function Navbar() {
       localStorage.removeItem("token");
       setUsername(null);
       setUserImage(null);
+      router.push("/");
       return;
     } catch (err) {
       console.log("handle logout err", err);

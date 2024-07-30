@@ -50,6 +50,7 @@ function LessonAccordion({ onRendered }) {
     );
     setCurrentSubLessonIndex(newIndex);
   };
+
   if (!courseData || courseData.length === 0) {
     return <div></div>;
   }

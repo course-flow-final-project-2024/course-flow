@@ -32,7 +32,7 @@ function CourseLearning() {
           : subLesson
       )
     );
-  }, []);
+  };
 
   const setSubLessonPlayStatus = (subLessonId, isPlaying, isEnded) => {
     setSubLessonStatus((prevStatus) => ({

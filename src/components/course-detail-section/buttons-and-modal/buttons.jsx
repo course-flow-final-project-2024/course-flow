@@ -7,6 +7,10 @@ function CourseCardAddAndRemove(props) {
   const router = useRouter();
   const context = useContext(CourseDetailContext);
 
+  const handleStartLearning = () => {
+    router.push(`/courses/${context.courseId}/learning`);
+  };
+
   return (
     <>
       {context.userCourseStatus === "none" ? (
@@ -64,6 +68,7 @@ function CourseCardAddAndRemove(props) {
           style="primary"
           text="Start Learning"
           customStyle={props.customStyle}
+          onClick={handleStartLearning}
         />
       ) : context.userCourseStatus === "guest" ? (
         <>

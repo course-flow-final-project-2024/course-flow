@@ -8,77 +8,84 @@ import {
   validateSubLessons,
 } from "../add-lesson/form-validate";
 
-export default function AdminEditLessonForm({ lessonId }) {
+export default function AdminEditLessonForm({ lessonIndex }) {
   const { course, setCourse } = useContext(AddCourseContext);
-  // const [subLessons, setSubLessons] = useState([{ name: "", video: null }]);
   const [subLessons, setSubLessons] = useState([]);
-
   const [lesson, setLesson] = useState({
     lesson_name: "",
-    subLessons: [],
+    index: null,
+    sub_lessons: [],
   });
   const [validatedLesson, setValidatedLesson] = useState({});
 
   const router = useRouter();
 
   useEffect(() => {
-    const presentLesson = course.lessons.find(
-      (item) => item.lesson_id === parseInt(lessonId)
-    );
-    setLesson(presentLesson);
+    let presentLesson;
+    if (lessonIndex !== undefined) {
+      presentLesson = course.lessons[lessonIndex];
+      setLesson(presentLesson);
+    }
 
-    const presentSubLessons = presentLesson.sub_lessons;
-    setSubLessons(presentSubLessons);
-  }, []);
-
-  console.log(lesson);
-
-  console.log(subLessons);
+    if (presentLesson) {
+      setLesson(presentLesson);
+      setSubLessons(presentLesson.sub_lessons);
+    }
+  }, [lessonIndex]);
 
   const handleLessonNameChange = (e) => {
     const input = e.target.value;
     const validateInput = validateLessonInput(input);
     setValidatedLesson(validateInput);
 
-    const updatedLesson = { ...lesson, lesson_name: input };
+    const updatedLesson = {
+      ...lesson,
+      lesson_title: input,
+      index: course.lessons.length,
+    };
     setLesson(updatedLesson);
   };
 
   const handleAddSubLesson = (e) => {
     e.preventDefault();
-    setSubLessons([...subLessons, { name: "", video: null }]);
+    setSubLessons([
+      ...subLessons,
+      { sub_lesson_title: "", sub_lesson_video: null },
+    ]);
   };
 
-  // const handleLessonSubmit = (e) => {
-  //   e.preventDefault();
+  const handleLessonUpdate = (e) => {
+    e.preventDefault();
 
-  //   const validateLessonName = validateLessonInput(lesson.lesson_name);
-  //   setValidatedLesson(validateLessonName);
+    const validateLessonName = validateLessonInput(lesson.lesson_title);
+    setValidatedLesson(validateLessonName);
 
-  //   const validatedSubLessons = validateSubLessons(subLessons);
+    const validatedSubLessons = validateSubLessons(subLessons);
 
-  //   const hasInvalidSubLesson = validatedSubLessons.some(
-  //     (item) => item.name !== "" || item.video !== ""
-  //   );
+    const hasInvalidSubLesson = validatedSubLessons.some(
+      (item) => item.name !== "" || item.video !== ""
+    );
 
-  //   if (Object.keys(validateLessonName).length > 0 || hasInvalidSubLesson) {
-  //     alert("Please complete all required fields before creating the lesson.");
-  //     return;
-  //   }
+    if (Object.keys(validateLessonName).length > 0 || hasInvalidSubLesson) {
+      alert("Please complete all required fields before creating the lesson.");
+      return;
+    }
 
-  //   const updatedLesson = { ...lesson, subLessons: subLessons };
-  //   const updatedLessons = course.lessons.push(updatedLesson);
-  //   const updatedCourse = { ...course, lesson: updatedLessons };
-  //   setCourse(updatedCourse);
-  //   router.push("/admin/add-course");
-  // };
+    const updatedLesson = { ...lesson, sub_lessons: subLessons };
+    const updatedLessons = () => {
+      const newLessons = [...course.lessons];
+      newLessons[lesson.index] = updatedLesson;
+      return newLessons;
+    };
+
+    const updatedCourse = { ...course, lessons: updatedLessons() };
+    setCourse(updatedCourse);
+    router.push(`/admin/courses/${course.course_id}`);
+  };
 
   return (
     <div className="m-[40px_40px_70px_40px] p-[40px_100px_60px_100px] rounded-2xl bg-white">
-      <form
-        id="add-lesson"
-        // onSubmit={handleLessonSubmit}
-      >
+      <form id="edit-lesson" onSubmit={handleLessonUpdate}>
         <div className="flex flex-col gap-1 mb-10">
           <div className="flex gap-2">
             <p>Lesson Name *</p>

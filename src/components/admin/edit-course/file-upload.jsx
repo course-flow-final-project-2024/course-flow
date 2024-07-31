@@ -50,14 +50,18 @@ export default function FileUpload({ errors }) {
           hidden
           onChange={(event) => handleFileChange(event, "course_image")}
         />
-        {course.files?.course_image ? (
+        {course.course_image ? (
           <div
             className="image-preview w-60
               h-60 relative flex justify-center items-center rounded-[8px] bg-[#F6F7FC] overflow-hidden"
           >
             <img
-              src={URL.createObjectURL(course.files.course_image)}
-              alt={course.files.course_image.name}
+              src={
+                typeof course.course_image === "string"
+                  ? course.course_image
+                  : URL.createObjectURL(course.course_image)
+              }
+              alt={course.course_name}
             />
             <button
               className="rounded-full bg-[#9B2FAC] w-4 h-4 text-center text-white text-[8px]  top-[6px] right-[6px] absolute"
@@ -95,14 +99,18 @@ export default function FileUpload({ errors }) {
           hidden
           onChange={(event) => handleFileChange(event, "video_trailer")}
         />
-        {course.files?.video_trailer ? (
+        {course.video_trailer ? (
           <div
             className="trailer-preview w-60
                 h-60 relative bg-[#F6F7FC] flex justify-center items-center rounded-[8px]"
           >
             <video
               controls
-              src={URL.createObjectURL(course.files.video_trailer)}
+              src={
+                typeof course.video_trailer === "string"
+                  ? course.video_trailer
+                  : URL.createObjectURL(course.video_trailer)
+              }
               type="video/mp4"
               className="h-full w-full rounded-2xl"
             >
@@ -139,9 +147,13 @@ export default function FileUpload({ errors }) {
           onChange={(event) => handleFileChange(event, "attach_file")}
           hidden
         />
-        {course.files?.attach_file ? (
+        {course.attach_file ? (
           <div className="ttachment-preview w-fit h-10 relative bg-[#F6F7FC] flex justify-center items-center rounded-[8px] px-3 pr-10">
-            <p className="text-xs">{course.files.attach_file.name}</p>
+            <p className="text-xs">
+              {typeof course.attach_file === "string"
+                ? `${course.attach_file.split("_").pop().split("?")[0]}`
+                : `${course.attach_file.name}`}
+            </p>
             <button
               className="rounded-full bg-[#9B2FAC] w-4 h-4 text-center text-white text-[8px]  top-[6px] right-[6px] absolute"
               onClick={() => {

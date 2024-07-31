@@ -23,7 +23,7 @@ export default function AdminLessonForm() {
     const input = e.target.value;
     const validateInput = validateLessonInput(input);
     setValidatedLesson(validateInput);
-    console.log("lesson", course.lessons);
+
     const updatedLesson = {
       ...lesson,
       lesson_title: input,

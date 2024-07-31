@@ -22,15 +22,17 @@ export const validateSubLessons = (subLessons) => {
     }
 
     if (subLesson.sub_lesson_video) {
-      const sublessonType = subLesson.sub_lesson_video.type;
-      const sublessonSize = subLesson.sub_lesson_video.size / 1024 / 1024;
-      if (!["video/mp4", "video/mov", "video/avi"].includes(sublessonType)) {
-        subLessonErrors[index].video =
-          "Video trailer must be a .mp4, .mov, or .avi file.";
-      }
-      if (sublessonSize > 20) {
-        subLessonErrors[index].video =
-          "Sub-lesson video must be less than 20 MB.";
+      if (typeof subLesson.sub_lesson_video !== "string") {
+        const sublessonType = subLesson.sub_lesson_video.type;
+        const sublessonSize = subLesson.sub_lesson_video.size / 1024 / 1024;
+        if (!["video/mp4", "video/mov", "video/avi"].includes(sublessonType)) {
+          subLessonErrors[index].video =
+            "Video trailer must be a .mp4, .mov, or .avi file.";
+        }
+        if (sublessonSize > 20) {
+          subLessonErrors[index].video =
+            "Sub-lesson video must be less than 20 MB.";
+        }
       }
     } else {
       subLessonErrors[index].video = "Sub-lesson video is required.";

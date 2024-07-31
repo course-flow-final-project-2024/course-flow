@@ -1,7 +1,7 @@
 import AdminSidebar from "@/components/admin/sidebar";
 import React, { useState, useContext } from "react";
 import AdminLessonHeader from "@/components/admin/header/creating-lesson-page";
-import AdminLessonForm from "@/components/admin/add-lesson/lesson-form";
+import AdminEditLessonForm from "@/components/admin/edit-lesson/edit-lesson-form";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
 
@@ -10,10 +10,10 @@ export default function AddNewLesson() {
   const [lesson, setLesson] = useState();
   const { course } = useContext(AddCourseContext);
 
-  const handleLessonSubmit = (lessonData) => {
-    setLesson(lessonData);
-    router.push("/admin/add-course");
-  };
+  // const handleLessonSubmit = (lessonData) => {
+  //   setLesson(lessonData);
+  //   router.push(`/admin/courses/${course.course_id}`);
+  // };
 
   return (
     <React.Fragment>
@@ -23,9 +23,10 @@ export default function AddNewLesson() {
           <AdminLessonHeader
             section="Add Lesson"
             course_name={course.course_name}
-            form_id="add-course"
+            form_id="edit-lesson"
+            course_id={course.course_id}
           />
-          <AdminLessonForm onSubmit={handleLessonSubmit} />
+          <AdminEditLessonForm />
         </div>
       </div>
     </React.Fragment>

@@ -4,15 +4,14 @@ import { AddCourseContext } from "@/pages/_app";
 import AdminEditLessonHeader from "@/components/admin/header/editing-lesson-page";
 import AdminSidebar from "@/components/admin/sidebar";
 import AdminEditLessonForm from "@/components/admin/edit-lesson/edit-lesson-form";
-// import AdminEditSubLessonForm from "@/components/admin/edit-lesson/edit-sub-lesson-form";
 
 export default function EditCourse() {
   const router = useRouter();
-  const lessonId = router.query.lessonId;
+  const lessonIndex = router.query.lessonIndex;
   const { course, setCourse } = useContext(AddCourseContext);
 
   const lesson = course.lessons.find(
-    (item) => item.lesson_id === parseInt(lessonId)
+    (item) => item.index === parseInt(lessonIndex)
   );
 
   return (
@@ -26,8 +25,7 @@ export default function EditCourse() {
             course={course.course_name}
             lesson={lesson.lesson_title}
           />
-          <AdminEditLessonForm lessonId={lesson.lesson_id} />
-          {/* <AdminLessonForm onSubmit={handleLessonSubmit} /> */}
+          <AdminEditLessonForm lessonIndex={lessonIndex} />
         </div>
       </div>
     </>

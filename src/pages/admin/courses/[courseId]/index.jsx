@@ -12,6 +12,23 @@ export default function EditCourse() {
   const courseId = router.query.courseId;
   const { course, setCourse } = useContext(AddCourseContext);
 
+  const isEmptyCourse = () => {
+    return (
+      course.course_name === "" &&
+      course.price === "" &&
+      course.duration === "" &&
+      course.summary === "" &&
+      course.detail === "" &&
+      course.course_image === null &&
+      course.video_trailer === null &&
+      course.attach_file === null &&
+      course.files.course_image === null &&
+      course.files.video_trailer === null &&
+      course.files.attach_file === null &&
+      (!course.lessons || course.lessons.length === 0)
+    );
+  };
+
   const getData = async () => {
     try {
       const result = await axios.get(
@@ -25,12 +42,13 @@ export default function EditCourse() {
   };
 
   useEffect(() => {
-    if (courseId) {
+    if (courseId && isEmptyCourse()) {
       getData();
     }
   }, [courseId]);
 
-  console.log(course);
+  console.log("course", course);
+
   return (
     <>
       <div id="page-container" className="flex min-h-screen w-full">

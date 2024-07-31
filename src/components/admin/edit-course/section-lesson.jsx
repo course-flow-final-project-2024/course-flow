@@ -14,7 +14,7 @@ export function AdminEditLessonSection() {
     if (course.course_name == "" || course.course_name == null) {
       alert("Please enter course title before create lesson");
     } else {
-      router.push("/admin/add-lesson");
+      router.push(`/admin/courses/${course.course_id}/add-lesson`);
     }
   };
 

@@ -44,11 +44,11 @@ const AdminEditLessonHeader = ({ section, course, lesson, courseId }) => {
           onClick={handleCancelClick}
         />
         <Button
-          text="Create"
+          text="Edit"
           style="primary"
           height="60px"
           type="submit"
-          form="add-lesson"
+          form="edit-lesson"
         />
       </div>
     </div>

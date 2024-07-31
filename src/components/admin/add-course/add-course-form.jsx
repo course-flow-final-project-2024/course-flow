@@ -143,8 +143,6 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
     }
   };
 
-  console.log("course", course);
-
   return (
     <div className="p-10">
       <div className=" bg-white  w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">

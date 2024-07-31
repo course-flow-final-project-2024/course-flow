@@ -20,7 +20,6 @@ export function AdminLessonList() {
     const updatedCourse = { ...course };
     updatedCourse.lessons.splice(index, 1);
     setCourse(updatedCourse);
-    handleClose();
   };
 
   const lessons = course.lessons;
@@ -100,7 +99,7 @@ export function AdminLessonList() {
                       }}
                       className=" cursor-pointer"
                     />
-                    <Link href="/">
+                    <Link href={`/admin/add-course/${index}`}>
                       <Image
                         src="/icons/edit.svg"
                         alt="edit Icon"

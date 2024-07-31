@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { AddCourseContext } from "@/pages/_app";
-import axios from "axios";
 import CommonModalBox from "@/utils/admin-common-modal";
 
 export function AdminEditLessonList() {
@@ -28,19 +27,10 @@ export function AdminEditLessonList() {
   };
 
   const handleDelete = async (id, index) => {
-    // try {
-    //   await axios.delete(`/api/lessons/delete`, {
-    //     data: { lesson_id: id },
-    //   });
     const updatedCourse = { ...course };
     updatedCourse.lessons.splice(index, 1);
     setCourse(updatedCourse);
     handleClose();
-    // } catch (error) {
-    //   return {
-    //     message: "Server could not delete lesson due to database connection",
-    //   };
-    // }
   };
 
   return (
@@ -131,7 +121,7 @@ export function AdminEditLessonList() {
                       crossClick={handleClose}
                     />
                     <Link
-                      href={`/admin/courses/${course.course_id}/lesson/${item.lesson_id}`}
+                      href={`/admin/courses/${course.course_id}/lesson/${item.index}`}
                     >
                       <Image
                         src="/icons/edit.svg"

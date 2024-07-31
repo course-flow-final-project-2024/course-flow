@@ -26,7 +26,7 @@ export default function AdminEditSubLessonForm({
 
   const handleFileChange = (event, index) => {
     const updatedSubLessons = [...subLessons];
-    updatedSubLessons[index].video = event.target.files[0];
+    updatedSubLessons[index].sub_lesson_video = event.target.files[0];
     setSubLessons(updatedSubLessons);
     event.target.value = "";
     validateInput(updatedSubLessons);
@@ -34,7 +34,7 @@ export default function AdminEditSubLessonForm({
 
   const handleRemoveFile = (index) => {
     const updatedSubLessons = [...subLessons];
-    updatedSubLessons[index].video = null;
+    updatedSubLessons[index].sub_lesson_video = null;
     setSubLessons(updatedSubLessons);
     validateInput(updatedSubLessons);
   };
@@ -68,13 +68,17 @@ export default function AdminEditSubLessonForm({
                 )}
               </div>
               <input
-                name="lesson_name"
+                name="sub_lesson_title"
                 type="text"
                 className="w-full h-12 p-3 border rounded-lg outline-none"
                 placeholder="Please enter sub-lesson"
                 value={subLesson.sub_lesson_title}
                 onChange={(e) =>
-                  handleSubLessonChange(index, "name", e.target.value)
+                  handleSubLessonChange(
+                    index,
+                    "sub_lesson_title",
+                    e.target.value
+                  )
                 }
               />
             </div>
@@ -85,11 +89,15 @@ export default function AdminEditSubLessonForm({
                   <p className="text-red-500">{localValidate[index].video}</p>
                 )}
               </div>
-              {subLessons[index].video !== null ? (
+              {subLessons[index].sub_lesson_video !== null ? (
                 <div className="sublesson-vdo-preview w-[160px] h-[160px] relative border rounded-lg bg-[#F1F2F6] flex justify-center items-center">
                   <video
                     controls
-                    src={subLesson.sub_lesson_video}
+                    src={
+                      typeof subLesson.sub_lesson_video === "string"
+                        ? subLesson.sub_lesson_video
+                        : URL.createObjectURL(subLesson.sub_lesson_video)
+                    }
                     type="video/mp4"
                     className="h-full w-full rounded-2xl"
                   >

@@ -1,6 +1,7 @@
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import axios from "axios";
 import { useContext, useEffect, useRef } from "react";
+import AssignmentCard from "./assignment-card";
 
 const updateVideoStatus = async (
   userId,
@@ -99,7 +100,7 @@ function CoursesContent() {
           className="object-cover w-full rounded-lg"
         />
       </div>
-      <div className="Assgiment_past h-[260px] border-[1px] border-black"></div>
+      <AssignmentCard />
     </main>
   );
 }

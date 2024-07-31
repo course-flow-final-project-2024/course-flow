@@ -17,6 +17,7 @@ function LessonAccordion() {
     subLessonData,
     currentLessonIndex,
     currentSubLessonId,
+    setCurrentLessonIndex,
     setCurrentSubLessonIndex,
     subLessonStatus,
   } = useContext(CoursesDataContext);
@@ -25,7 +26,16 @@ function LessonAccordion() {
     const newIndex = subLessonData.findIndex(
       (subLesson) => subLesson.sub_lesson_id === id
     );
+    const lessonIndex = lessonData.findIndex((lesson) =>
+      lesson.sub_lessons.some((subLesson) => subLesson.sub_lesson_id === id)
+    );
+    setCurrentLessonIndex(lessonIndex);
     setCurrentSubLessonIndex(newIndex);
+
+    const videoElement = document.querySelector("video");
+    if (videoElement) {
+      videoElement.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   if (!courseData || courseData.length === 0) {

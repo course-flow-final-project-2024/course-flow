@@ -6,11 +6,11 @@ import {
   AccordionIcon,
   Box,
 } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import StatusImage from "./select-status-image";
 
-function LessonAccordion() {
+function LessonAccordion({ onRendered }) {
   const {
     courseData,
     lessonData,
@@ -38,8 +38,14 @@ function LessonAccordion() {
     }
   };
 
+  useEffect(() => {
+    if (courseData && courseData.length > 0) {
+      onRendered();
+    }
+  }, [courseData, onRendered]);
+
   if (!courseData || courseData.length === 0) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return (

@@ -15,7 +15,7 @@ export default function EditCourse() {
   const getData = async () => {
     try {
       const result = await axios.get(
-        `/api/courses_detail/course_detail?courseId=${courseId}`
+        `/api/courses_detail/get_by_id?courseId=${courseId}`
       );
       setCourse(result.data.courses[0]);
     } catch (error) {

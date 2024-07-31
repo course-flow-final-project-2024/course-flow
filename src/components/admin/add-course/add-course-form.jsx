@@ -99,16 +99,18 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
 
           const subLessonUploadedResults = await Promise.all(
             course.lessons.map(async (item) => {
-              const lessonId = uploadedLesson[item.lesson_name];
+              console.log("1", item);
+              const lessonId = uploadedLesson[item.lesson_title];
               const subLessonsWithUrls = await Promise.all(
-                item.subLessons.map(async (item) => {
+                item.sub_lessons.map(async (item) => {
+                  console.log("2", item);
                   const subLessonUrl = await uploadFile(
-                    item.video,
+                    item.sub_lesson_video,
                     "sub_lessons"
                   );
                   return {
                     ...item,
-                    video: subLessonUrl,
+                    sub_lesson_video: subLessonUrl,
                     lesson_id: lessonId,
                   };
                 })
@@ -129,7 +131,7 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
           if (allSuccessful) {
             router.push("/admin/courses");
             setIsLoading(false);
-          }
+          } else alert("Fail to uploaded sub-lessons, please try again");
         }
       }
     } catch (error) {
@@ -140,6 +142,8 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
       setIsLoading(false);
     }
   };
+
+  console.log("course", course);
 
   return (
     <div className="p-10">

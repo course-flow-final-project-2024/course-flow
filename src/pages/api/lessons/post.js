@@ -2,9 +2,10 @@ import { supabase } from "../../../../lib/supabase";
 import { z } from "zod";
 
 const schema = z.object({
-  lesson_name: z
+  lesson_title: z
     .string()
     .max(60, { message: "Lesson name should be at most 60 characters" }),
+  index: z.number().nonnegative({ message: "Index must be a positive number" }),
 });
 
 export default async function handler(req, res) {
@@ -23,11 +24,12 @@ export default async function handler(req, res) {
           .from("lessons")
           .insert([
             {
-              lesson_title: validatedData.data.lesson_name,
+              lesson_title: validatedData.data.lesson_title,
               created_at: new Date(),
               updated_at: new Date(),
               user_id: 1,
               course_id: courseId,
+              index: validatedData.data.index,
             },
           ])
           .select();

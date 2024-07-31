@@ -7,10 +7,13 @@ import { validateLessonInput, validateSubLessons } from "./form-validate";
 
 export default function AdminLessonForm() {
   const { course, setCourse } = useContext(AddCourseContext);
-  const [subLessons, setSubLessons] = useState([{ name: "", video: null }]);
+  const [subLessons, setSubLessons] = useState([
+    { sub_lesson_title: "", sub_lesson_video: null, index: null },
+  ]);
   const [lesson, setLesson] = useState({
-    lesson_name: "",
-    subLessons: [],
+    lesson_title: "",
+    index: null,
+    sub_lessons: [],
   });
   const [validatedLesson, setValidatedLesson] = useState({});
 
@@ -20,20 +23,27 @@ export default function AdminLessonForm() {
     const input = e.target.value;
     const validateInput = validateLessonInput(input);
     setValidatedLesson(validateInput);
-
-    const updatedLesson = { ...lesson, lesson_name: input };
+    console.log("lesson", course.lessons);
+    const updatedLesson = {
+      ...lesson,
+      lesson_title: input,
+      index: course.lessons.length,
+    };
     setLesson(updatedLesson);
   };
 
   const handleAddSubLesson = (e) => {
     e.preventDefault();
-    setSubLessons([...subLessons, { name: "", video: null }]);
+    setSubLessons([
+      ...subLessons,
+      { sub_lesson_title: "", sub_lesson_video: null, index: null },
+    ]);
   };
 
   const handleLessonSubmit = (e) => {
     e.preventDefault();
 
-    const validateLessonName = validateLessonInput(lesson.lesson_name);
+    const validateLessonName = validateLessonInput(lesson.lesson_title);
     setValidatedLesson(validateLessonName);
 
     const validatedSubLessons = validateSubLessons(subLessons);
@@ -47,9 +57,10 @@ export default function AdminLessonForm() {
       return;
     }
 
-    const updatedLesson = { ...lesson, subLessons: subLessons };
-    const updatedLessons = course.lessons.push(updatedLesson);
-    const updatedCourse = { ...course, lesson: updatedLessons };
+    const updatedLesson = { ...lesson, sub_lessons: subLessons };
+    const updatedLessons = [...course.lessons, updatedLesson];
+
+    const updatedCourse = { ...course, lessons: updatedLessons };
     setCourse(updatedCourse);
     router.push("/admin/add-course");
   };
@@ -66,7 +77,7 @@ export default function AdminLessonForm() {
           </div>
 
           <input
-            name="lesson_name"
+            name="lesson_title"
             type="text"
             className="w-full h-12 p-3 border rounded-lg outline-none"
             placeholder="please enter lesson name"

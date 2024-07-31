@@ -35,10 +35,16 @@ function CourseLearning() {
   };
 
   const setSubLessonPlayStatus = (subLessonId, isPlaying, isEnded) => {
-    setSubLessonStatus((prevStatus) => ({
-      ...prevStatus,
-      [subLessonId]: { isPlaying, isEnded },
-    }));
+    setSubLessonStatus((prevStatus) => {
+      const currentStatus = prevStatus[subLessonId] || {};
+      const finalStatus = currentStatus.isEnded
+        ? { isPlaying: false, isEnded: true }
+        : { isPlaying, isEnded };
+      return {
+        ...prevStatus,
+        [subLessonId]: finalStatus,
+      };
+    });
   };
 
   const valueInContext = {

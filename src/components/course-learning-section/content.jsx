@@ -46,6 +46,7 @@ function CoursesContent() {
     setCurrentSubLessonId,
     updateSubLessonStatus,
     setSubLessonPlayStatus,
+    subLessonStatus,
   } = useContext(CoursesDataContext);
 
   const videoRef = useRef(null);
@@ -71,11 +72,20 @@ function CoursesContent() {
   }, [currentSubLessonIndex, subLessonData, setCurrentSubLessonId]);
 
   const handlePlay = async () => {
-    setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, false);
-    await updateVideoStatus(17, 15, currentSubLesson.sub_lesson_id, 2);
+    const currentSubLesson = subLessonData[currentSubLessonIndex];
+    const currentStatus = subLessonStatus[currentSubLesson.sub_lesson_id] || {};
+    console.log(currentSubLesson.user_lessons[0].sub_lesson_status_id);
+    if (
+      !currentStatus.isEnded &&
+      currentSubLesson.user_lessons[0].sub_lesson_status_id !== 1
+    ) {
+      setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, false);
+      await updateVideoStatus(17, 15, currentSubLesson.sub_lesson_id, 2);
+    }
   };
 
   const handleEnded = async () => {
+    const currentSubLesson = subLessonData[currentSubLessonIndex];
     setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, true);
     await updateVideoStatus(17, 15, currentSubLesson.sub_lesson_id, 1);
   };

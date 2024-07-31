@@ -84,10 +84,12 @@ function LessonAccordion({ onRendered }) {
 
                 let statusImage;
 
-                if (isPlaying) {
-                  statusImage = isEnded ? StatusImage(1) : StatusImage(2);
+                if (isEnded) {
+                  statusImage = StatusImage(1);
+                } else if (isPlaying) {
+                  statusImage = StatusImage(2);
                 } else {
-                  statusImage = StatusImage(3);
+                  statusImage = defaultStatusImage;
                 }
 
                 return (
@@ -104,11 +106,7 @@ function LessonAccordion({ onRendered }) {
                           : "w-full h-12 px-2 py-3  flex flex-row gap-4 items-center hover:bg-[#F6F7FC]"
                       }
                     >
-                      <span>
-                        {subLessonStatus[subLesson.sub_lesson_id]
-                          ? statusImage
-                          : defaultStatusImage}
-                      </span>
+                      <span>{statusImage}</span>
                       <div className="text-base font-normal text-[#646D89] flex items-center">
                         {subLesson.sub_lesson_title}
                       </div>

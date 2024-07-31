@@ -13,7 +13,7 @@ export default function AssignmentCard() {
         <p>What are the 4 elements of service design?</p>
         <textarea
           type="text"
-          className="flex w-full h-24 border border-[#D6D9E4] bg-white rounded-lg p-[12px_16px_12px_12px] gap-2 items-start outline-none"
+          className="flex w-full min-h-24 border border-[#D6D9E4] bg-white rounded-lg p-[12px_16px_12px_12px] gap-2 items-start outline-none"
           placeholder="Answer..."
         />
       </div>

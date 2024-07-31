@@ -94,10 +94,8 @@ function CoursesContent() {
         <video
           ref={videoRef}
           src={currentSubLesson.sub_lesson_video}
-          width={343}
-          height={214}
           controls
-          className="object-cover w-full rounded-lg"
+          className="object-center rounded-lg w-[739px] h-[460px] bg-black"
         />
       </div>
       <AssignmentCard />

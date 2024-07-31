@@ -5,6 +5,7 @@ import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 function CoursesProgress() {
   const { courseData } = useContext(CoursesDataContext);
   const [progress, setProgress] = useState(0);
+  const [isAccordionRendered, setIsAccordionRendered] = useState(false);
 
   const calculateProgress = (lessons) => {
     let totalSubLessons = 0;
@@ -34,27 +35,38 @@ function CoursesProgress() {
     }
   }, [courseData]);
 
+  const handleAccordionRendered = () => {
+    setIsAccordionRendered(true);
+  };
+
   const course = courseData.length > 0 ? courseData[0].courses : "Loading...";
 
   return (
-    <main className="w-full max-w-[350px] h-full mt-[4%] flex flex-col p-4 sm:px-6 sm:py-8 gap-4 rounded-[8px] bg-white shadow-xl">
-      <div className="text-sm font-normal text-[#F47E20]">Course</div>
-      <div className="header">
-        <h2 className="text-2xl font-medium">{course.course_name}</h2>
-        <p className="text-base font-normal text-[#646D89]">{course.summary}</p>
-      </div>
-      <div className="percent">
-        <a className="text-sm font-normal text-[#646D89]">
-          {progress.toFixed(2)}% Complete
-        </a>
-        <progress
-          className="progress progress-bar  w-full"
-          value={progress}
-          max="100"
-        ></progress>
-      </div>
-      <LessonAccordion />
-    </main>
+    <div className="w-full max-w-[350px] mt-[4%] h-full flex flex-col p-4 sm:px-6 sm:py-8 gap-4 rounded-[8px] bg-white shadow-xl">
+      {isAccordionRendered && course !== "Loading..." && (
+        <>
+          <h1 className="text-sm font-normal text-[#F47E20]">Course</h1>
+          <div className="header">
+            <h2 className="text-2xl font-medium">{course.course_name}</h2>
+            <p className="text-base font-normal text-[#646D89]">
+              {course.summary}
+            </p>
+          </div>
+          <div className="percent">
+            <a className="text-sm font-normal text-[#646D89]">
+              {progress.toFixed(2)}% Complete
+            </a>
+            <progress
+              className="progress progress-bar  w-full"
+              value={progress}
+              max="100"
+            ></progress>
+          </div>
+        </>
+      )}
+      <LessonAccordion onRendered={handleAccordionRendered} />
+    </div>
   );
 }
+
 export default CoursesProgress;

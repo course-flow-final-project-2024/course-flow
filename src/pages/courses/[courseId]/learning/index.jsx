@@ -68,6 +68,28 @@ function CourseLearning() {
     );
   }, []);
 
+  useEffect(() => {
+    if (subLessonData.length > 0) {
+      const firstSubLessonIndex = subLessonData.findIndex(
+        (subLesson) =>
+          subLesson.user_lessons[0].sub_lesson_status_id === 2 ||
+          subLesson.user_lessons[0].sub_lesson_status_id === 3
+      );
+      if (firstSubLessonIndex !== -1) {
+        const firstSubLesson = subLessonData[firstSubLessonIndex];
+        const lessonIndex = lessonData.findIndex((lesson) =>
+          lesson.sub_lessons.some(
+            (subLesson) =>
+              subLesson.sub_lesson_id === firstSubLesson.sub_lesson_id
+          )
+        );
+        setCurrentLessonIndex(lessonIndex);
+        setCurrentSubLessonIndex(firstSubLessonIndex);
+        setCurrentSubLessonId(firstSubLesson.sub_lesson_id);
+      }
+    }
+  }, [subLessonData, lessonData]);
+
   return (
     <CoursesDataContext.Provider value={valueInContext}>
       <div className="w-full h-max">

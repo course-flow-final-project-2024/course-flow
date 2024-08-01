@@ -1,6 +1,6 @@
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import axios from "axios";
-import { useContext, useEffect, useRef, useCallback } from "react";
+import { useContext, useEffect, useRef, useCallback, useState } from "react";
 import AssignmentCard from "./assignment-card";
 import { calculateProgress } from "./calculate-progress";
 
@@ -155,18 +155,20 @@ function CoursesContent() {
           className="object-center rounded-lg sm:w-[739px] sm:h-[460px] max-[375px]:w-[343px] max-[375px]:h-[214px] bg-black"
         />
       </div>
-      {assignmentData.map((item, index) => {
-        if (currentSubLessonId === item.sub_lesson_id) {
-          return (
-            <AssignmentCard
-              question={item.assignment_title}
-              status={item.user_assignment[0].assignment_status.status}
-              answer={item.user_assignment[0].answers}
-              key={index}
-            />
-          );
-        }
-      })}
+      {(videoStatusRef.current[currentSubLesson.sub_lesson_id] === 1 ||
+        currentSubLesson.user_lessons[0].sub_lesson_status_id === 1) &&
+        assignmentData.map((item, index) => {
+          if (currentSubLessonId === item.sub_lesson_id) {
+            return (
+              <AssignmentCard
+                question={item.assignment_title}
+                status={item.user_assignment[0].assignment_status.status}
+                answer={item.user_assignment[0].answers}
+                key={index}
+              />
+            );
+          }
+        })}
     </main>
   );
 }

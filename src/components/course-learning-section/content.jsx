@@ -38,6 +38,7 @@ function CoursesContent() {
     courseData,
     subLessonData,
     currentSubLessonIndex,
+    currentSubLessonId,
     setCurrentSubLessonId,
     setSubLessonPlayStatus,
     subLessonStatus,
@@ -45,6 +46,7 @@ function CoursesContent() {
     setProgress,
     isVideoEnded,
     setisVideoEnded,
+    assignmentData,
   } = useContext(CoursesDataContext);
 
   const videoRef = useRef(null);
@@ -153,7 +155,18 @@ function CoursesContent() {
           className="object-center rounded-lg sm:w-[739px] sm:h-[460px] max-[375px]:w-[343px] max-[375px]:h-[214px] bg-black"
         />
       </div>
-      <AssignmentCard />
+      {assignmentData.map((item, index) => {
+        if (currentSubLessonId === item.sub_lesson_id) {
+          return (
+            <AssignmentCard
+              question={item.assignment_title}
+              status={item.user_assignment[0].assignment_status.status}
+              answer={item.user_assignment[0].answers}
+              key={index}
+            />
+          );
+        }
+      })}
     </main>
   );
 }

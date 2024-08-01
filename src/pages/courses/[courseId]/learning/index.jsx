@@ -20,6 +20,7 @@ function CourseLearning() {
   const [subLessonStatus, setSubLessonStatus] = useState({});
   const [progress, setProgress] = useState(0);
   const [isVideoEnded, setisVideoEnded] = useState(0);
+  const [assignmentData, setAssignmentData] = useState([]);
 
   const updateSubLessonStatus = (subLessonId, status) => {
     setSubLessonData((prevData) =>
@@ -68,6 +69,8 @@ function CourseLearning() {
     setProgress,
     isVideoEnded,
     setisVideoEnded,
+    assignmentData,
+    setAssignmentData,
   };
 
   useEffect(() => {
@@ -76,6 +79,7 @@ function CourseLearning() {
       setLessonData,
       setSubLessonData,
       setSubLessonsLenght,
+      setAssignmentData,
       router
     );
   }, []);

@@ -4,6 +4,7 @@ const getUserCourseInfo = async (
   setLessonData,
   setSubLessonData,
   setSubLessonsLenght,
+  setAssignmentData,
   router
 ) => {
   try {
@@ -24,6 +25,10 @@ const getUserCourseInfo = async (
       );
       setSubLessonData(subLessons);
       setSubLessonsLenght(subLessons.length);
+      const assignments = subLessons.flatMap(
+        (sublesson) => sublesson.assignments
+      );
+      setAssignmentData(assignments);
     } else {
       router.push("/courses");
     }

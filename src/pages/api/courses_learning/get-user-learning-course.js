@@ -11,9 +11,46 @@ export default async function getUserLearningCourse(req, res) {
     const { data: courses, error } = await supabase
       .from("user_courses")
       .select(
-        "course_id, courses(course_name, detail, summary, lessons (lesson_id, lesson_title, sub_lessons(sub_lesson_id, lesson_id, sub_lesson_title, sub_lesson_video, user_lessons(sub_lesson_status_id))))"
+        `
+        course_id,
+        courses (
+          course_name,
+          detail,
+          summary,
+          lessons (
+            lesson_id,
+            lesson_title,
+            sub_lessons (
+              sub_lesson_id,
+              lesson_id,
+              sub_lesson_title,
+              sub_lesson_video,
+              user_lessons (
+                sub_lesson_status_id
+              ),
+              assignments (
+                assignment_id,
+                sub_lesson_id,
+                assignment_title,
+                user_assignment (
+                  assignment_status_id,
+                  answer_id,
+                  assignment_status (
+                    status
+                  ),
+                  answers (
+                    description
+                  )
+                )
+              )
+            )
+          )
+        )
+      `
       )
-      .eq("course_id", courseId, "user_id", userId, "payment_status_id", "1");
+      .eq("course_id", courseId)
+      .eq("user_id", userId)
+      .eq("payment_status_id", "1");
 
     if (error) {
       return res.status(400).json({ error: "Course not found" });

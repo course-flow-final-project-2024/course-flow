@@ -1,16 +1,18 @@
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AddCourseContext } from "@/pages/_app";
 import axios from "axios";
 import AdminEditingHeader from "@/components/admin/header/editing-page";
 import AdminSidebar from "@/components/admin/sidebar";
 import AdminEditCourseForm from "@/components/admin/edit-course/edit-course-form";
 import { AdminEditLessonSection } from "@/components/admin/edit-course/section-lesson";
+import { Spinner } from "@chakra-ui/react";
 
 export default function EditCourse() {
   const router = useRouter();
   const courseId = router.query.courseId;
   const { course, setCourse } = useContext(AddCourseContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isEmptyCourse = () => {
     return (
@@ -49,22 +51,64 @@ export default function EditCourse() {
 
   return (
     <>
-      <div id="page-container" className="flex min-h-screen w-full">
-        <AdminSidebar section="course" />
-        <div className="flex flex-col w-full">
-          <AdminEditingHeader
-            section="Course"
-            courseTitle={course.course_name}
-            action="Edit"
-            href="/admin/add-course"
-          />
-
-          <div className="bg-[#F6F7FC] p-10 w-full h-full">
-            <AdminEditCourseForm />
+      {isLoading ? (
+        <>
+          <div className="flex flex-col justify-start items-center gap-10 w-full min-h-screen h-full bg-white opacity-90 absolute z-10">
+            <Spinner
+              thickness="4px"
+              speed="0.9s"
+              emptyColor="gray.200"
+              color="blue.500"
+              width="50px"
+              height="50px"
+              marginTop="300px"
+            />
+            <p className="opacity-100">Course is being updated...</p>
           </div>
-          <AdminEditLessonSection />
+          <div
+            id="page-container"
+            className="flex min-h-screen w-full relative"
+          >
+            <AdminSidebar section="course" />
+            <div className="flex flex-col w-full">
+              <AdminEditingHeader
+                section="Course"
+                courseTitle={course.course_name}
+                action="Edit"
+                href="/admin/add-course"
+              />
+
+              <div className="bg-[#F6F7FC] p-10 w-full h-full">
+                <AdminEditCourseForm
+                  isLoading={isLoading}
+                  setIsLoading={setIsLoading}
+                />
+              </div>
+              <AdminEditLessonSection />
+            </div>
+          </div>
+        </>
+      ) : (
+        <div id="page-container" className="flex min-h-screen w-full">
+          <AdminSidebar section="course" />
+          <div className="flex flex-col w-full">
+            <AdminEditingHeader
+              section="Course"
+              courseTitle={course.course_name}
+              action="Edit"
+              href="/admin/add-course"
+            />
+
+            <div className="bg-[#F6F7FC] p-10 w-full h-full">
+              <AdminEditCourseForm
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            </div>
+            <AdminEditLessonSection />
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

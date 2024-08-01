@@ -39,13 +39,13 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
 
   const handleEditCourse = async (event) => {
     event.preventDefault();
-    // setIsLoading(true);
+    setIsLoading(true);
 
     const validateError = validateFormInput(course);
 
     if (Object.keys(validateError).length > 0) {
       setErrors(validateError);
-      // setIsLoading(false);
+      setIsLoading(false);
       alert("Please complete all required fields before creating the course.");
       return;
     } else {
@@ -53,13 +53,13 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
     }
 
     if (course.lessons.length < 1) {
-      // setIsLoading(false);
+      setIsLoading(false);
       alert("Please create at least one lesson before creating the course.");
       return;
     }
 
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
 
       const coverImageUrl = await uploadFile(
         course.course_image,
@@ -131,7 +131,7 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
           );
           if (allSuccessful) {
             router.push("/admin/courses");
-            //setIsLoading(false);
+            setIsLoading(false);
           }
         }
       }
@@ -140,7 +140,7 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
         "Server could not create course due to database connection",
         error
       );
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 

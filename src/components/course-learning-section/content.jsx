@@ -1,6 +1,6 @@
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import axios from "axios";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useCallback } from "react";
 import AssignmentCard from "./assignment-card";
 import { calculateProgress } from "./calculate-progress";
 
@@ -28,7 +28,7 @@ const updateVideoStatus = async (userId, lessonId, subLessonId, status) => {
   } catch (error) {
     return {
       message:
-        "Server could not updating video status due to database connection",
+        "Server could not update video status due to database connection",
     };
   }
 };
@@ -48,35 +48,15 @@ function CoursesContent() {
   } = useContext(CoursesDataContext);
 
   const videoRef = useRef(null);
-  let videoStatus = null;
+  const videoStatusRef = useRef({});
 
-  useEffect(() => {
-    if (videoRef.current) {
-      const videoElement = videoRef.current;
-      videoElement.addEventListener("play", handlePlay);
-      videoElement.addEventListener("ended", handleEnded);
-
-      return () => {
-        videoElement.removeEventListener("play", handlePlay);
-        videoElement.removeEventListener("ended", handleEnded);
-      };
-    }
-  }, [currentSubLessonIndex]);
-
-  useEffect(() => {
-    if (subLessonData.length > 0) {
-      const currentSubLesson = subLessonData[currentSubLessonIndex];
-      setCurrentSubLessonId(currentSubLesson.sub_lesson_id);
-    }
-  }, [currentSubLessonIndex, subLessonData, setCurrentSubLessonId]);
-
-  const handlePlay = async () => {
+  const handlePlay = useCallback(async () => {
     const currentSubLesson = subLessonData[currentSubLessonIndex];
     const currentStatus = subLessonStatus[currentSubLesson.sub_lesson_id] || {};
 
     if (
       !currentStatus.isEnded &&
-      videoStatus !== 1 &&
+      videoStatusRef.current[currentSubLesson.sub_lesson_id] !== 1 &&
       currentSubLesson.user_lessons[0].sub_lesson_status_id !== 1
     ) {
       setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, false);
@@ -86,15 +66,21 @@ function CoursesContent() {
         currentSubLesson.sub_lesson_id,
         2
       );
-      videoStatus = response.videoStatus;
+      videoStatusRef.current[currentSubLesson.sub_lesson_id] =
+        response.videoStatus;
     }
-  };
+  }, [
+    currentSubLessonIndex,
+    subLessonData,
+    subLessonStatus,
+    setSubLessonPlayStatus,
+  ]);
 
-  const handleEnded = async () => {
+  const handleEnded = useCallback(async () => {
     const currentSubLesson = subLessonData[currentSubLessonIndex];
 
     if (
-      videoStatus !== 1 &&
+      videoStatusRef.current[currentSubLesson.sub_lesson_id] !== 1 &&
       currentSubLesson.user_lessons[0].sub_lesson_status_id !== 1
     ) {
       setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, true);
@@ -104,7 +90,8 @@ function CoursesContent() {
         currentSubLesson.sub_lesson_id,
         1
       );
-      videoStatus = response.videoStatus;
+      videoStatusRef.current[currentSubLesson.sub_lesson_id] =
+        response.videoStatus;
 
       if (courseData.length > 0) {
         const course = courseData[0].courses;
@@ -117,7 +104,36 @@ function CoursesContent() {
         setProgress(progressValue);
       }
     }
-  };
+  }, [
+    currentSubLessonIndex,
+    subLessonData,
+    setSubLessonPlayStatus,
+    courseData,
+    progress,
+    isVideoEnded,
+    setisVideoEnded,
+    setProgress,
+  ]);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      videoElement.addEventListener("play", handlePlay);
+      videoElement.addEventListener("ended", handleEnded);
+
+      return () => {
+        videoElement.removeEventListener("play", handlePlay);
+        videoElement.removeEventListener("ended", handleEnded);
+      };
+    }
+  }, [handlePlay, handleEnded, currentSubLessonIndex]);
+
+  useEffect(() => {
+    if (subLessonData.length > 0) {
+      const currentSubLesson = subLessonData[currentSubLessonIndex];
+      setCurrentSubLessonId(currentSubLesson.sub_lesson_id);
+    }
+  }, [currentSubLessonIndex, subLessonData, setCurrentSubLessonId]);
 
   if (!courseData || courseData.length === 0) {
     return <div></div>;

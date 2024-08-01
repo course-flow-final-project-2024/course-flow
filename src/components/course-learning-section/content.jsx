@@ -150,7 +150,7 @@ function CoursesContent() {
           ref={videoRef}
           src={currentSubLesson.sub_lesson_video}
           controls
-          className="object-center rounded-lg w-[739px] h-[460px] bg-black"
+          className="object-center rounded-lg sm:w-[739px] sm:h-[460px] max-[375px]:w-[343px] max-[375px]:h-[214px] bg-black"
         />
       </div>
       <AssignmentCard />

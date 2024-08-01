@@ -6,7 +6,6 @@ export default async function updateVideoStatus(req, res) {
   }
 
   const { userId, lessonId, subLessonId, status } = req.body;
-  console.log(req.body);
 
   try {
     const { data, error } = await supabase
@@ -18,13 +17,11 @@ export default async function updateVideoStatus(req, res) {
       .select();
 
     if (error) {
-      console.error("Update error:", error.message); // Log the error for debugging
       return res.status(500).json({ error: "Failed to update status" });
     }
 
-    return res.status(200).json(data); // Send the updated data as a response
+    return res.status(200).json(data);
   } catch (error) {
-    console.error("Server error:", error.message); // Log the error for debugging
     return res.status(500).json({
       error: "Server could not update video status due to database connection",
     });

@@ -3,11 +3,10 @@ import LessonAccordion from "./lesson-accordion";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 
 function CoursesProgress() {
-  const { courseData } = useContext(CoursesDataContext);
-  const [progress, setProgress] = useState(0);
+  const { courseData, progress, setProgress } = useContext(CoursesDataContext);
   const [isAccordionRendered, setIsAccordionRendered] = useState(false);
 
-  const calculateProgress = (lessons) => {
+  const calProgress = (lessons) => {
     let totalSubLessons = 0;
     let completedSubLessons = 0;
 
@@ -30,7 +29,7 @@ function CoursesProgress() {
   useEffect(() => {
     if (courseData.length > 0) {
       const course = courseData[0].courses;
-      const progressValue = calculateProgress(course.lessons);
+      const progressValue = calProgress(course.lessons);
       setProgress(progressValue);
     }
   }, [courseData]);

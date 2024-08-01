@@ -2,6 +2,7 @@ import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import axios from "axios";
 import { useContext, useEffect, useRef } from "react";
 import AssignmentCard from "./assignment-card";
+import { calculateProgress } from "./calculate-progress";
 
 const updateVideoStatus = async (userId, lessonId, subLessonId, status) => {
   try {
@@ -40,6 +41,10 @@ function CoursesContent() {
     setCurrentSubLessonId,
     setSubLessonPlayStatus,
     subLessonStatus,
+    progress,
+    setProgress,
+    isVideoEnded,
+    setisVideoEnded,
   } = useContext(CoursesDataContext);
 
   const videoRef = useRef(null);
@@ -100,6 +105,17 @@ function CoursesContent() {
         1
       );
       videoStatus = response.videoStatus;
+
+      if (courseData.length > 0) {
+        const course = courseData[0].courses;
+        const progressValue = calculateProgress(
+          course.lessons,
+          progress,
+          isVideoEnded,
+          setisVideoEnded
+        );
+        setProgress(progressValue);
+      }
     }
   };
 

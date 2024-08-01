@@ -85,8 +85,6 @@ export default function AdminEditLessonForm({ lessonIndex }) {
     router.push(`/admin/courses/${course.course_id}`);
   };
 
-  console.log("course", course.lessons);
-
   return (
     <div className="m-[40px_40px_70px_40px] p-[40px_100px_60px_100px] rounded-2xl bg-white">
       <form id="edit-lesson" onSubmit={handleLessonUpdate}>

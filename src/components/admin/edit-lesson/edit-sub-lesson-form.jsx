@@ -13,8 +13,7 @@ export default function AdminEditSubLessonForm({
   const handleDeleteSubLesson = (event, index) => {
     event.preventDefault();
     if (subLessons.length > 1) {
-      const newSubLessons = [...subLessons];
-      newSubLessons.filter((_, i) => i !== index);
+      const newSubLessons = subLessons.filter((_, i) => i !== index);
       newSubLessons.map((subLesson, index) => {
         subLesson.index = index;
       });

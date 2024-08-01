@@ -1,150 +1,161 @@
 import React, { useState, useContext } from "react";
-// import { supabase } from "../../../../lib/supabase";
-// import { v4 as uuidv4 } from "uuid";
-// import { validateFormInput } from "./form-validation";
+import { supabase } from "../../../../lib/supabase";
+import { v4 as uuidv4 } from "uuid";
+import { validateFormInput } from "../add-course/form-validation";
 import EditCourseInput from "./edit-course-input";
 import FileUpload from "./file-upload";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
+import axios from "axios";
 
 const AdminEditCourseForm = ({ setIsLoading }) => {
   const { course, setCourse } = useContext(AddCourseContext);
   const [errors, setErrors] = useState({});
   const router = useRouter();
+  const courseId = router.query.courseId;
 
-  // const uploadFile = async (file, folder) => {
-  //   const uniqueFileName = `${uuidv4()}_${file.name}`;
-  //   try {
-  //     const { data, error } = await supabase.storage
-  //       .from("course")
-  //       .upload(`${folder}/${uniqueFileName}`, file);
+  const uploadFile = async (file, folder) => {
+    if (typeof file !== "string") {
+      const uniqueFileName = `${uuidv4()}_${file.name}`;
+      try {
+        const { data, error } = await supabase.storage
+          .from("course")
+          .upload(`${folder}/${uniqueFileName}`, file);
 
-  //     if (error) {
-  //       alert("Error uploading file.");
-  //       return;
-  //     }
+        if (error) {
+          console.log("error", error);
+          alert("Error uploading file.");
+          return;
+        }
 
-  //     const url = supabase.storage
-  //       .from("course")
-  //       .getPublicUrl(`${folder}/${uniqueFileName}`);
-  //     return url.data.publicUrl;
-  //   } catch (error) {
-  //     alert("Error uploading file.");
-  //   }
-  // };
+        const url = supabase.storage
+          .from("course")
+          .getPublicUrl(`${folder}/${uniqueFileName}`);
+        return url.data.publicUrl;
+      } catch (error) {
+        alert("Error uploading file.");
+      }
+    }
+  };
 
-  // const onSubmit = async (event) => {
-  //   event.preventDefault();
-  //   setIsLoading(true);
+  const handleEditCourse = async (event) => {
+    event.preventDefault();
+    // setIsLoading(true);
 
-  //   const validateError = validateFormInput(course);
+    const validateError = validateFormInput(course);
 
-  //   if (Object.keys(validateError).length > 0) {
-  //     setErrors(validateError);
-  //     setIsLoading(false);
-  //     alert("Please complete all required fields before creating the course.");
-  //     return;
-  //   } else {
-  //     setErrors({});
-  //   }
+    if (Object.keys(validateError).length > 0) {
+      setErrors(validateError);
+      // setIsLoading(false);
+      alert("Please complete all required fields before creating the course.");
+      return;
+    } else {
+      setErrors({});
+    }
 
-  //   if (course.lessons.length < 1) {
-  //     setIsLoading(false);
-  //     alert("Please create at least one lesson before creating the course.");
-  //     return;
-  //   }
+    if (course.lessons.length < 1) {
+      // setIsLoading(false);
+      alert("Please create at least one lesson before creating the course.");
+      return;
+    }
 
-  //   try {
-  //     setIsLoading(true);
-  //     const coverImageUrl = await uploadFile(
-  //       course.course_image,
-  //       "cover_images"
-  //     );
-  //     const trailerUrl = await uploadFile(course.video_trailer, "trailers");
-  //     const attachmentUrl = course.attach_file
-  //       ? await uploadFile(course.attach_file, "attachments")
-  //       : null;
-  //     const updatedWithUrl = {
-  //       ...course,
-  //       course_image: coverImageUrl,
-  //       video_trailer: trailerUrl,
-  //       attach_file: attachmentUrl,
-  //     };
-  //     setCourse(updatedWithUrl);
+    try {
+      // setIsLoading(true);
 
-  //     const courseUplaodedResult = await axios.post(
-  //       `/api/courses/post`,
-  //       updatedWithUrl
-  //     );
+      const coverImageUrl = await uploadFile(
+        course.course_image,
+        "cover_images"
+      );
+      const trailerUrl = await uploadFile(course.video_trailer, "trailers");
+      const attachmentUrl = course.attach_file
+        ? await uploadFile(course.attach_file, "attachments")
+        : null;
 
-  //     if (courseUplaodedResult.status === 200) {
-  //       const courseId = courseUplaodedResult.data.data.course_id;
-  //       const lessons = { ...course, course_id: courseId };
+      const updatedWithUrl = {
+        ...course,
+        course_image: coverImageUrl ? coverImageUrl : course.course_image,
+        video_trailer: trailerUrl ? trailerUrl : course.video_trailer,
+        attach_file: attachmentUrl ? attachmentUrl : course.attach_file,
+      };
+      setCourse(updatedWithUrl);
 
-  //       const lessonsUplodedResult = await axios.post(
-  //         `/api/lessons/post`,
-  //         lessons
-  //       );
+      console.log("uploaded");
 
-  //       if (lessonsUplodedResult.status === 200) {
-  //         const uploadedLesson = lessonsUplodedResult.data.data.reduce(
-  //           (acc, item) => {
-  //             const lessonTitle = item[0].lesson_title;
-  //             acc[lessonTitle] = item[0].lesson_id;
-  //             return acc;
-  //           },
-  //           {}
-  //         );
+      const courseUplaodedResult = await axios.put(
+        `/api/courses/put?courseId=${courseId}`,
+        updatedWithUrl
+      );
 
-  //         const subLessonUploadedResults = await Promise.all(
-  //           course.lessons.map(async (item) => {
-  //             const lessonId = uploadedLesson[item.lesson_name];
-  //             const subLessonsWithUrls = await Promise.all(
-  //               item.subLessons.map(async (item) => {
-  //                 const subLessonUrl = await uploadFile(
-  //                   item.video,
-  //                   "sub-lessons"
-  //                 );
-  //                 return {
-  //                   ...item,
-  //                   video: subLessonUrl,
-  //                   lesson_id: lessonId,
-  //                 };
-  //               })
-  //             );
+      // if (courseUplaodedResult.status === 200) {
+      //   const courseId = courseUplaodedResult.data.data.course_id;
+      //   const lessons = { ...course, course_id: courseId };
 
-  //             const subLessonUploadedResult = await axios.post(
-  //               `/api/sub-lesson/post`,
-  //               subLessonsWithUrls
-  //             );
-  //             return subLessonUploadedResult;
-  //           })
-  //         );
+      //   const lessonsUplodedResult = await axios.post(
+      //     `/api/lessons/post`,
+      //     lessons
+      //   );
 
-  //         const allSuccessful = subLessonUploadedResults.every(
-  //           (result) => result.status === 200
-  //         );
+      //   if (lessonsUplodedResult.status === 200) {
+      //     const uploadedLesson = lessonsUplodedResult.data.data.reduce(
+      //       (acc, item) => {
+      //         const lessonTitle = item[0].lesson_title;
+      //         acc[lessonTitle] = item[0].lesson_id;
+      //         return acc;
+      //       },
+      //       {}
+      //     );
 
-  //         if (allSuccessful) {
-  //           router.push("/admin/courses");
-  //           setIsLoading(false);
-  //         }
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error(
-  //       "Server could not create course due to database connection",
-  //       error
-  //     );
-  //     setIsLoading(false);
-  //   }
-  // };
+      //     const subLessonUploadedResults = await Promise.all(
+      //       course.lessons.map(async (item) => {
+      //         const lessonId = uploadedLesson[item.lesson_name];
+      //         const subLessonsWithUrls = await Promise.all(
+      //           item.subLessons.map(async (item) => {
+      //             const subLessonUrl = await uploadFile(
+      //               item.video,
+      //               "sub-lessons"
+      //             );
+      //             return {
+      //               ...item,
+      //               video: subLessonUrl,
+      //               lesson_id: lessonId,
+      //             };
+      //           })
+      //         );
+
+      //         const subLessonUploadedResult = await axios.post(
+      //           `/api/sub-lesson/post`,
+      //           subLessonsWithUrls
+      //         );
+      //         return subLessonUploadedResult;
+      //       })
+      //     );
+
+      //     const allSuccessful = subLessonUploadedResults.every(
+      //       (result) => result.status === 200
+      //     );
+
+      //     if (allSuccessful) {
+      //       router.push("/admin/courses");
+      //       setIsLoading(false);
+      //     }
+      //   }
+      // }
+    } catch (error) {
+      console.error(
+        "Server could not create course due to database connection",
+        error
+      );
+      // setIsLoading(false);
+    }
+  };
+
+  console.log("course", course);
 
   return (
     <div className=" bg-white  w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">
       <form
-        id="add-course"
-        // onSubmit={onSubmit}
+        id="edit-course"
+        onSubmit={handleEditCourse}
         className="flex flex-col gap-10"
       >
         <EditCourseInput errors={errors} />

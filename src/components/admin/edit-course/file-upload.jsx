@@ -4,21 +4,21 @@ import { useContext, useEffect } from "react";
 export default function FileUpload({ errors }) {
   const { course, setCourse } = useContext(AddCourseContext);
 
-  useEffect(() => {
-    if (!course.files) {
-      setCourse({
-        ...course,
-        files: { course_image: null, video_trailer: null, attach_file: null },
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!course.files) {
+  //     setCourse({
+  //       ...course,
+  //       files: { course_image: null, video_trailer: null, attach_file: null },
+  //     });
+  //   }
+  // }, []);
 
   const handleFileChange = (event, fileType) => {
     const file = event.target.files[0];
     const updatedCourse = {
       ...course,
       [fileType]: file,
-      files: { ...course.files, [fileType]: file },
+      // files: { ...course.files, [fileType]: file },
     };
     setCourse(updatedCourse);
     event.target.value = "";
@@ -29,7 +29,7 @@ export default function FileUpload({ errors }) {
       ...course,
     };
     delete updatedCourse[fileType];
-    delete updatedCourse.files[fileType];
+    // delete updatedCourse.files[fileType];
     setCourse(updatedCourse);
   };
 

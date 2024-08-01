@@ -31,25 +31,30 @@ export const validateFormInput = (course) => {
   }
 
   if (course.course_image) {
-    const coverImageType = course.course_image.type;
-    const coverImageSize = course.course_image.size / 1024 / 1024;
-    if (!["image/jpeg", "image/jpg", "image/png"].includes(coverImageType)) {
-      errors.coverImage = "Cover image must be a .jpg, .jpeg, or .png file.";
-    }
-    if (coverImageSize > 5) {
-      errors.coverImage = "Cover image must be less than 5 MB.";
+    if (typeof course.course_image !== "string") {
+      const coverImageType = course.course_image.type;
+      const coverImageSize = course.course_image.size / 1024 / 1024;
+      if (!["image/jpeg", "image/jpg", "image/png"].includes(coverImageType)) {
+        errors.coverImage = "Cover image must be a .jpg, .jpeg, or .png file.";
+      }
+      if (coverImageSize > 5) {
+        errors.coverImage = "Cover image must be less than 5 MB.";
+      }
     }
   } else {
     errors.coverImage = "Cover image is required.";
   }
+
   if (course.video_trailer) {
-    const trailerType = course.video_trailer.type;
-    const trailerSize = course.video_trailer.size / 1024 / 1024;
-    if (!["video/mp4", "video/mov", "video/avi"].includes(trailerType)) {
-      errors.trailer = "Video trailer must be a .mp4, .mov, or .avi file.";
-    }
-    if (trailerSize > 20) {
-      errors.trailer = "Video trailer must be less than 20 MB.";
+    if (typeof course.video_trailer !== "string") {
+      const trailerType = course.video_trailer.type;
+      const trailerSize = course.video_trailer.size / 1024 / 1024;
+      if (!["video/mp4", "video/mov", "video/avi"].includes(trailerType)) {
+        errors.trailer = "Video trailer must be a .mp4, .mov, or .avi file.";
+      }
+      if (trailerSize > 20) {
+        errors.trailer = "Video trailer must be less than 20 MB.";
+      }
     }
   } else {
     errors.trailer = "Video trailer is required.";

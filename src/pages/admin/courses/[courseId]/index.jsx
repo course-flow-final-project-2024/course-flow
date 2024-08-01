@@ -22,9 +22,9 @@ export default function EditCourse() {
       course.course_image === null &&
       course.video_trailer === null &&
       course.attach_file === null &&
-      course.files.course_image === null &&
-      course.files.video_trailer === null &&
-      course.files.attach_file === null &&
+      // course.files.course_image === null &&
+      // course.files.video_trailer === null &&
+      // course.files.attach_file === null &&
       (!course.lessons || course.lessons.length === 0)
     );
   };
@@ -46,8 +46,6 @@ export default function EditCourse() {
       getData();
     }
   }, [courseId]);
-
-  console.log("course", course);
 
   return (
     <>

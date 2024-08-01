@@ -39,7 +39,7 @@ const AdminEditingHeader = (props) => {
           style="primary"
           height="60px"
           type="submit"
-          //form="add-course"
+          form="edit-course"
         />
       </div>
     </div>

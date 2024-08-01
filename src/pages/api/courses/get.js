@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   let coursesQuery = supabase
     .from("courses")
-    .select("*, lessons(count)")
+    .select("*, lessons(*)")
     .order("updated_at", { ascending: false });
 
   if (search) {

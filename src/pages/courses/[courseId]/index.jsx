@@ -17,21 +17,32 @@ function CourseDetail() {
   const router = useRouter();
   const { courseId } = router.query;
   const [courseData, setCourseData] = useState([]);
+  const [allCourseData, setAllCourseData] = useState([]);
   const [userId, setUserId] = useState(null);
   const [loginStatus, setLoginStatus] = useState(false);
   const [userCourseStatus, setUserCourseStatus] = useState(null);
   const [openCourseModal, setOpenCourseModal] = useState(false);
   const [buttonAction, setButtonAction] = useState(null);
+  const [formattedPrice, setFormattedPrice] = useState("");
 
-  const getCourseData = async () => {
-    const result = await axios.get(
-      `/api/courses_detail/get_by_id?courseId=${courseId}`
-    );
-    setCourseData(result.data.courses);
+  const getallCoursesData = async () => {
+    try {
+      const result = await axios.get(`/api/courses_detail/get_all`);
+      const filteredResult = result.data.courses.filter(
+        (item) => item.course_id === Number(courseId)
+      );
+
+      if (filteredResult.length === 0) {
+        throw new Error("Course not found");
+      }
+
+      setAllCourseData(result.data.courses);
+      setCourseData(filteredResult);
+      setFormattedPrice(commaNumber(filteredResult[0].price));
+    } catch (error) {
+      console.error("Error fetching courses data", error);
+    }
   };
-
-  const formattedPrice =
-    courseData.length > 0 && commaNumber(courseData[0].price);
 
   function checkLoginStatus() {
     const getUserStatus = JSON.parse(localStorage.getItem("token"));
@@ -93,7 +104,7 @@ function CourseDetail() {
     const initFetch = async () => {
       const isLoggedIn = checkLoginStatus();
       if (courseId) {
-        await getCourseData();
+        await getallCoursesData();
         if (isLoggedIn) {
           await fetchUserId();
           if (userId) {
@@ -112,6 +123,7 @@ function CourseDetail() {
     <div className="w-full h-max">
       <CourseDetailContext.Provider
         value={{
+          allCourseData,
           courseData,
           courseId,
           userId,
@@ -129,7 +141,7 @@ function CourseDetail() {
       >
         <Navbar />
         <MainDetail />
-        <OtherCourses courseData={courseData} />
+        <OtherCourses />
         <CommonBottomSection />
         <CommonFooter />
         <BottomCourseCard />

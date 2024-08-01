@@ -1,6 +1,7 @@
 import Button from "@/utils/button";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 function AdminLogInForm() {
   const [name, setName] = useState("");
@@ -19,27 +20,21 @@ function AdminLogInForm() {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/adminlogin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, password }),
+      const response = await axios.post("/api/auth/adminlogin", {
+        name,
+        password,
       });
-      const data = await response.json();
-      console.log("Response Data:", data);
 
-      if (!response.ok || !data.token) {
-        setError("Failed to sign in. Please check your credentials.");
+      if (!response.data.token) {
+        setError("Failed to sign in. Please try again later.");
         return;
       }
 
-      localStorage.setItem("token", JSON.stringify(data.token));
+      localStorage.setItem("token", JSON.stringify(response.data.token));
 
       router.push("/admin/courses");
     } catch (error) {
-      console.error("Error signing in:", error.message);
-      setError("Failed to sign in. Please try again later.");
+      setError("Invalid username or password.");
     }
   };
   return (

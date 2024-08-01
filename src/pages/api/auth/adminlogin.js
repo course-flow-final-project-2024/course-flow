@@ -14,23 +14,30 @@ export default async function handler(req, res) {
   try {
     const { data: user, error: userError } = await supabase
       .from("users")
-      .select("email, password")
+      .select("email, role")
       .eq("name", name)
       .single();
 
     if (userError || !user) {
-      return res.status(401).json({ error: "Name not found" });
+      return res.status(400).json({ error: "Invalid username or password." });
     }
 
-    if (password !== user.password) {
-      return res.status(401).json({ error: "Incorrect password" });
+    if (user.role !== 1) {
+      return res.status(401).json({ error: "Failed to sign in" });
     }
+    const email = user.email;
 
-    const session = await supabase.from("loginsession").insert({user_email: user.email}).select()
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
+    if (error || !data) {
+      return res.status(401).json({ error: error.message || "Login failed" });
+    }
     return res
       .status(200)
-      .json({ message: "Login successful", token: session.data[0].sessionId });
+      .json({ message: "Login successful", token: data.session.access_token });
   } catch (error) {
     console.error("Error signing in:", error.message);
     return res.status(500).json({ error: "Failed to sign in" });

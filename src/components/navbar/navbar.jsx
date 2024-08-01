@@ -11,16 +11,29 @@ function Navbar() {
   const [username, setUsername] = useState(null);
   const [userImage, setUserImage] = useState(null);
   const getUserProfile = async (email, auth) => {
-    const token = JSON.parse(localStorage.getItem("token"));
-    if (token === null) {
+    const hasToken = Boolean(localStorage.getItem("token"));
+    const hasUserInfo = Boolean(sessionStorage.getItem("user"));
+    if (!hasToken) {
+      return;
+    } else if (hasUserInfo) {
+      const userInfo = JSON.parse(sessionStorage.getItem("user"));
+      setUsername(userInfo.name);
+      setUserImage(userInfo.image);
       return;
     }
     try {
-      const result = await axios.get("/api/user-profile/get", {
-        params: { token },
-      });
-      setUsername(result.data.user.name);
-      setUserImage(result.data.user.image);
+      const result = await axios.get("/api/user-profile/get");
+      const name = result.data.user.name;
+      const UrlImage = result.data.user.image;
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: name,
+          image: UrlImage,
+        })
+      );
+      setUsername(name);
+      setUserImage(UrlImage);
       return;
     } catch (err) {
       return {
@@ -30,9 +43,9 @@ function Navbar() {
   };
   const handleLogOut = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem("token"));
-      const response = await axios.post("/api/auth/logout", { token });
+      const response = await axios.post("/api/auth/logout");
       localStorage.removeItem("token");
+      sessionStorage.removeItem("user");
       setUsername(null);
       setUserImage(null);
       router.push("/");
@@ -46,7 +59,7 @@ function Navbar() {
   };
   useEffect(() => {
     getUserProfile();
-  }, [username, userImage]);
+  }, []);
   return (
     <div className="w-full h-14 bg-white items-center flex justify-between shadow-md px-4 ease-in-out duration-200 sm:px-16 lg:px-40 lg:h-[88px] min-[1800px]:px-96">
       <Link

@@ -1,31 +1,16 @@
 import { supabase } from "../../../../lib/supabase";
-
+import { validationToken } from "../validation-token";
 export default async function getProfile(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-
-  const { token } = req.query;
-
-  if (!token) {
-    return res.status(400).json({ error: "Not authorized" });
-  }
+  const payload = await validationToken(req, res);
 
   try {
-    const { data: session, error: sessionError } = await supabase
-      .from("loginsession")
-      .select("user_email")
-      .eq("sessionId", token)
-      .single();
-
-    if (sessionError) {
-      throw new Error(sessionError);
-    }
-
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("*")
-      .eq("email", session.user_email)
+      .eq("email", payload.email)
       .single();
 
     if (userError || !user) {

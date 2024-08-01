@@ -13,7 +13,13 @@ export default function AdminEditSubLessonForm({
   const handleDeleteSubLesson = (event, index) => {
     event.preventDefault();
     if (subLessons.length > 1) {
-      setSubLessons(subLessons.filter((_, i) => i !== index));
+      const newSubLessons = [...subLessons];
+      newSubLessons.filter((_, i) => i !== index);
+      newSubLessons.map((subLesson, index) => {
+        subLesson.index = index;
+      });
+      setSubLessons(newSubLessons);
+      //setSubLessons(subLessons.filter((_, i) => i !== index));
     }
   };
 

@@ -79,67 +79,59 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
       };
       setCourse(updatedWithUrl);
 
-      console.log("uploaded");
-
-      const courseUplaodedResult = await axios.put(
+      const courseUpdatedResult = await axios.put(
         `/api/courses/put?courseId=${courseId}`,
         updatedWithUrl
       );
 
-      // if (courseUplaodedResult.status === 200) {
-      //   const courseId = courseUplaodedResult.data.data.course_id;
-      //   const lessons = { ...course, course_id: courseId };
+      if (courseUpdatedResult.status === 200) {
+        const lessonsUpdatedResult = await axios.patch(
+          `/api/lessons/patch?courseId=${courseId}`,
+          course.lessons
+        );
 
-      //   const lessonsUplodedResult = await axios.post(
-      //     `/api/lessons/post`,
-      //     lessons
-      //   );
-
-      //   if (lessonsUplodedResult.status === 200) {
-      //     const uploadedLesson = lessonsUplodedResult.data.data.reduce(
-      //       (acc, item) => {
-      //         const lessonTitle = item[0].lesson_title;
-      //         acc[lessonTitle] = item[0].lesson_id;
-      //         return acc;
-      //       },
-      //       {}
-      //     );
-
-      //     const subLessonUploadedResults = await Promise.all(
-      //       course.lessons.map(async (item) => {
-      //         const lessonId = uploadedLesson[item.lesson_name];
-      //         const subLessonsWithUrls = await Promise.all(
-      //           item.subLessons.map(async (item) => {
-      //             const subLessonUrl = await uploadFile(
-      //               item.video,
-      //               "sub-lessons"
-      //             );
-      //             return {
-      //               ...item,
-      //               video: subLessonUrl,
-      //               lesson_id: lessonId,
-      //             };
-      //           })
-      //         );
-
-      //         const subLessonUploadedResult = await axios.post(
-      //           `/api/sub-lesson/post`,
-      //           subLessonsWithUrls
-      //         );
-      //         return subLessonUploadedResult;
-      //       })
-      //     );
-
-      //     const allSuccessful = subLessonUploadedResults.every(
-      //       (result) => result.status === 200
-      //     );
-
-      //     if (allSuccessful) {
-      //       router.push("/admin/courses");
-      //       setIsLoading(false);
-      //     }
-      //   }
-      // }
+        if (lessonsUpdatedResult.status === 200) {
+          console.log("huray", lessonsUpdatedResult.status);
+          // const uploadedLesson = lessonsUplodedResult.data.data.reduce(
+          //   (acc, item) => {
+          //     const lessonTitle = item[0].lesson_title;
+          //     acc[lessonTitle] = item[0].lesson_id;
+          //     return acc;
+          //   },
+          //   {}
+          // );
+          // const subLessonUploadedResults = await Promise.all(
+          //   course.lessons.map(async (item) => {
+          //     const lessonId = uploadedLesson[item.lesson_title];
+          //     const subLessonsWithUrls = await Promise.all(
+          //       item.subLessons.map(async (item) => {
+          //         const subLessonUrl = await uploadFile(
+          //           item.video,
+          //           "sub-lessons"
+          //         );
+          //         return {
+          //           ...item,
+          //           video: subLessonUrl,
+          //           lesson_id: lessonId,
+          //         };
+          //       })
+          //     );
+          //     const subLessonUploadedResult = await axios.post(
+          //       `/api/sub-lesson/post`,
+          //       subLessonsWithUrls
+          //     );
+          //     return subLessonUploadedResult;
+          //   })
+          // );
+          // const allSuccessful = subLessonUploadedResults.every(
+          //   (result) => result.status === 200
+          // );
+          // if (allSuccessful) {
+          //   router.push("/admin/courses");
+          //   setIsLoading(false);
+          // }
+        }
+      }
     } catch (error) {
       console.error(
         "Server could not create course due to database connection",
@@ -148,8 +140,6 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
       // setIsLoading(false);
     }
   };
-
-  console.log("course", course);
 
   return (
     <div className=" bg-white  w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">

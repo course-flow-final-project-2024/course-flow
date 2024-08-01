@@ -6,7 +6,7 @@ import { handleLessonSubmit } from "@/components/admin/add-lesson/lesson-form";
 const AdminLessonHeader = ({
   section,
   course_name,
-  lesson_name,
+  lesson_title,
   form_id,
   course_id,
 }) => {
@@ -15,12 +15,17 @@ const AdminLessonHeader = ({
   const handleOnClick = () => {
     if (form_id === "edit-lesson") {
       router.push(`/admin/courses/${course_id}`);
+    } else {
+      router.push("/admin/add-course");
     }
-    router.push("/admin/add-course");
   };
 
   const handleArrowOnClick = () => {
-    router.push("/admin/add-course");
+    if (form_id === "edit-lesson") {
+      router.push(`/admin/courses/${course_id}`);
+    } else {
+      router.push("/admin/add-course");
+    }
   };
 
   return (
@@ -38,7 +43,7 @@ const AdminLessonHeader = ({
           <div className="flex flex-row gap-2 text-sm">
             <p className="text-[#9AA1B9]">Course</p>
             <p className=" font-normal">
-              ‘{course_name}’{lesson_name}
+              ‘{course_name}’{lesson_title}
             </p>
           </div>
           <h3 className="grow font-medium text-[24px] text-gray-900 ">

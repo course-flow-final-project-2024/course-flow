@@ -33,7 +33,57 @@ export default async function handler(req, res) {
 
   try {
     const validatedData = schema.safeParse(req.body);
-    console.log("data", validatedData.data);
+
+    const { data: courseFromDb, error: fetchError } = await supabase
+      .from("courses")
+      .select("course_image, video_trailer, attach_file")
+      .eq("course_id", courseId)
+      .single();
+
+    if (fetchError) {
+      console.log(fetchError);
+      return res.status(500).json({ error: fetchError.message });
+    }
+
+    if (courseFromDb.course_image !== validatedData.data.course_image) {
+      const coverImagepath = `cover_images/${courseFromDb.course_image
+        .split("/")
+        .pop()}`;
+      const { error: coverImageError } = await supabase.storage
+        .from("course")
+        .remove([coverImagepath]);
+      if (coverImageError) {
+        return res.status(500).json({ error: coverImageError });
+      }
+    }
+
+    if (courseFromDb.video_trailer !== validatedData.data.video_trailer) {
+      const trailerPath = `trailers/${courseFromDb.video_trailer
+        .split("/")
+        .pop()}`;
+      const { error: videoTrailerError } = await supabase.storage
+        .from("course")
+        .remove([trailerPath]);
+      if (videoTrailerError) {
+        return res.status(500).json({ error: videoTrailerError });
+      }
+    }
+
+    if (courseFromDb.attach_file) {
+      if (courseFromDb.attach_file !== validatedData.data.attach_file) {
+        console.log("yeppp3");
+        const attachmentpath = `attachments/${courseData.attach_file
+          .split("/")
+          .pop()}`;
+        const { error: attachmentError } = await supabase.storage
+          .from("course")
+          .remove([attachmentpath]);
+
+        if (attachmentError) {
+          return res.status(500).json({ error: attachmentError });
+        }
+      }
+    }
 
     const { error } = await supabase
       .from("courses")
@@ -47,7 +97,7 @@ export default async function handler(req, res) {
     if (error) {
       console.error(error);
       return res.status(500).json({
-        message: "Server could not create course due to database connection",
+        message: "Server could not update course due to database connection",
         error: error,
       });
     }

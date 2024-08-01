@@ -10,11 +10,6 @@ export default function AddNewLesson() {
   const [lesson, setLesson] = useState();
   const { course } = useContext(AddCourseContext);
 
-  // const handleLessonSubmit = (lessonData) => {
-  //   setLesson(lessonData);
-  //   router.push(`/admin/courses/${course.course_id}`);
-  // };
-
   return (
     <React.Fragment>
       <div className="flex flex-grow w-full mx-auto h-full relative">

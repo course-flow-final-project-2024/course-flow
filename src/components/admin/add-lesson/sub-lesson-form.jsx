@@ -69,7 +69,7 @@ export default function AdminSubLessonForm({
                 )}
               </div>
               <input
-                name="sub_lesson_name"
+                name="sub_lesson_title"
                 type="text"
                 className="w-full h-12 p-3 border rounded-lg outline-none"
                 placeholder="Please enter sub-lesson"

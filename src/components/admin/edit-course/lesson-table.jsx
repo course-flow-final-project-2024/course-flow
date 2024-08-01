@@ -29,6 +29,7 @@ export function AdminEditLessonList() {
   const handleDelete = async (id, index) => {
     const updatedCourse = { ...course };
     updatedCourse.lessons.splice(index, 1);
+    updatedCourse.lessons.map((lesson, index) => (lesson.index = index));
     setCourse(updatedCourse);
     handleClose();
   };
@@ -114,7 +115,6 @@ export function AdminEditLessonList() {
                       leftText="Yes, I want to delete this lesson"
                       rightText="No, keep it"
                       leftOnClick={() => {
-                        console.log(item.lesson_id, index);
                         handleDelete(item.lesson_id);
                       }}
                       rightOnClick={handleClose}

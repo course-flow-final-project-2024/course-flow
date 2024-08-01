@@ -12,7 +12,7 @@ export default function AdminEditLessonForm({ lessonIndex }) {
   const { course, setCourse } = useContext(AddCourseContext);
   const [subLessons, setSubLessons] = useState([]);
   const [lesson, setLesson] = useState({
-    lesson_name: "",
+    lesson_title: "",
     index: null,
     sub_lessons: [],
   });
@@ -95,7 +95,7 @@ export default function AdminEditLessonForm({ lessonIndex }) {
           </div>
 
           <input
-            name="lesson_name"
+            name="lesson_title"
             type="text"
             className="w-full h-12 p-3 border rounded-lg outline-none"
             placeholder="please enter lesson name"

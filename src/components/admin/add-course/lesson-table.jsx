@@ -59,7 +59,7 @@ export function AdminLessonList() {
               fontSize={16}
               textColor={"#000"}
               backgroundColor={"#fff"}
-              key={`${index}-${item.lesson_name}`}
+              key={`${index}-${item.lesson_title}`}
             >
               <Tr height={"88px"} borderBottom={"1px"} borderColor={"#F1F2F6"}>
                 <Td>
@@ -79,7 +79,7 @@ export function AdminLessonList() {
                   </Flex>
                 </Td>
                 <Td textAlign={"center"}>{index + 1}</Td>
-                <Td paddingX={3}>{item.lesson_name}</Td>
+                <Td paddingX={3}>{item.lesson_title}</Td>
                 <Td isNumeric paddingX={10}>
                   {item.sub_lessons.length}
                 </Td>

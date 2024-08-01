@@ -3,13 +3,7 @@ import axios from "axios";
 import { useContext, useEffect, useRef } from "react";
 import AssignmentCard from "./assignment-card";
 
-const updateVideoStatus = async (
-  userId,
-  lessonId,
-  subLessonId,
-  status,
-  updateSubLessonStatus
-) => {
+const updateVideoStatus = async (userId, lessonId, subLessonId, status) => {
   try {
     const response = await axios.post(
       `/api/courses_learning/update-video-status`,
@@ -21,9 +15,9 @@ const updateVideoStatus = async (
       }
     );
     if (response.status === 200) {
-      updateSubLessonStatus(subLessonId, status);
       return {
         message: "Video status updated successfully",
+        videoStatus: response.data[0].sub_lesson_status_id,
       };
     } else {
       return {
@@ -44,12 +38,12 @@ function CoursesContent() {
     subLessonData,
     currentSubLessonIndex,
     setCurrentSubLessonId,
-    updateSubLessonStatus,
     setSubLessonPlayStatus,
     subLessonStatus,
   } = useContext(CoursesDataContext);
 
   const videoRef = useRef(null);
+  let videoStatus = null;
 
   useEffect(() => {
     if (videoRef.current) {
@@ -74,20 +68,39 @@ function CoursesContent() {
   const handlePlay = async () => {
     const currentSubLesson = subLessonData[currentSubLessonIndex];
     const currentStatus = subLessonStatus[currentSubLesson.sub_lesson_id] || {};
-    console.log(currentSubLesson.user_lessons[0].sub_lesson_status_id);
+
     if (
       !currentStatus.isEnded &&
+      videoStatus !== 1 &&
       currentSubLesson.user_lessons[0].sub_lesson_status_id !== 1
     ) {
       setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, false);
-      await updateVideoStatus(17, 15, currentSubLesson.sub_lesson_id, 2);
+      const response = await updateVideoStatus(
+        17,
+        15,
+        currentSubLesson.sub_lesson_id,
+        2
+      );
+      videoStatus = response.videoStatus;
     }
   };
 
   const handleEnded = async () => {
     const currentSubLesson = subLessonData[currentSubLessonIndex];
-    setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, true);
-    await updateVideoStatus(17, 15, currentSubLesson.sub_lesson_id, 1);
+
+    if (
+      videoStatus !== 1 &&
+      currentSubLesson.user_lessons[0].sub_lesson_status_id !== 1
+    ) {
+      setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, true);
+      const response = await updateVideoStatus(
+        17,
+        15,
+        currentSubLesson.sub_lesson_id,
+        1
+      );
+      videoStatus = response.videoStatus;
+    }
   };
 
   if (!courseData || courseData.length === 0) {

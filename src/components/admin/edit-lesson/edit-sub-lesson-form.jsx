@@ -25,6 +25,10 @@ export default function AdminEditSubLessonForm({
   const handleSubLessonChange = (index, field, value) => {
     const newSubLessons = [...subLessons];
     newSubLessons[index][field] = value;
+
+    if (newSubLessons[index].index === "") {
+      newSubLessons[index].index = index;
+    }
     setSubLessons(newSubLessons);
     validateInput(newSubLessons);
   };

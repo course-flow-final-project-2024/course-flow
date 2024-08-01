@@ -52,7 +52,7 @@ export default function AdminEditLessonForm({ lessonIndex }) {
     e.preventDefault();
     setSubLessons([
       ...subLessons,
-      { sub_lesson_title: "", sub_lesson_video: null },
+      { sub_lesson_title: "", sub_lesson_video: null, index: "" },
     ]);
   };
 

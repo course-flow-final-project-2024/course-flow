@@ -56,7 +56,7 @@ export default async function handler(req, res) {
     }
 
     const results = await Promise.all(
-      lessons.map(async (lesson, index) => {
+      lessons.map(async (lesson) => {
         const validatedData = schema.safeParse(lesson);
         const upsertData = {
           lesson_title: validatedData.data.lesson_title,
@@ -81,6 +81,7 @@ export default async function handler(req, res) {
         if (upsertLessonError) {
           console.error(upsertLessonError);
         }
+        return upsertedLesson;
       })
     );
     return res.status(200).json({

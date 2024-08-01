@@ -16,7 +16,6 @@ export default async function handler(req, res) {
 
   try {
     const subLessons = req.body;
-    console.log("sub post try", subLessons);
 
     const results = await Promise.all(
       subLessons.map(async (item) => {

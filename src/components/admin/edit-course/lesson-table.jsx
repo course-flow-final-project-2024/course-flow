@@ -26,7 +26,7 @@ export function AdminEditLessonList() {
     setOpen(false);
   };
 
-  const handleDelete = async (id, index) => {
+  const handleDelete = async (index) => {
     const updatedCourse = { ...course };
     updatedCourse.lessons.splice(index, 1);
     updatedCourse.lessons.map((lesson, index) => (lesson.index = index));
@@ -115,7 +115,7 @@ export function AdminEditLessonList() {
                       leftText="Yes, I want to delete this lesson"
                       rightText="No, keep it"
                       leftOnClick={() => {
-                        handleDelete(item.lesson_id);
+                        handleDelete(index);
                       }}
                       rightOnClick={handleClose}
                       crossClick={handleClose}

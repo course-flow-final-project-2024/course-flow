@@ -23,7 +23,6 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
           .upload(`${folder}/${uniqueFileName}`, file);
 
         if (error) {
-          console.log("error", error);
           alert("Error uploading file.");
           return;
         }
@@ -79,57 +78,61 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
       };
       setCourse(updatedWithUrl);
 
-      const courseUpdatedResult = await axios.put(
+      const courseUpdateResult = await axios.put(
         `/api/courses/put?courseId=${courseId}`,
         updatedWithUrl
       );
 
-      if (courseUpdatedResult.status === 200) {
-        const lessonsUpdatedResult = await axios.patch(
+      if (courseUpdateResult.status === 200) {
+        const lessonsUpdateResult = await axios.patch(
           `/api/lessons/patch?courseId=${courseId}`,
           course.lessons
         );
 
-        if (lessonsUpdatedResult.status === 200) {
-          console.log("huray", lessonsUpdatedResult.status);
-          // const uploadedLesson = lessonsUplodedResult.data.data.reduce(
-          //   (acc, item) => {
-          //     const lessonTitle = item[0].lesson_title;
-          //     acc[lessonTitle] = item[0].lesson_id;
-          //     return acc;
-          //   },
-          //   {}
-          // );
-          // const subLessonUploadedResults = await Promise.all(
-          //   course.lessons.map(async (item) => {
-          //     const lessonId = uploadedLesson[item.lesson_title];
-          //     const subLessonsWithUrls = await Promise.all(
-          //       item.subLessons.map(async (item) => {
-          //         const subLessonUrl = await uploadFile(
-          //           item.video,
-          //           "sub-lessons"
-          //         );
-          //         return {
-          //           ...item,
-          //           video: subLessonUrl,
-          //           lesson_id: lessonId,
-          //         };
-          //       })
-          //     );
-          //     const subLessonUploadedResult = await axios.post(
-          //       `/api/sub-lesson/post`,
-          //       subLessonsWithUrls
-          //     );
-          //     return subLessonUploadedResult;
-          //   })
-          // );
-          // const allSuccessful = subLessonUploadedResults.every(
-          //   (result) => result.status === 200
-          // );
-          // if (allSuccessful) {
-          //   router.push("/admin/courses");
-          //   setIsLoading(false);
-          // }
+        if (lessonsUpdateResult.status === 200) {
+          const updatedLesson = lessonsUpdateResult.data.data.reduce(
+            (acc, item) => {
+              const lessonTitle = item[0].lesson_title;
+              acc[lessonTitle] = item[0].lesson_id;
+              return acc;
+            },
+            {}
+          );
+
+          const subLessonUpdateResults = await Promise.all(
+            course.lessons.map(async (item) => {
+              const lessonId = updatedLesson[item.lesson_title];
+
+              const subLessonsWithUrls = await Promise.all(
+                item.sub_lessons.map(async (item) => {
+                  const subLessonUrl = await uploadFile(
+                    item.sub_lesson_video,
+                    "sub-lessons"
+                  );
+                  return {
+                    ...item,
+                    sub_lesson_video: subLessonUrl
+                      ? subLessonUrl
+                      : item.sub_lesson_video,
+                  };
+                })
+              );
+
+              const subLessonUpdateResult = await axios.patch(
+                `/api/sub-lesson/patch?lessonId=${lessonId}`,
+                subLessonsWithUrls
+              );
+              return subLessonUpdateResult;
+            })
+          );
+
+          const allSuccessful = subLessonUpdateResults.every(
+            (result) => result.status === 200
+          );
+          if (allSuccessful) {
+            router.push("/admin/courses");
+            //setIsLoading(false);
+          }
         }
       }
     } catch (error) {

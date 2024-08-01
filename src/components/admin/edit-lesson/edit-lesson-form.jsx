@@ -37,12 +37,14 @@ export default function AdminEditLessonForm({ lessonIndex }) {
     const input = e.target.value;
     const validateInput = validateLessonInput(input);
     setValidatedLesson(validateInput);
-
     const updatedLesson = {
       ...lesson,
       lesson_title: input,
-      index: course.lessons.length,
     };
+    if (lesson.index === null) {
+      updatedLesson.index = course.lessons.length;
+    }
+
     setLesson(updatedLesson);
   };
 
@@ -82,6 +84,8 @@ export default function AdminEditLessonForm({ lessonIndex }) {
     setCourse(updatedCourse);
     router.push(`/admin/courses/${course.course_id}`);
   };
+
+  console.log("course", course.lessons);
 
   return (
     <div className="m-[40px_40px_70px_40px] p-[40px_100px_60px_100px] rounded-2xl bg-white">

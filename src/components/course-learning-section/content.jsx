@@ -161,9 +161,10 @@ function CoursesContent() {
           if (currentSubLessonId === item.sub_lesson_id) {
             return (
               <AssignmentCard
+                id={item.assignment_id}
                 question={item.assignment_title}
                 status={item.user_assignment[0].assignment_status.status}
-                answer={item.user_assignment[0].answers}
+                answer={item.user_assignment[0].answer}
                 key={index}
               />
             );

@@ -34,12 +34,9 @@ export default async function getUserLearningCourse(req, res) {
                 assignment_title,
                 user_assignment (
                   assignment_status_id,
-                  answer_id,
+                  answer,
                   assignment_status (
                     status
-                  ),
-                  answers (
-                    description
                   )
                 )
               )
@@ -55,6 +52,7 @@ export default async function getUserLearningCourse(req, res) {
     if (error) {
       return res.status(400).json({ error: "Course not found" });
     }
+
     res.status(200).json({ courses });
   } catch (error) {
     return res.status(500).json({

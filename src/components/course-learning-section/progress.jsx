@@ -41,7 +41,7 @@ function CoursesProgress() {
   const course = courseData.length > 0 ? courseData[0].courses : "Loading...";
 
   return (
-    <div className="sm:min-h-[1000px] mt-[4%]">
+    <div className="sm:min-h-[500px] mt-[4%]">
       <div className="w-full max-w-[350px]  h-fit flex flex-col p-4 sm:px-6 sm:py-8 gap-4 rounded-[8px] bg-white shadow-xl">
         {isAccordionRendered && course !== "Loading..." && (
           <>
@@ -54,7 +54,7 @@ function CoursesProgress() {
             </div>
             <div className="percent">
               <a className="text-sm font-normal text-[#646D89]">
-                {progress.toFixed(2)}% Complete
+                {Math.round(progress)}% Complete
               </a>
               <progress
                 className="progress progress-bar  w-full"

@@ -4,13 +4,12 @@ import { useContext, useEffect, useRef, useCallback, useState } from "react";
 import AssignmentCard from "./assignment-card";
 import { calculateProgress } from "./calculate-progress";
 
-const updateVideoStatus = async (userId, lessonId, subLessonId, status) => {
+const updateVideoStatus = async (userId, subLessonId, status) => {
   try {
     const response = await axios.post(
       `/api/courses_learning/update-video-status`,
       {
         userId,
-        lessonId,
         subLessonId,
         status,
       }
@@ -33,7 +32,7 @@ const updateVideoStatus = async (userId, lessonId, subLessonId, status) => {
   }
 };
 
-function CoursesContent() {
+function CoursesContent({ titleRef }) {
   const {
     courseData,
     subLessonData,
@@ -64,7 +63,6 @@ function CoursesContent() {
       setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, false);
       const response = await updateVideoStatus(
         17,
-        15,
         currentSubLesson.sub_lesson_id,
         2
       );
@@ -88,7 +86,6 @@ function CoursesContent() {
       setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, true);
       const response = await updateVideoStatus(
         17,
-        15,
         currentSubLesson.sub_lesson_id,
         1
       );
@@ -144,7 +141,7 @@ function CoursesContent() {
 
   return (
     <main className="w-full max-w-3xl h-full px-4 py-4 mt-[4%] flex flex-col gap-8">
-      <h3 className="Course_Title text-2xl font-medium">
+      <h3 ref={titleRef} className="Course_Title text-2xl font-medium">
         {currentSubLesson.sub_lesson_title}
       </h3>
       <div className="video_trailer w-full">

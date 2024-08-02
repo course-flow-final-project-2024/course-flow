@@ -5,7 +5,8 @@ const getUserCourseInfo = async (
   setSubLessonData,
   setSubLessonsLenght,
   setAssignmentData,
-  router
+  router,
+  courseId
 ) => {
   try {
     const result = await axios.get(
@@ -13,7 +14,7 @@ const getUserCourseInfo = async (
       {
         params: {
           userId: 17,
-          courseId: 5,
+          courseId,
         },
       }
     );

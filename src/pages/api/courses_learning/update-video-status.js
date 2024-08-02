@@ -5,14 +5,13 @@ export default async function updateVideoStatus(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { userId, lessonId, subLessonId, status } = req.body;
+  const { userId, subLessonId, status } = req.body;
 
   try {
     const { data, error } = await supabase
       .from("user_lessons")
       .update({ sub_lesson_status_id: status })
       .eq("user_id", userId)
-      .eq("lesson_id", lessonId)
       .eq("sub_lesson_id", subLessonId)
       .select();
 

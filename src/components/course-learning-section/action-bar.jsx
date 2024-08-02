@@ -2,7 +2,7 @@ import Button from "@/utils/button";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import { useContext } from "react";
 
-function ActionBar() {
+function ActionBar({ titleRef }) {
   const {
     subLessonsLenght,
     lessonData,
@@ -22,7 +22,12 @@ function ActionBar() {
       lesson.sub_lessons.includes(subLessonData[currentSubLessonIndex + 1])
     );
     setCurrentLessonIndex(newIndex !== -1 ? newIndex : 0);
+
+    if (titleRef.current) {
+      titleRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
+
   const handlePreviousLesson = () => {
     if (currentSubLessonIndex > 0) {
       setCurrentSubLessonIndex(currentSubLessonIndex - 1);
@@ -33,6 +38,10 @@ function ActionBar() {
       lesson.sub_lessons.includes(subLessonData[currentSubLessonIndex - 1])
     );
     setCurrentLessonIndex(newIndex !== -1 ? newIndex : lessonData.length - 1);
+
+    if (titleRef.current) {
+      titleRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (

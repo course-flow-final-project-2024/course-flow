@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import LessonAccordion from "./lesson-accordion";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 
-function CoursesProgress() {
+function CoursesProgress({ titleRef }) {
   const { courseData, progress, setProgress } = useContext(CoursesDataContext);
   const [isAccordionRendered, setIsAccordionRendered] = useState(false);
 
@@ -64,7 +64,10 @@ function CoursesProgress() {
             </div>
           </>
         )}
-        <LessonAccordion onRendered={handleAccordionRendered} />
+        <LessonAccordion
+          onRendered={handleAccordionRendered}
+          titleRef={titleRef}
+        />
       </div>
     </div>
   );

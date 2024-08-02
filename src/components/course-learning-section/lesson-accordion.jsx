@@ -10,7 +10,7 @@ import { useContext, useEffect } from "react";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import StatusImage from "./select-status-image";
 
-function LessonAccordion({ onRendered }) {
+function LessonAccordion({ onRendered, titleRef }) {
   const {
     courseData,
     lessonData,
@@ -32,9 +32,8 @@ function LessonAccordion({ onRendered }) {
     setCurrentLessonIndex(lessonIndex);
     setCurrentSubLessonIndex(newIndex);
 
-    const videoElement = document.querySelector("video");
-    if (videoElement) {
-      videoElement.scrollIntoView({ behavior: "smooth" });
+    if (titleRef.current) {
+      titleRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 

@@ -3,13 +3,16 @@ import ActionBar from "@/components/course-learning-section/action-bar";
 import CommonFooter from "@/components/footer/common-footer";
 import CoursesContent from "@/components/course-learning-section/content";
 import CoursesProgress from "@/components/course-learning-section/progress";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 import getUserCourseInfo from "./getUserCourseInfo";
 import { useRouter } from "next/router";
 
 export const CoursesDataContext = createContext();
 function CourseLearning() {
   const router = useRouter();
+  const { courseId } = router.query;
+  const titleRef = useRef(null);
+
   const [courseData, setCourseData] = useState([]);
   const [lessonData, setLessonData] = useState([]);
   const [subLessonData, setSubLessonData] = useState([]);
@@ -74,15 +77,18 @@ function CourseLearning() {
   };
 
   useEffect(() => {
-    getUserCourseInfo(
-      setCourseData,
-      setLessonData,
-      setSubLessonData,
-      setSubLessonsLenght,
-      setAssignmentData,
-      router
-    );
-  }, []);
+    if (courseId) {
+      getUserCourseInfo(
+        setCourseData,
+        setLessonData,
+        setSubLessonData,
+        setSubLessonsLenght,
+        setAssignmentData,
+        router,
+        courseId
+      );
+    }
+  }, [courseId]);
 
   useEffect(() => {
     if (subLessonData.length > 0) {
@@ -111,10 +117,10 @@ function CourseLearning() {
       <div className="w-full h-max">
         <Navbar />
         <div className="w-full h-full flex flex-col sm:flex-row sm:justify-center max-[640px]:items-center ">
-          <CoursesProgress />
-          <CoursesContent />
+          <CoursesProgress titleRef={titleRef} />
+          <CoursesContent titleRef={titleRef} />
         </div>
-        <ActionBar />
+        <ActionBar titleRef={titleRef} />
         <CommonFooter />
       </div>
     </CoursesDataContext.Provider>

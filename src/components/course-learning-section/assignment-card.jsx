@@ -1,6 +1,6 @@
 import Button from "@/utils/button";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function AssignmentCard({ id, question, status, answer }) {
   const [assignmentAnswer, setAssignmentAnswer] = useState("");
@@ -44,6 +44,10 @@ export default function AssignmentCard({ id, question, status, answer }) {
   };
 
   const handleOnSubmit = async (id) => {
+    if (assignmentAnswer.trim() === "") {
+      alert("Please provide an answer before submitting.");
+      return;
+    }
     const response = await updateAssignmentStatus(17, id, 1, assignmentAnswer);
     setResponseStatus(response.responseStatus);
     setResponseAnswer(response.responseAnswer);

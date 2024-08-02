@@ -9,7 +9,7 @@ import {
 } from "../add-lesson/form-validate";
 import { useToast } from "@chakra-ui/react";
 
-export default function AdminEditLessonForm({ lessonIndex }) {
+export default function AdminEditLessonForm({ lessonIndex, form_id }) {
   const { course, setCourse } = useContext(AddCourseContext);
   const [subLessons, setSubLessons] = useState([]);
   const [lesson, setLesson] = useState({
@@ -92,12 +92,16 @@ export default function AdminEditLessonForm({ lessonIndex }) {
 
     const updatedCourse = { ...course, lessons: updatedLessons() };
     setCourse(updatedCourse);
-    router.push(`/admin/courses/${course.course_id}`);
+    if (form_id === "edit-lesson-in-add-course") {
+      router.push(`/admin/add-course`);
+    } else {
+      router.push(`/admin/courses/${course.course_id}`);
+    }
   };
 
   return (
     <div className="m-[40px_40px_70px_40px] p-[40px_100px_60px_100px] rounded-2xl bg-white">
-      <form id="edit-lesson" onSubmit={handleLessonUpdate}>
+      <form id={form_id} onSubmit={handleLessonUpdate}>
         <div className="flex flex-col gap-1 mb-10">
           <div className="flex gap-2">
             <p>Lesson Name *</p>

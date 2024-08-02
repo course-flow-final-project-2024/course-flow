@@ -8,7 +8,7 @@ import AdminEditLessonForm from "@/components/admin/edit-lesson/edit-lesson-form
 export default function EditCourse() {
   const router = useRouter();
   const lessonIndex = router.query.lessonIndex;
-  const { course, setCourse } = useContext(AddCourseContext);
+  const { course } = useContext(AddCourseContext);
 
   const lesson = course.lessons.find(
     (item) => item.index === parseInt(lessonIndex)

@@ -13,18 +13,20 @@ const AdminLessonHeader = ({
   const router = useRouter();
 
   const handleOnClick = () => {
+    if (form_id === "add-lesson-in-add-course") {
+      router.push("/admin/add-course");
+    }
     if (form_id === "edit-lesson") {
       router.push(`/admin/courses/${course_id}`);
-    } else {
-      router.push("/admin/add-course");
     }
   };
 
   const handleArrowOnClick = () => {
+    if (form_id === "add-lesson-in-add-course") {
+      router.push("/admin/add-course");
+    }
     if (form_id === "edit-lesson") {
       router.push(`/admin/courses/${course_id}`);
-    } else {
-      router.push("/admin/add-course");
     }
   };
 

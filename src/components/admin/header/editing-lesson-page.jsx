@@ -1,13 +1,22 @@
 import Button from "@/utils/button";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { handleLessonSubmit } from "@/components/admin/add-lesson/lesson-form";
 
-const AdminEditLessonHeader = ({ section, course, lesson, courseId }) => {
+const AdminEditLessonHeader = ({
+  section,
+  course,
+  lesson,
+  courseId,
+  form_id,
+}) => {
   const router = useRouter();
 
   const handleCancelClick = () => {
-    router.push(`/admin/courses/${courseId}`);
+    if (form_id === "edit-lesson-in-add-course") {
+      router.push(`/admin/add-course`);
+    } else {
+      router.push(`/admin/courses/${courseId}`);
+    }
   };
 
   return (
@@ -48,7 +57,7 @@ const AdminEditLessonHeader = ({ section, course, lesson, courseId }) => {
           style="primary"
           height="60px"
           type="submit"
-          form="edit-lesson"
+          form={form_id}
         />
       </div>
     </div>

@@ -10,19 +10,31 @@ import {
   TableContainer,
   Flex,
 } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AddCourseContext } from "@/pages/_app";
+import CommonModalBox from "@/utils/admin-common-modal";
 
 export function AdminLessonList() {
   const { course, setCourse } = useContext(AddCourseContext);
+  const [open, setOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState("");
+  const lessons = course.lessons;
+
+  const handleOpen = (index) => {
+    setSelectedIndex(index);
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleDelete = async (index) => {
     const updatedCourse = { ...course };
     updatedCourse.lessons.splice(index, 1);
+    updatedCourse.lessons.map((lesson, index) => (lesson.index = index));
     setCourse(updatedCourse);
+    handleClose();
   };
-
-  const lessons = course.lessons;
 
   return (
     <TableContainer rounded={"8px"} marginBottom={"30px"}>
@@ -95,11 +107,22 @@ export function AdminLessonList() {
                       width={24}
                       height={24}
                       onClick={() => {
-                        handleDelete(index);
+                        handleOpen(index);
                       }}
                       className=" cursor-pointer"
                     />
-                    <Link href={`/admin/add-course/${index}`}>
+                    <CommonModalBox
+                      open={open}
+                      AlertMessage="Are you sure you want to delete this lesson?"
+                      leftText="Yes, I want to delete this lesson"
+                      rightText="No, keep it"
+                      leftOnClick={() => {
+                        handleDelete(selectedIndex);
+                      }}
+                      rightOnClick={handleClose}
+                      crossClick={handleClose}
+                    />
+                    <Link href={`/admin/add-lesson/${index}`}>
                       <Image
                         src="/icons/edit.svg"
                         alt="edit Icon"

@@ -44,7 +44,7 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
 
         if (error) {
           displayToast(
-            "Opps...",
+            "Oops...",
             "Error uploading file, please try agian.",
             "error",
             "top",
@@ -60,7 +60,7 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
         return url.data.publicUrl;
       } catch (error) {
         displayToast(
-          "Opps...",
+          "Oops...",
           "Error uploading file, please try agian.",
           "error",
           "top",
@@ -81,7 +81,7 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
       setErrors(validateError);
       setIsLoading(false);
       displayToast(
-        "Opps...",
+        "Oops...",
         "Please complete all required fields before updating the course.",
         "error",
         "top",
@@ -97,7 +97,7 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
     if (course.lessons.length < 1) {
       setIsLoading(false);
       displayToast(
-        "Opps...",
+        "Oops...",
         "Please create at least one lesson before updating the course.",
         "error",
         "top",

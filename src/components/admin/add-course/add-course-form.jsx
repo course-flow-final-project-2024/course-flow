@@ -7,11 +7,31 @@ import AddCourseInput from "./add-course-input";
 import FileUpload from "./file-upload";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
+import { useToast } from "@chakra-ui/react";
 
 const AdminAddCourseForm = ({ setIsLoading }) => {
   const { course, setCourse } = useContext(AddCourseContext);
   const [errors, setErrors] = useState({});
   const router = useRouter();
+  const toast = useToast();
+
+  const displayToast = (
+    title,
+    description,
+    status,
+    position,
+    duration,
+    isClosable
+  ) => {
+    toast({
+      title: `${title}`,
+      description: `${description}`,
+      status: `${status}`,
+      position: `${position}`,
+      duration: duration,
+      isClosable: isClosable,
+    });
+  };
 
   const uploadFile = async (file, folder) => {
     const uniqueFileName = `${uuidv4()}_${file.name}`;
@@ -21,7 +41,14 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
         .upload(`${folder}/${uniqueFileName}`, file);
 
       if (error) {
-        alert("Error uploading file.");
+        displayToast(
+          "Opps...",
+          "Error uploading file, please try agian.",
+          "error",
+          "top",
+          9000,
+          true
+        );
         return;
       }
 
@@ -30,7 +57,14 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
         .getPublicUrl(`${folder}/${uniqueFileName}`);
       return url.data.publicUrl;
     } catch (error) {
-      alert("Error uploading file.");
+      displayToast(
+        "Opps...",
+        "Error uploading file, please try agian.",
+        "error",
+        "top",
+        9000,
+        true
+      );
     }
   };
 
@@ -43,7 +77,14 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
     if (Object.keys(validateError).length > 0) {
       setErrors(validateError);
       setIsLoading(false);
-      alert("Please complete all required fields before creating the course.");
+      displayToast(
+        "Opps...",
+        "Please complete all required fields before updating the course.",
+        "error",
+        "top",
+        9000,
+        true
+      );
       return;
     } else {
       setErrors({});
@@ -51,7 +92,14 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
 
     if (course.lessons.length < 1) {
       setIsLoading(false);
-      alert("Please create at least one lesson before creating the course.");
+      displayToast(
+        "Opps...",
+        "Please create at least one lesson before creating the course.",
+        "error",
+        "top",
+        9000,
+        true
+      );
       return;
     }
 
@@ -131,7 +179,16 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
           if (allSuccessful) {
             router.push("/admin/courses");
             setIsLoading(false);
-          } else alert("Fail to uploaded sub-lessons, please try again");
+          } else {
+            toast({
+              title: "Oops...",
+              description: "Fail to uploaded sub-lessons, please try again",
+              status: "error",
+              position: "top",
+              duration: 9000,
+              isClosable: true,
+            });
+          }
         }
       }
     } catch (error) {

@@ -1,11 +1,26 @@
 import Button from "@/utils/button";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { useContext } from "react";
+import { AddCourseContext } from "@/pages/_app";
 
 const AdminEditingHeader = (props) => {
+  const { setCourse } = useContext(AddCourseContext);
   const router = useRouter();
+  const courseInitialValue = {
+    course_name: "",
+    price: "",
+    duration: "",
+    summary: "",
+    detail: "",
+    course_image: null,
+    video_trailer: null,
+    attach_file: null,
+    lessons: [],
+  };
 
   const handleCancelClick = () => {
+    setCourse(courseInitialValue);
     router.push("/admin/courses");
   };
 

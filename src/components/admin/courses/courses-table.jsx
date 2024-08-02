@@ -9,6 +9,7 @@ import {
   Flex,
   Image,
   Box,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -28,6 +29,12 @@ const AdminCoursesList = () => {
   });
   const [open, setOpen] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const toastId = "fetch-data";
+  const toast = useToast({
+    id: toastId,
+    position: "top",
+    isClosable: true,
+  });
 
   const handleOpen = (courseId) => {
     setSelectedCourseId(courseId);
@@ -44,14 +51,31 @@ const AdminCoursesList = () => {
   const title = searchParams.get("title") || "";
 
   async function getCourseData() {
-    try {
-      const result = await axios.get(`/api/courses/get`, {
-        params: {
-          search: title,
-          currentPage: currentPage,
-          limit: limitCardPerPage,
+    const getCourseData = axios.get(`/api/courses/get`, {
+      params: {
+        search: title,
+        currentPage: currentPage,
+        limit: limitCardPerPage,
+      },
+    });
+    if (!toast.isActive(toastId)) {
+      toast.promise(getCourseData, {
+        success: {
+          title: "Dowload complete :)",
+          description: "Let's go!",
+        },
+        error: {
+          title: "Oops.. :(",
+          description: "Something wrong.",
+        },
+        loading: {
+          title: "Downloading course",
+          description: "Please wait.",
         },
       });
+    }
+    try {
+      const result = await getCourseData;
 
       if (result.data.totalItems === 0) {
         setCourse([]);

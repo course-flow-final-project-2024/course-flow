@@ -4,15 +4,24 @@ import { AddCourseContext } from "@/pages/_app";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { AdminEditLessonList } from "./lesson-table";
+import { useToast } from "@chakra-ui/react";
 
 export function AdminEditLessonSection() {
   const { course } = useContext(AddCourseContext);
 
   const router = useRouter();
+  const toast = useToast;
 
   const handleAddLessonClick = () => {
     if (course.course_name == "" || course.course_name == null) {
-      alert("Please enter course title before create lesson");
+      toast({
+        title: "Oops...",
+        description: "Please enter course title before update lesson",
+        status: "error",
+        position: "top",
+        duration: 9000,
+        isClosable: true,
+      });
     } else {
       router.push(`/admin/courses/${course.course_id}/add-lesson`);
     }

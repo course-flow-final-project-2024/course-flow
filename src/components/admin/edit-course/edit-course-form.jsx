@@ -7,12 +7,32 @@ import FileUpload from "./file-upload";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
 import axios from "axios";
+import { useToast } from "@chakra-ui/react";
 
 const AdminEditCourseForm = ({ setIsLoading }) => {
   const { course, setCourse } = useContext(AddCourseContext);
   const [errors, setErrors] = useState({});
   const router = useRouter();
   const courseId = router.query.courseId;
+  const toast = useToast();
+
+  const displayToast = (
+    title,
+    description,
+    status,
+    position,
+    duration,
+    isClosable
+  ) => {
+    toast({
+      title: `${title}`,
+      description: `${description}`,
+      status: `${status}`,
+      position: `${position}`,
+      duration: duration,
+      isClosable: isClosable,
+    });
+  };
 
   const uploadFile = async (file, folder) => {
     if (typeof file !== "string") {
@@ -23,7 +43,14 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
           .upload(`${folder}/${uniqueFileName}`, file);
 
         if (error) {
-          alert("Error uploading file.");
+          displayToast(
+            "Opps...",
+            "Error uploading file, please try agian.",
+            "error",
+            "top",
+            9000,
+            true
+          );
           return;
         }
 
@@ -32,7 +59,14 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
           .getPublicUrl(`${folder}/${uniqueFileName}`);
         return url.data.publicUrl;
       } catch (error) {
-        alert("Error uploading file.");
+        displayToast(
+          "Opps...",
+          "Error uploading file, please try agian.",
+          "error",
+          "top",
+          9000,
+          true
+        );
       }
     }
   };
@@ -46,7 +80,15 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
     if (Object.keys(validateError).length > 0) {
       setErrors(validateError);
       setIsLoading(false);
-      alert("Please complete all required fields before creating the course.");
+      displayToast(
+        "Opps...",
+        "Please complete all required fields before updating the course.",
+        "error",
+        "top",
+        9000,
+        true
+      );
+
       return;
     } else {
       setErrors({});
@@ -54,7 +96,14 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
 
     if (course.lessons.length < 1) {
       setIsLoading(false);
-      alert("Please create at least one lesson before creating the course.");
+      displayToast(
+        "Opps...",
+        "Please create at least one lesson before updating the course.",
+        "error",
+        "top",
+        9000,
+        true
+      );
       return;
     }
 

@@ -53,7 +53,15 @@ export default function AdminLessonForm() {
     );
 
     if (Object.keys(validateLessonName).length > 0 || hasInvalidSubLesson) {
-      alert("Please complete all required fields before creating the lesson.");
+      toast({
+        title: "Oops...",
+        description:
+          "Please complete all required fields before creating lesson.",
+        status: "error",
+        position: "top",
+        duration: 9000,
+        isClosable: true,
+      });
       return;
     }
 

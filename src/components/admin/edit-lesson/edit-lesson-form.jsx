@@ -7,6 +7,7 @@ import {
   validateLessonInput,
   validateSubLessons,
 } from "../add-lesson/form-validate";
+import { useToast } from "@chakra-ui/react";
 
 export default function AdminEditLessonForm({ lessonIndex }) {
   const { course, setCourse } = useContext(AddCourseContext);
@@ -19,6 +20,7 @@ export default function AdminEditLessonForm({ lessonIndex }) {
   const [validatedLesson, setValidatedLesson] = useState({});
 
   const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     let presentLesson;
@@ -69,7 +71,15 @@ export default function AdminEditLessonForm({ lessonIndex }) {
     );
 
     if (Object.keys(validateLessonName).length > 0 || hasInvalidSubLesson) {
-      alert("Please complete all required fields before creating the lesson.");
+      toast({
+        title: "Invalid Lesson Name",
+        description:
+          "Please complete all required fields before updating lesson.",
+        status: "error",
+        position: "top",
+        duration: 9000,
+        isClosable: true,
+      });
       return;
     }
 

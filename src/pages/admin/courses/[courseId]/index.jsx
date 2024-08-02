@@ -6,13 +6,19 @@ import AdminEditingHeader from "@/components/admin/header/editing-page";
 import AdminSidebar from "@/components/admin/sidebar";
 import AdminEditCourseForm from "@/components/admin/edit-course/edit-course-form";
 import { AdminEditLessonSection } from "@/components/admin/edit-course/section-lesson";
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, useToast } from "@chakra-ui/react";
 
 export default function EditCourse() {
   const router = useRouter();
   const courseId = router.query.courseId;
   const { course, setCourse } = useContext(AddCourseContext);
   const [isLoading, setIsLoading] = useState(false);
+  const toastId = "fetch-course";
+  const toast = useToast({
+    id: toastId,
+    position: "top",
+    isClosable: true,
+  });
 
   const isEmptyCourse = () => {
     return (
@@ -24,22 +30,29 @@ export default function EditCourse() {
       course.course_image === null &&
       course.video_trailer === null &&
       course.attach_file === null &&
-      // course.files.course_image === null &&
-      // course.files.video_trailer === null &&
-      // course.files.attach_file === null &&
       (!course.lessons || course.lessons.length === 0)
     );
   };
 
   const getData = async () => {
+    const getCourseData = axios.get(
+      `/api/courses_detail/get_by_id?courseId=${courseId}`
+    );
+    console.log("before active", toast.isActive(toastId));
+    if (!toast.isActive(toastId)) {
+      toast.promise(getCourseData, {
+        toastId,
+        success: { title: "Dowload complete :)", description: "Let's go!" },
+        error: { title: "Oops.. :(", description: "Something wrong." },
+        loading: { title: "Downloading course", description: "Please wait." },
+      });
+    }
     try {
-      const result = await axios.get(
-        `/api/courses_detail/get_by_id?courseId=${courseId}`
-      );
+      const result = await getCourseData;
       setCourse(result.data.courses[0]);
     } catch (error) {
       console.log("Failed to read course data");
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 

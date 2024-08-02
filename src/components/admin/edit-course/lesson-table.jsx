@@ -17,9 +17,11 @@ import CommonModalBox from "@/utils/admin-common-modal";
 export function AdminEditLessonList() {
   const { course, setCourse } = useContext(AddCourseContext);
   const [open, setOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState("");
   const lessons = course.lessons;
 
-  const handleOpen = () => {
+  const handleOpen = (index) => {
+    setSelectedIndex(index);
     setOpen(true);
   };
   const handleClose = () => {
@@ -105,7 +107,7 @@ export function AdminEditLessonList() {
                       width={24}
                       height={24}
                       onClick={() => {
-                        handleOpen();
+                        handleOpen(index);
                       }}
                       className=" cursor-pointer"
                     />
@@ -115,7 +117,7 @@ export function AdminEditLessonList() {
                       leftText="Yes, I want to delete this lesson"
                       rightText="No, keep it"
                       leftOnClick={() => {
-                        handleDelete(index);
+                        handleDelete(selectedIndex);
                       }}
                       rightOnClick={handleClose}
                       crossClick={handleClose}

@@ -23,11 +23,11 @@ export default function AddNewLesson() {
           <AdminLessonHeader
             section="Add Lesson"
             course_name={course.course_name}
-            form_id={"add-lesson-in-add-course"}
+            formId={"add-lesson-in-add-course"}
           />
           <AdminLessonForm
             onSubmit={handleLessonSubmit}
-            form_id={"add-lesson-in-add-course"}
+            formId={"add-lesson-in-add-course"}
           />
         </div>
       </div>

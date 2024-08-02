@@ -18,10 +18,10 @@ export default function AddNewLesson() {
           <AdminLessonHeader
             section="Add Lesson"
             course_name={course.course_name}
-            form_id="edit-lesson"
+            formId={"add-lesson-in-edit-course"}
             course_id={course.course_id}
           />
-          <AdminEditLessonForm />
+          <AdminEditLessonForm formId={"add-lesson-in-edit-course"} />
         </div>
       </div>
     </React.Fragment>

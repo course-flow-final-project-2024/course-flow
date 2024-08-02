@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { validateLessonInput, validateSubLessons } from "./form-validate";
 import { useToast } from "@chakra-ui/react";
 
-export default function AdminLessonForm({ form_id }) {
+export default function AdminLessonForm({ formId }) {
   const { course, setCourse } = useContext(AddCourseContext);
   const [subLessons, setSubLessons] = useState([
     { sub_lesson_title: "", sub_lesson_video: null, index: null },
@@ -57,7 +57,8 @@ export default function AdminLessonForm({ form_id }) {
     if (Object.keys(validateLessonName).length > 0 || hasInvalidSubLesson) {
       toast({
         title: "Oops...",
-        description: "Please enter lesson name.",
+        description:
+          "Please complete all reqiured data before creatind a lesson.",
         status: "error",
         position: "top",
         duration: 9000,
@@ -76,7 +77,7 @@ export default function AdminLessonForm({ form_id }) {
 
   return (
     <div className="m-[40px_40px_70px_40px] p-[40px_100px_60px_100px] rounded-2xl bg-white">
-      <form id={form_id} onSubmit={handleLessonSubmit}>
+      <form id={formId} onSubmit={handleLessonSubmit}>
         <div className="flex flex-col gap-1 mb-10">
           <div className="flex gap-2">
             <p>Lesson Name *</p>

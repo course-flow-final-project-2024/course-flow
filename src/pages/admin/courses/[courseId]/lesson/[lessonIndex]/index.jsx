@@ -24,8 +24,12 @@ export default function EditCourse() {
             section="Lesson"
             course={course.course_name}
             lesson={lesson.lesson_title}
+            formId={"edit-lesson-in-edit-course"}
           />
-          <AdminEditLessonForm lessonIndex={lessonIndex} />
+          <AdminEditLessonForm
+            lessonIndex={lessonIndex}
+            formId={"edit-lesson-in-edit-course"}
+          />
         </div>
       </div>
     </>

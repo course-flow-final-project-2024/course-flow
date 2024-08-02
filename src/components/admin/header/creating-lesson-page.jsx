@@ -7,25 +7,16 @@ const AdminLessonHeader = ({
   section,
   course_name,
   lesson_title,
-  form_id,
+  formId,
   course_id,
 }) => {
   const router = useRouter();
 
-  const handleOnClick = () => {
-    if (form_id === "add-lesson-in-add-course") {
+  const handleCancleOnClick = () => {
+    if (formId === "add-lesson-in-add-course") {
       router.push("/admin/add-course");
     }
-    if (form_id === "edit-lesson") {
-      router.push(`/admin/courses/${course_id}`);
-    }
-  };
-
-  const handleArrowOnClick = () => {
-    if (form_id === "add-lesson-in-add-course") {
-      router.push("/admin/add-course");
-    }
-    if (form_id === "edit-lesson") {
+    if (formId === "add-lesson-in-edit-course") {
       router.push(`/admin/courses/${course_id}`);
     }
   };
@@ -38,7 +29,7 @@ const AdminLessonHeader = ({
           alt="CourseFlow logo"
           width={16}
           height={16}
-          onClick={handleArrowOnClick}
+          onClick={handleCancleOnClick}
           className=" cursor-pointer"
         />
         <div>
@@ -58,14 +49,14 @@ const AdminLessonHeader = ({
           text="Cancel"
           style="secondary"
           height="60px"
-          onClick={handleOnClick}
+          onClick={handleCancleOnClick}
         />
         <Button
           text="Create"
           style="primary"
           height="60px"
           type="submit"
-          form={form_id}
+          form={formId}
         />
       </div>
     </div>

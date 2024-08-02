@@ -7,14 +7,15 @@ const AdminEditLessonHeader = ({
   course,
   lesson,
   courseId,
-  form_id,
+  formId,
 }) => {
   const router = useRouter();
 
   const handleCancelClick = () => {
-    if (form_id === "edit-lesson-in-add-course") {
+    if (formId === "edit-lesson-in-add-course") {
       router.push(`/admin/add-course`);
-    } else {
+    }
+    if (formId === "edit-lesson-in-edit-course") {
       router.push(`/admin/courses/${courseId}`);
     }
   };
@@ -57,7 +58,7 @@ const AdminEditLessonHeader = ({
           style="primary"
           height="60px"
           type="submit"
-          form={form_id}
+          form={formId}
         />
       </div>
     </div>

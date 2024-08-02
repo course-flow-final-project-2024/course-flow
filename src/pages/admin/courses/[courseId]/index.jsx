@@ -7,6 +7,7 @@ import AdminSidebar from "@/components/admin/sidebar";
 import AdminEditCourseForm from "@/components/admin/edit-course/edit-course-form";
 import { AdminEditLessonSection } from "@/components/admin/edit-course/section-lesson";
 import { Spinner, useToast } from "@chakra-ui/react";
+import AdminDeleteCourse from "@/components/admin/edit-course/delete-course";
 
 export default function EditCourse() {
   const router = useRouter();
@@ -119,6 +120,7 @@ export default function EditCourse() {
               />
             </div>
             <AdminEditLessonSection />
+            <AdminDeleteCourse />
           </div>
         </div>
       )}

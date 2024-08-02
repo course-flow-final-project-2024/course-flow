@@ -1,6 +1,7 @@
 import Button from "@/utils/button";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 export default function LogInForm() {
   const router = useRouter();
@@ -19,26 +20,19 @@ export default function LogInForm() {
     setSignInError(null);
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post("/api/auth/login", {
+        email,
+        password,
       });
-      const data = await response.json();
-      console.log("Response Data:", data);
-
-      if (!response.ok || !data.token) {
-        setSignInError("Failed to sign in. Please check your credentials.");
+      if (!response.data.token) {
+        setSignInError("Invalid email or password.");
         return;
       }
 
-      localStorage.setItem("token", JSON.stringify(data.token));
+      localStorage.setItem("token", JSON.stringify(response.data.token));
 
       router.push("/");
     } catch (error) {
-      console.error("Error signing in:", error.message);
       setSignInError("Failed to sign in. Please try again later.");
     }
   };

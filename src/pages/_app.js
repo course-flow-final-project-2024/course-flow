@@ -4,6 +4,7 @@ import { AppCacheProvider } from "@mui/material-nextjs/v13-pagesRouter";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Roboto } from "next/font/google";
 import { createContext, useState } from "react";
+import jwtInterceptor from "@/utils/jwtinterceptor";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -18,7 +19,7 @@ const theme = createTheme({
 });
 
 export const AddCourseContext = createContext();
-
+jwtInterceptor();
 export default function App({ Component, pageProps }) {
   const [course, setCourse] = useState({
     course_name: "",

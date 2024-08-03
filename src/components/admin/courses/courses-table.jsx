@@ -9,11 +9,14 @@ import {
   Flex,
   Image,
   Box,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { Pagination } from "@mui/material";
+import CommonModalBox from "@/utils/admin-common-modal";
+import Link from "next/link";
 
 const AdminCoursesList = () => {
   const [course, setCourse] = useState([]);
@@ -24,6 +27,22 @@ const AdminCoursesList = () => {
     page: 0,
     limit: 0,
   });
+  const [open, setOpen] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const toastId = "fetch-data";
+  const toast = useToast({
+    id: toastId,
+    position: "top",
+    isClosable: true,
+  });
+
+  const handleOpen = (courseId) => {
+    setSelectedCourseId(courseId);
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const searchParams = useSearchParams();
 
@@ -31,46 +50,77 @@ const AdminCoursesList = () => {
 
   const title = searchParams.get("title") || "";
 
-  useEffect(() => {
-    async function getCourseData() {
-      try {
-        const result = await axios.get(`/api/courses/get`, {
-          params: {
-            search: title,
-            currentPage: currentPage,
-            limit: limitCardPerPage,
-          },
-        });
+  async function getCourseData() {
+    const getCourseData = axios.get(`/api/courses/get`, {
+      params: {
+        search: title,
+        currentPage: currentPage,
+        limit: limitCardPerPage,
+      },
+    });
+    if (!toast.isActive(toastId)) {
+      toast.promise(getCourseData, {
+        success: {
+          title: "Dowload complete :)",
+          description: "Let's go!",
+        },
+        error: {
+          title: "Oops.. :(",
+          description: "Something wrong.",
+        },
+        loading: {
+          title: "Downloading course",
+          description: "Please wait.",
+        },
+      });
+    }
+    try {
+      const result = await getCourseData;
 
-        if (result.data.totalItems === 0) {
-          setCourse([]);
+      if (result.data.totalItems === 0) {
+        setCourse([]);
+        setPagination({
+          currentPage: 1,
+          allItem: 0,
+          page: 0,
+          limit: limitCardPerPage,
+        });
+        setCurrentPage(1);
+      } else {
+        setCourse(result.data.courses);
+        if (currentPage > result.data.totalPages) {
+          setCurrentPage(result.data.totalPages);
+        } else {
           setPagination({
-            currentPage: 1,
-            allItem: 0,
-            page: 0,
+            currentPage: result.data.currentPage,
+            allItem: result.data.totalItems,
+            page: result.data.totalPages,
             limit: limitCardPerPage,
           });
-          setCurrentPage(1);
-        } else {
-          setCourse(result.data.courses);
-          if (currentPage > result.data.totalPages) {
-            setCurrentPage(result.data.totalPages);
-          } else {
-            setPagination({
-              currentPage: result.data.currentPage,
-              allItem: result.data.totalItems,
-              page: result.data.totalPages,
-              limit: limitCardPerPage,
-            });
-          }
         }
-      } catch (error) {
-        return {
-          message: "Server could not read courses due to database connection",
-        };
       }
+    } catch (error) {
+      return {
+        message: "Server could not read courses due to database connection",
+      };
     }
+  }
 
+  const handleDelete = async (courseId) => {
+    try {
+      await axios.delete(`/api/courses/delete`, {
+        data: { course_id: courseId },
+      });
+      getCourseData();
+      handleClose();
+    } catch (error) {
+      return {
+        message: "Server could not delete courses due to database connection",
+      };
+    }
+  };
+
+  useEffect(() => {
     getCourseData();
   }, [title, currentPage]);
 
@@ -159,8 +209,27 @@ const AdminCoursesList = () => {
                   <Td pl="16px">{dateFormat(item.updated_at)}</Td>
                   <Td>
                     <Flex gap={2} align="start" justify="center">
-                      <Image src="/icons/delete.svg" alt="delete icon" />
-                      <Image src="/icons/edit.svg" alt="edit icon" />
+                      <Image
+                        src="/icons/delete.svg"
+                        alt="delete icon"
+                        onClick={() => {
+                          handleOpen(item.course_id);
+                        }}
+                      />
+                      <CommonModalBox
+                        open={open}
+                        AlertMessage="Are you sure you want to delete this course?"
+                        leftText="Yes, I want to delete this course"
+                        rightText="No, keep it"
+                        leftOnClick={() => {
+                          handleDelete(selectedCourseId);
+                        }}
+                        rightOnClick={handleClose}
+                        crossClick={handleClose}
+                      />
+                      <Link href={`/admin/courses/${item.course_id}`}>
+                        <Image src="/icons/edit.svg" alt="edit icon" />
+                      </Link>
                     </Flex>
                   </Td>
                 </Tr>

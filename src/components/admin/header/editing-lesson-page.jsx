@@ -1,23 +1,22 @@
 import Button from "@/utils/button";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { handleLessonSubmit } from "@/components/admin/add-lesson/lesson-form";
 
-const AdminLessonHeader = ({
+const AdminEditLessonHeader = ({
   section,
-  course_name,
-  lesson_title,
+  course,
+  lesson,
+  courseId,
   formId,
-  course_id,
 }) => {
   const router = useRouter();
 
-  const handleCancleOnClick = () => {
-    if (formId === "add-lesson-in-add-course") {
-      router.push("/admin/add-course");
+  const handleCancelClick = () => {
+    if (formId === "edit-lesson-in-add-course") {
+      router.push(`/admin/add-course`);
     }
-    if (formId === "add-lesson-in-edit-course") {
-      router.push(`/admin/courses/${course_id}`);
+    if (formId === "edit-lesson-in-edit-course") {
+      router.push(`/admin/courses/${courseId}`);
     }
   };
 
@@ -29,19 +28,22 @@ const AdminLessonHeader = ({
           alt="CourseFlow logo"
           width={16}
           height={16}
-          onClick={handleCancleOnClick}
+          onClick={handleCancelClick}
           className=" cursor-pointer"
         />
         <div>
           <div className="flex flex-row gap-2 text-sm">
             <p className="text-[#9AA1B9]">Course</p>
-            <p className=" font-normal">
-              ‘{course_name}’{lesson_title}
-            </p>
+            <p className=" font-normal">‘{course}’</p>
           </div>
-          <h3 className="grow font-medium text-[24px] text-gray-900 ">
-            {section}
-          </h3>
+          <div className="flex flex-row gap-2">
+            <h3 className="grow font-medium text-[24px] text-[#9AA1B9]">
+              {section}
+            </h3>
+            <h3 className="grow font-medium text-[24px] text-black">
+              `{lesson}`
+            </h3>
+          </div>
         </div>
       </div>
       <div className="flex w-[252px] gap-[16px] ">
@@ -49,10 +51,10 @@ const AdminLessonHeader = ({
           text="Cancel"
           style="secondary"
           height="60px"
-          onClick={handleCancleOnClick}
+          onClick={handleCancelClick}
         />
         <Button
-          text="Create"
+          text="Edit"
           style="primary"
           height="60px"
           type="submit"
@@ -63,4 +65,4 @@ const AdminLessonHeader = ({
   );
 };
 
-export default AdminLessonHeader;
+export default AdminEditLessonHeader;

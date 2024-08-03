@@ -2,10 +2,11 @@ import { supabase } from "../../../../lib/supabase";
 import { z } from "zod";
 
 const schema = z.object({
-  name: z
+  sub_lesson_title: z
     .string()
     .max(60, { message: "Lesson name should be at most 60 characters" }),
-  video: z.string().url({ message: "Invalid URL" }),
+  sub_lesson_video: z.string().url({ message: "Invalid URL" }),
+  index: z.number().nonnegative({ message: "Index must be a positive number" }),
 });
 
 export default async function handler(req, res) {
@@ -20,17 +21,19 @@ export default async function handler(req, res) {
       subLessons.map(async (item) => {
         const lessonId = item.lesson_id;
         const validatedData = schema.safeParse(item);
+        console.log("sub post validated", validatedData.data);
 
         const { data, error } = await supabase
           .from("sub_lessons")
           .insert([
             {
               user_id: 1,
-              sub_lesson_title: validatedData.data.name,
+              sub_lesson_title: validatedData.data.sub_lesson_title,
               lesson_id: lessonId,
-              sub_lesson_video: validatedData.data.video,
+              sub_lesson_video: validatedData.data.sub_lesson_video,
               created_at: new Date(),
               updated_at: new Date(),
+              index: validatedData.data.index,
             },
           ])
           .select();
@@ -46,6 +49,7 @@ export default async function handler(req, res) {
       data: results,
     });
   } catch (error) {
+    console.log("500", error);
     return res.status(500).json({
       message: "Server could not create lessons due to database connection",
       error: error.message,

@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { useState } from "react";
-import { validateSubLessons } from "./form-validate";
+import { validateSubLessons } from "../add-lesson/form-validate";
 
-export default function AdminSubLessonForm({
+export default function AdminEditSubLessonForm({
   index,
   subLesson,
   subLessons,
@@ -13,14 +13,22 @@ export default function AdminSubLessonForm({
   const handleDeleteSubLesson = (event, index) => {
     event.preventDefault();
     if (subLessons.length > 1) {
-      setSubLessons(subLessons.filter((_, i) => i !== index));
+      const newSubLessons = subLessons.filter((_, i) => i !== index);
+      newSubLessons.map((subLesson, index) => {
+        subLesson.index = index;
+      });
+      setSubLessons(newSubLessons);
+      //setSubLessons(subLessons.filter((_, i) => i !== index));
     }
   };
 
   const handleSubLessonChange = (index, field, value) => {
     const newSubLessons = [...subLessons];
     newSubLessons[index][field] = value;
-    newSubLessons[index].index = index;
+
+    if (newSubLessons[index].index === "") {
+      newSubLessons[index].index = index;
+    }
     setSubLessons(newSubLessons);
     validateInput(newSubLessons);
   };
@@ -94,9 +102,11 @@ export default function AdminSubLessonForm({
                 <div className="sublesson-vdo-preview w-[160px] h-[160px] relative border rounded-lg bg-[#F1F2F6] flex justify-center items-center">
                   <video
                     controls
-                    src={URL.createObjectURL(
-                      subLessons[index].sub_lesson_video
-                    )}
+                    src={
+                      typeof subLesson.sub_lesson_video === "string"
+                        ? subLesson.sub_lesson_video
+                        : URL.createObjectURL(subLesson.sub_lesson_video)
+                    }
                     type="video/mp4"
                     className="h-full w-full rounded-2xl"
                   >

@@ -14,7 +14,7 @@ import { useContext, useState } from "react";
 import { AddCourseContext } from "@/pages/_app";
 import CommonModalBox from "@/utils/admin-common-modal";
 
-export function AdminLessonList() {
+export function AdminEditLessonList() {
   const { course, setCourse } = useContext(AddCourseContext);
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState("");
@@ -71,7 +71,7 @@ export function AdminLessonList() {
               fontSize={16}
               textColor={"#000"}
               backgroundColor={"#fff"}
-              key={`${index}-${item.lesson_title}`}
+              key={index + item.lesson_title}
             >
               <Tr height={"88px"} borderBottom={"1px"} borderColor={"#F1F2F6"}>
                 <Td>
@@ -122,7 +122,9 @@ export function AdminLessonList() {
                       rightOnClick={handleClose}
                       crossClick={handleClose}
                     />
-                    <Link href={`/admin/add-lesson/${index}`}>
+                    <Link
+                      href={`/admin/courses/${course.course_id}/lesson/${item.index}`}
+                    >
                       <Image
                         src="/icons/edit.svg"
                         alt="edit Icon"

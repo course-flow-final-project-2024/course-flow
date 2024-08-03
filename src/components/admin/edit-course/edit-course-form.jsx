@@ -1,18 +1,19 @@
-import axios from "axios";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { supabase } from "../../../../lib/supabase";
 import { v4 as uuidv4 } from "uuid";
-import { validateFormInput } from "./form-validation";
-import AddCourseInput from "./add-course-input";
+import { validateFormInput } from "../add-course/form-validation";
+import EditCourseInput from "./edit-course-input";
 import FileUpload from "./file-upload";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
+import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 
-const AdminAddCourseForm = ({ setIsLoading }) => {
+const AdminEditCourseForm = ({ setIsLoading }) => {
   const { course, setCourse } = useContext(AddCourseContext);
   const [errors, setErrors] = useState({});
   const router = useRouter();
+  const courseId = router.query.courseId;
   const toast = useToast();
 
   const displayToast = (
@@ -34,13 +35,30 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
   };
 
   const uploadFile = async (file, folder) => {
-    const uniqueFileName = `${uuidv4()}_${file.name}`;
-    try {
-      const { data, error } = await supabase.storage
-        .from("course")
-        .upload(`${folder}/${uniqueFileName}`, file);
+    if (typeof file !== "string") {
+      const uniqueFileName = `${uuidv4()}_${file.name}`;
+      try {
+        const { data, error } = await supabase.storage
+          .from("course")
+          .upload(`${folder}/${uniqueFileName}`, file);
 
-      if (error) {
+        if (error) {
+          displayToast(
+            "Oops...",
+            "Error uploading file, please try agian.",
+            "error",
+            "top",
+            9000,
+            true
+          );
+          return;
+        }
+
+        const url = supabase.storage
+          .from("course")
+          .getPublicUrl(`${folder}/${uniqueFileName}`);
+        return url.data.publicUrl;
+      } catch (error) {
         displayToast(
           "Oops...",
           "Error uploading file, please try agian.",
@@ -49,26 +67,11 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
           9000,
           true
         );
-        return;
       }
-
-      const url = supabase.storage
-        .from("course")
-        .getPublicUrl(`${folder}/${uniqueFileName}`);
-      return url.data.publicUrl;
-    } catch (error) {
-      displayToast(
-        "Oops...",
-        "Error uploading file, please try agian.",
-        "error",
-        "top",
-        9000,
-        true
-      );
     }
   };
 
-  const onSubmit = async (event) => {
+  const handleEditCourse = async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
@@ -85,6 +88,7 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
         9000,
         true
       );
+
       return;
     } else {
       setErrors({});
@@ -94,7 +98,7 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
       setIsLoading(false);
       displayToast(
         "Oops...",
-        "Please create at least one lesson before creating the course.",
+        "Please create at least one lesson before updating the course.",
         "error",
         "top",
         9000,
@@ -105,6 +109,7 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
 
     try {
       setIsLoading(true);
+
       const coverImageUrl = await uploadFile(
         course.course_image,
         "cover_images"
@@ -113,30 +118,28 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
       const attachmentUrl = course.attach_file
         ? await uploadFile(course.attach_file, "attachments")
         : null;
+
       const updatedWithUrl = {
         ...course,
-        course_image: coverImageUrl,
-        video_trailer: trailerUrl,
-        attach_file: attachmentUrl,
+        course_image: coverImageUrl ? coverImageUrl : course.course_image,
+        video_trailer: trailerUrl ? trailerUrl : course.video_trailer,
+        attach_file: attachmentUrl ? attachmentUrl : course.attach_file,
       };
       setCourse(updatedWithUrl);
 
-      const courseUplaodedResult = await axios.post(
-        `/api/courses/post`,
+      const courseUpdateResult = await axios.put(
+        `/api/courses/put?courseId=${courseId}`,
         updatedWithUrl
       );
 
-      if (courseUplaodedResult.status === 200) {
-        const courseId = courseUplaodedResult.data.data.course_id;
-        const lessons = { ...course, course_id: courseId };
-
-        const lessonsUplodedResult = await axios.post(
-          `/api/lessons/post`,
-          lessons
+      if (courseUpdateResult.status === 200) {
+        const lessonsUpdateResult = await axios.patch(
+          `/api/lessons/patch?courseId=${courseId}`,
+          course.lessons
         );
 
-        if (lessonsUplodedResult.status === 200) {
-          const uploadedLesson = lessonsUplodedResult.data.data.reduce(
+        if (lessonsUpdateResult.status === 200) {
+          const updatedLesson = lessonsUpdateResult.data.data.reduce(
             (acc, item) => {
               const lessonTitle = item[0].lesson_title;
               acc[lessonTitle] = item[0].lesson_id;
@@ -145,49 +148,39 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
             {}
           );
 
-          const subLessonUploadedResults = await Promise.all(
+          const subLessonUpdateResults = await Promise.all(
             course.lessons.map(async (item) => {
-              console.log("1", item);
-              const lessonId = uploadedLesson[item.lesson_title];
+              const lessonId = updatedLesson[item.lesson_title];
+
               const subLessonsWithUrls = await Promise.all(
                 item.sub_lessons.map(async (item) => {
-                  console.log("2", item);
                   const subLessonUrl = await uploadFile(
                     item.sub_lesson_video,
-                    "sub_lessons"
+                    "sub-lessons"
                   );
                   return {
                     ...item,
-                    sub_lesson_video: subLessonUrl,
-                    lesson_id: lessonId,
+                    sub_lesson_video: subLessonUrl
+                      ? subLessonUrl
+                      : item.sub_lesson_video,
                   };
                 })
               );
 
-              const subLessonUploadedResult = await axios.post(
-                `/api/sub-lesson/post`,
+              const subLessonUpdateResult = await axios.patch(
+                `/api/sub-lesson/patch?lessonId=${lessonId}`,
                 subLessonsWithUrls
               );
-              return subLessonUploadedResult;
+              return subLessonUpdateResult;
             })
           );
 
-          const allSuccessful = subLessonUploadedResults.every(
+          const allSuccessful = subLessonUpdateResults.every(
             (result) => result.status === 200
           );
-
           if (allSuccessful) {
             router.push("/admin/courses");
             setIsLoading(false);
-          } else {
-            toast({
-              title: "Oops...",
-              description: "Fail to uploaded sub-lessons, please try again",
-              status: "error",
-              position: "top",
-              duration: 9000,
-              isClosable: true,
-            });
           }
         }
       }
@@ -201,19 +194,17 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
   };
 
   return (
-    <div className="p-10">
-      <div className=" bg-white  w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">
-        <form
-          id="add-course"
-          onSubmit={onSubmit}
-          className="flex flex-col gap-10"
-        >
-          <AddCourseInput errors={errors} />
-          <FileUpload errors={errors} />
-        </form>
-      </div>
+    <div className=" bg-white  w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">
+      <form
+        id="edit-course"
+        onSubmit={handleEditCourse}
+        className="flex flex-col gap-10"
+      >
+        <EditCourseInput errors={errors} />
+        <FileUpload errors={errors} />
+      </form>
     </div>
   );
 };
 
-export default AdminAddCourseForm;
+export default AdminEditCourseForm;

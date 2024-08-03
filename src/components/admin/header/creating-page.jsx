@@ -1,11 +1,27 @@
+import { AddCourseContext } from "@/pages/_app";
 import Button from "@/utils/button";
 import { useRouter } from "next/router";
+import { useContext } from "react";
 
 const AdminCreatingHeader = ({ section, onClick }) => {
   const router = useRouter();
+  const { setCourse } = useContext(AddCourseContext);
+
+  const courseInitialValue = {
+    course_name: "",
+    price: "",
+    duration: "",
+    summary: "",
+    detail: "",
+    course_image: null,
+    video_trailer: null,
+    attach_file: null,
+    lessons: [],
+  };
 
   const handleOnClick = () => {
     router.push("/admin/courses");
+    setCourse(courseInitialValue);
   };
 
   return (

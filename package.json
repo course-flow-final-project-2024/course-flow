@@ -30,6 +30,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
+    "formidable": "^3.5.1",
     "framer-motion": "^11.2.13",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.407.0",

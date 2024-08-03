@@ -5,6 +5,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import NavbarDropdown from "./dropdown.jsx";
 import { useRouter } from "next/router.js";
+import { useRouter } from 'next/router';
 
 function Navbar() {
   const router = useRouter();

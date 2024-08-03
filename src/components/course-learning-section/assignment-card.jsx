@@ -1,11 +1,30 @@
 import Button from "@/utils/button";
+import { useRouter } from "next/router";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
+import getUserCourseInfo from "@/pages/courses/[courseId]/learning/getUserCourseInfo";
 
 export default function AssignmentCard({ id, question, status, answer }) {
+  const {
+    setCourseData,
+    setLessonData,
+    setSubLessonData,
+    setSubLessonsLenght,
+    setAssignmentData,
+    currentSubLessonIndex,
+    setCurrentSubLessonIndex,
+  } = useContext(CoursesDataContext);
   const [assignmentAnswer, setAssignmentAnswer] = useState("");
   const [responseStatus, setResponseStatus] = useState(null);
   const [responseAnswer, setResponseAnswer] = useState(null);
+
+  const router = useRouter();
+  const { courseId } = router.query;
+
+  // useEffect(() => {
+  //   setCurrentSubLessonIndex(currentSubLessonIndex);
+  // }, [currentSubLessonIndex, setCurrentSubLessonIndex]);
 
   const updateAssignmentStatus = async (
     userId,
@@ -24,6 +43,22 @@ export default function AssignmentCard({ id, question, status, answer }) {
         }
       );
       if (response.status === 200) {
+        try {
+          await getUserCourseInfo(
+            setCourseData,
+            setLessonData,
+            setSubLessonData,
+            setSubLessonsLenght,
+            setAssignmentData,
+            router,
+            courseId
+          );
+        } catch (error) {
+          console.log({ error });
+          return {
+            message: "Server could not read courses due to database connection",
+          };
+        }
         return {
           message: "Assignment status updated successfully",
           responseStatus:
@@ -51,6 +86,7 @@ export default function AssignmentCard({ id, question, status, answer }) {
     const response = await updateAssignmentStatus(17, id, 1, assignmentAnswer);
     setResponseStatus(response.responseStatus);
     setResponseAnswer(response.responseAnswer);
+    // setCurrentSubLessonIndex(currentSubLessonIndex);
   };
 
   return (
@@ -71,15 +107,9 @@ export default function AssignmentCard({ id, question, status, answer }) {
           </div>
           <div className="flex flex-col gap-3">
             <p>{question}</p>
-            {responseAnswer === null ? (
-              <div className="w-full text-[#646D89] border border-[#D6D9E4] bg-slate-100 rounded-lg p-[12px_16px_12px_12px] gap-2">
-                {answer}
-              </div>
-            ) : (
-              <div className="w-full text-[#646D89] border border-[#D6D9E4] bg-slate-100 rounded-lg p-[12px_16px_12px_12px] gap-2">
-                {responseAnswer}
-              </div>
-            )}
+            <div className="w-full text-[#646D89] border border-[#D6D9E4] bg-slate-100 rounded-lg p-[12px_16px_12px_12px] gap-2">
+              {answer}
+            </div>
           </div>
         </div>
       ) : (

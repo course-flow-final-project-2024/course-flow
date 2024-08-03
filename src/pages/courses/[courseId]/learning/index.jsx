@@ -57,6 +57,7 @@ function CourseLearning() {
     courseData,
     lessonData,
     subLessonData,
+    setLessonData,
     subLessonsLenght,
     setSubLessonsLenght,
     currentLessonIndex,
@@ -74,6 +75,10 @@ function CourseLearning() {
     setisVideoEnded,
     assignmentData,
     setAssignmentData,
+    setSubLessonData,
+    setSubLessonsLenght,
+    setAssignmentData,
+    setCourseData,
   };
 
   useEffect(() => {

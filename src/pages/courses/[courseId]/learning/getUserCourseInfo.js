@@ -19,6 +19,8 @@ const getUserCourseInfo = async (
       }
     );
     if (result.data.courses.length !== 0) {
+      console.log({ res: result.data.courses });
+
       setCourseData(result.data.courses);
       setLessonData(result.data.courses[0].courses.lessons);
       const subLessons = result.data.courses[0].courses.lessons.flatMap(

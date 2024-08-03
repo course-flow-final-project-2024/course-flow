@@ -134,6 +134,8 @@ function CoursesContent({ titleRef }) {
     }
   }, [currentSubLessonIndex, subLessonData, setCurrentSubLessonId]);
 
+  useEffect(() => {}, [assignmentData]);
+
   if (!courseData || courseData.length === 0) {
     return <div></div>;
   }

@@ -1,3 +1,4 @@
+import { useState, useContext, useEffect } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -6,7 +7,6 @@ import {
   AccordionIcon,
   Box,
 } from "@chakra-ui/react";
-import { useContext, useEffect } from "react";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import StatusImage from "./select-status-image";
 
@@ -22,6 +22,8 @@ function LessonAccordion({ onRendered, titleRef }) {
     subLessonStatus,
   } = useContext(CoursesDataContext);
 
+  const [expandedIndex, setExpandedIndex] = useState([currentLessonIndex]);
+
   const handleOnClick = (id) => {
     const newIndex = subLessonData.findIndex(
       (subLesson) => subLesson.sub_lesson_id === id
@@ -35,6 +37,10 @@ function LessonAccordion({ onRendered, titleRef }) {
     if (titleRef.current) {
       titleRef.current.scrollIntoView({ behavior: "smooth" });
     }
+
+    if (!expandedIndex.includes(lessonIndex)) {
+      setExpandedIndex([...expandedIndex, lessonIndex]);
+    }
   };
 
   useEffect(() => {
@@ -43,13 +49,27 @@ function LessonAccordion({ onRendered, titleRef }) {
     }
   }, [courseData, onRendered]);
 
+  useEffect(() => {
+    if (!expandedIndex.includes(currentLessonIndex)) {
+      setExpandedIndex([...expandedIndex, currentLessonIndex]);
+    }
+  }, [currentLessonIndex]);
+
   if (!courseData || courseData.length === 0) {
     return <div></div>;
   }
 
+  const handleAccordionChange = (index) => {
+    setExpandedIndex(index);
+  };
+
   return (
     <div className="w-full h-max sm:max-h-[900px] sm:overflow-y-scroll flex flex-col gap-2 ">
-      <Accordion index={[currentLessonIndex]} allowMultiple>
+      <Accordion
+        index={expandedIndex}
+        allowMultiple
+        onChange={handleAccordionChange}
+      >
         {lessonData.map((lesson, index) => (
           <AccordionItem key={lesson.lesson_id}>
             <h2>
@@ -64,8 +84,10 @@ function LessonAccordion({ onRendered, titleRef }) {
                   paddingY={3}
                 >
                   <div className="w-full flex flex-row items-center gap-6">
-                    <span className="text-[#646D89]">{index + 1}</span>
-                    <span className="w-full lg:text-2xl">
+                    <span className="text-base text-[#646D89]">
+                      {(index + 1).toString().padStart(2, "0")}
+                    </span>
+                    <span className="w-full text-base">
                       <span>{lesson.lesson_title}</span>
                     </span>
                     <AccordionIcon />

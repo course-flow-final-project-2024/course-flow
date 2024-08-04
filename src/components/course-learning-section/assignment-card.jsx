@@ -1,7 +1,7 @@
 import Button from "@/utils/button";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import getUserCourseInfo from "@/pages/courses/[courseId]/learning/getUserCourseInfo";
 
@@ -12,19 +12,11 @@ export default function AssignmentCard({ id, question, status, answer }) {
     setSubLessonData,
     setSubLessonsLenght,
     setAssignmentData,
-    currentSubLessonIndex,
-    setCurrentSubLessonIndex,
   } = useContext(CoursesDataContext);
   const [assignmentAnswer, setAssignmentAnswer] = useState("");
-  const [responseStatus, setResponseStatus] = useState(null);
-  const [responseAnswer, setResponseAnswer] = useState(null);
 
   const router = useRouter();
   const { courseId } = router.query;
-
-  // useEffect(() => {
-  //   setCurrentSubLessonIndex(currentSubLessonIndex);
-  // }, [currentSubLessonIndex, setCurrentSubLessonIndex]);
 
   const updateAssignmentStatus = async (
     userId,
@@ -83,27 +75,18 @@ export default function AssignmentCard({ id, question, status, answer }) {
       alert("Please provide an answer before submitting.");
       return;
     }
-    const response = await updateAssignmentStatus(17, id, 1, assignmentAnswer);
-    setResponseStatus(response.responseStatus);
-    setResponseAnswer(response.responseAnswer);
-    // setCurrentSubLessonIndex(currentSubLessonIndex);
+    await updateAssignmentStatus(17, id, 1, assignmentAnswer);
   };
 
   return (
     <div>
-      {status === "Submitted" || responseStatus === 1 ? (
+      {status === "Submitted" ? (
         <div className=" flex flex-col gap-[25px] p-6 rounded-lg bg-[#E5ECF8]">
           <div className=" flex justify-between">
             <h1 className="text-xl">Assignment</h1>
-            {responseStatus === 1 ? (
-              <p className="rounded p-[4px_8px_4px_8px] bg-[#DDF9EF] text-[#0A7B60] font-medium">
-                Submitted
-              </p>
-            ) : (
-              <p className="rounded p-[4px_8px_4px_8px] bg-[#DDF9EF] text-[#0A7B60] font-medium">
-                {status}
-              </p>
-            )}
+            <p className="rounded p-[4px_8px_4px_8px] bg-[#DDF9EF] text-[#0A7B60] font-medium">
+              {status}
+            </p>
           </div>
           <div className="flex flex-col gap-3">
             <p>{question}</p>

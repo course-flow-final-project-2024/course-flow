@@ -46,10 +46,12 @@ function CoursesContent({ titleRef }) {
     isVideoEnded,
     setisVideoEnded,
     assignmentData,
+    setCurrentSubLessonIndex,
   } = useContext(CoursesDataContext);
 
   const videoRef = useRef(null);
   const videoStatusRef = useRef({});
+  const previousSubLessonIndex = useRef(currentSubLessonIndex);
 
   const handlePlay = useCallback(async () => {
     const currentSubLesson = subLessonData[currentSubLessonIndex];
@@ -131,10 +133,15 @@ function CoursesContent({ titleRef }) {
     if (subLessonData.length > 0) {
       const currentSubLesson = subLessonData[currentSubLessonIndex];
       setCurrentSubLessonId(currentSubLesson.sub_lesson_id);
+      setCurrentSubLessonIndex(currentSubLessonIndex);
     }
-  }, [currentSubLessonIndex, subLessonData, setCurrentSubLessonId]);
-
-  useEffect(() => {}, [assignmentData]);
+  }, [
+    currentSubLessonIndex,
+    subLessonData,
+    setCurrentSubLessonId,
+    setCurrentSubLessonIndex,
+    assignmentData,
+  ]);
 
   if (!courseData || courseData.length === 0) {
     return <div></div>;

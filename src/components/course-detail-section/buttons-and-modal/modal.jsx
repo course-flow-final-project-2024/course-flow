@@ -47,6 +47,10 @@ function CourseDetailModal() {
             ? () => {
                 context.handleRemoveDesiredCourse();
               }
+            : buttonAction === "subscribe"
+            ? () => {
+                context.handleSubscribeCourse();
+              }
             : null
         }
       />

@@ -4,7 +4,6 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
-  console.log(req.body);
   const { email, password } = req.body;
 
   if (!email || !password) {

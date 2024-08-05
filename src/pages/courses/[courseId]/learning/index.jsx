@@ -113,7 +113,7 @@ function CourseLearning() {
       }
     }
   }, [subLessonId, subLessonData, lessonData]);
-
+  console.log(courseData);
   return (
     <CoursesDataContext.Provider value={valueInContext}>
       <div className="w-full h-max">

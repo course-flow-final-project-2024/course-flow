@@ -51,7 +51,6 @@ function CoursesContent({ titleRef }) {
 
   const videoRef = useRef(null);
   const videoStatusRef = useRef({});
-  const previousSubLessonIndex = useRef(currentSubLessonIndex);
 
   const handlePlay = useCallback(async () => {
     const currentSubLesson = subLessonData[currentSubLessonIndex];

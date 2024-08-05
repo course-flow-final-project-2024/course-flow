@@ -4,6 +4,7 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import getUserCourseInfo from "@/pages/courses/[courseId]/learning/getUserCourseInfo";
+import CommonModalBox from "@/utils/common-modal";
 
 export default function AssignmentCard({ id, question, status, answer }) {
   const {
@@ -14,6 +15,8 @@ export default function AssignmentCard({ id, question, status, answer }) {
     setAssignmentData,
   } = useContext(CoursesDataContext);
   const [assignmentAnswer, setAssignmentAnswer] = useState("");
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
 
   const router = useRouter();
   const { courseId } = router.query;
@@ -107,7 +110,7 @@ export default function AssignmentCard({ id, question, status, answer }) {
             <p>{question}</p>
             <textarea
               type="text"
-              className="flex w-full min-h-24 border border-[#D6D9E4] bg-white rounded-lg p-[12px_16px_12px_12px] gap-2 items-start outline-none"
+              className="flex w-full max-h-24 min-h-24 border border-[#D6D9E4] bg-white rounded-lg p-[12px_16px_12px_12px] gap-2 items-start outline-none"
               placeholder="Answer..."
               value={assignmentAnswer}
               onChange={(e) => setAssignmentAnswer(e.target.value)}
@@ -118,7 +121,17 @@ export default function AssignmentCard({ id, question, status, answer }) {
               <Button
                 style="primary"
                 text="Send Assigment"
-                onClick={() => handleOnSubmit(id)}
+                onClick={() => setOpen(true)}
+              />
+              <CommonModalBox
+                setOpen={setOpen}
+                open={open}
+                text="Send Assigment"
+                AlertMessage="Do you want to send this assignment? Please ensure that once sent, it cannot be edited."
+                leftOnClick={handleClose}
+                leftText="Cancel"
+                rightOnClick={() => handleOnSubmit(id)}
+                rightText="Yes, send now"
               />
             </div>
             {/* <p className="text-[#646D89]">Assign within 2 days</p> */}

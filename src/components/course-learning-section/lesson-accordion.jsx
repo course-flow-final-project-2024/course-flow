@@ -55,6 +55,25 @@ function LessonAccordion({ onRendered, titleRef }) {
     }
   }, [currentLessonIndex]);
 
+  useEffect(() => {
+    if (subLessonData.length > 0) {
+      const subLessonIndex = subLessonData.findIndex(
+        (subLesson) => subLesson.sub_lesson_id == currentSubLessonId
+      );
+      const lessonIndex = lessonData.findIndex((lesson) =>
+        lesson.sub_lessons.some(
+          (subLesson) => subLesson.sub_lesson_id == currentSubLessonId
+        )
+      );
+
+      if (subLessonIndex !== -1 && lessonIndex !== -1) {
+        setCurrentLessonIndex(lessonIndex);
+        setCurrentSubLessonIndex(subLessonIndex);
+        setExpandedIndex([lessonIndex]);
+      }
+    }
+  }, [currentSubLessonId, subLessonData, lessonData]);
+
   if (!courseData || courseData.length === 0) {
     return <div></div>;
   }

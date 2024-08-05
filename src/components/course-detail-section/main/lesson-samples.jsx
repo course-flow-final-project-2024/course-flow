@@ -31,7 +31,9 @@ function LessonSamples({ courseData }) {
                       paddingY={3}
                     >
                       <div className="w-full flex flex-row items-center gap-6">
-                        <span className="text-[#646D89]">0{index + 1}</span>
+                        <span className="text-[#646D89] font-medium">
+                          {index + 1 <= 9 ? `0${index + 1}` : `${index + 1}`}
+                        </span>
                         <span className="w-full lg:text-2xl">
                           <span>{lesson.lesson_title}</span>
                         </span>
@@ -42,7 +44,10 @@ function LessonSamples({ courseData }) {
                 </h2>
                 <AccordionPanel pt={3} pl={12}>
                   {lesson.sub_lessons.map((subLesson) => (
-                    <li className="list-disc" key={subLesson.sub_lesson_id}>
+                    <li
+                      className="list-disc text-[#646D89] font-normal"
+                      key={subLesson.sub_lesson_id}
+                    >
                       {subLesson.sub_lesson_title}
                     </li>
                   ))}
@@ -50,7 +55,9 @@ function LessonSamples({ courseData }) {
               </AccordionItem>
             ))
           ) : (
-            <div>No lessons available</div>
+            <div className="mt-2 text-[#646D89] font-normal">
+              No lessons available
+            </div>
           )}
         </Accordion>
       </div>

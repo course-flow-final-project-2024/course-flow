@@ -39,14 +39,18 @@ function BottomCourseCard() {
                         {courseData.length > 0 && courseData[0].summary}
                       </span>
                     </AccordionPanel>
-                    <span className="block text-[#646D89] sm:text-lg">
-                      {context.userCourseStatus === "bought"
-                        ? null
-                        : `THB ${context.formattedPrice}`}
+                    <span
+                      className={
+                        context.userCourseStatus === "bought"
+                          ? "hidden"
+                          : "block text-[#646D89] sm:text-lg"
+                      }
+                    >
+                      THB ${context.formattedPrice}
                     </span>
                   </div>
                   <div className="w-full h-10 flex flex-row gap-2 ">
-                    <CourseCardAddAndRemove customStyle="h-max grow-1" />
+                    <CourseCardAddAndRemove customStyle="h-max grow-1 max-[400px]:text-[13px] max-[475px]:text-sm max-[375px]:py-[4px] max-[375px]:leading-[18px] leading-5" />
                   </div>
                 </div>
               </Box>

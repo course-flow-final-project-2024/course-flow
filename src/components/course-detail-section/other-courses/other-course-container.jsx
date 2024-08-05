@@ -1,26 +1,12 @@
 import CourseCard from "@/components/courses/course-card";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useState, useEffect, useContext } from "react";
+import { CourseDetailContext } from "@/pages/courses/[courseId]";
 
 function OtherCourses() {
-  const [allCourseData, setAllCourseData] = useState([]);
-  const [errorStatus, setErrorStatus] = useState(null);
+  const context = useContext(CourseDetailContext);
+  const allCourseData = context.allCourseData;
+  const courseId = context.courseId;
   const [randomCourses, setRandomCourses] = useState([]);
-
-  const router = useRouter();
-  const { courseId } = router.query;
-
-  let fetchCoursesData = async () => {
-    try {
-      setErrorStatus(null);
-      let result = await axios.get("/api/courses_detail/get");
-      setAllCourseData(result.data.courses);
-    } catch {
-      setErrorStatus("Failed to fetch courses");
-      console.log(errorStatus);
-    }
-  };
 
   const getRandomCourses = () => {
     if (allCourseData.length > 0) {
@@ -39,16 +25,12 @@ function OtherCourses() {
   };
 
   useEffect(() => {
-    fetchCoursesData();
-  }, []);
-
-  useEffect(() => {
     getRandomCourses();
   }, [allCourseData, courseId]);
 
   return (
     <div className="w-full h-max px-4 py-10 bg-[#F6F7FC] lg:px-69">
-      <div className="w-full h-max flex flex-col gap-4 items-center">
+      <div className="w-full h-max flex flex-col gap-4 lg:gap-8 items-center">
         <span className="font-medium text-2xl text-center">
           Other Interesting Course
         </span>

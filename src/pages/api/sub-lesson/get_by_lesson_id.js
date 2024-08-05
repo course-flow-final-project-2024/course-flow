@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     .from("sub_lessons")
     .select("*")
     .eq("lesson_id", lessonId)
-    .order("index", { ascending: false });
+    .order("index", { ascending: true });
 
   if (error) {
     return res.status(500).json({

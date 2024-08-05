@@ -7,6 +7,7 @@ export default function CourseCard({
   course_image,
   course_name,
   summary,
+  warning,
   lessons,
   duration,
   index,
@@ -33,8 +34,10 @@ export default function CourseCard({
           <Stack
             spacing="3"
             marginY="14px"
+            marginBottom="5px"
             padding="0px 16px 16px 16px"
-            height="151px"
+            height="160px"
+            className="relative"
           >
             <Text color="#F47E20" fontSize="14px">
               Course
@@ -44,6 +47,9 @@ export default function CourseCard({
             </Heading>
             <Text color="#646D89" fontSize="16px" height="42px">
               {summary}
+            </Text>
+            <Text className="absolute bottom-0 text-red-600 text-sm">
+              {warning}
             </Text>
           </Stack>
           <div className="flex border-t-[1px] border-t-[#E4E6ED] gap-4 p-4">
@@ -58,7 +64,7 @@ export default function CourseCard({
                 {lessons.length} Lessons
               </Text>
             </div>
-            <div className="flex gap-1 w-[100px] sm:w-[100px]">
+            <div className="flex gap-1 w-[110px] sm:w-[110px]">
               <Image
                 src="/icons/time.svg"
                 alt="time icon"

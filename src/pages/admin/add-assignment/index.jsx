@@ -2,7 +2,7 @@ import AdminSidebar from "@/components/admin/sidebar";
 import AdminCreatingHeader from "@/components/admin/header/creating-page";
 import AdminAddAssignmentForm from "@/components/admin/add-assignment/add-assignment-form";
 
-export default function AddNewASsignment() {
+export default function AddNewAssignment() {
   return (
     <>
       <div className="min-h-screen flex flex-grow w-full relative">

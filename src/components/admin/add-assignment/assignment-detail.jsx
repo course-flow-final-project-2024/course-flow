@@ -1,4 +1,4 @@
-const AddAssignmentDetail = () => {
+const AdminAddAssignmentDetail = () => {
   return (
     <div className="flex flex-col gap-10 pt-10">
       <h3 className="text-[#646D89] font-[600] text-xl">Assignment detail</h3>
@@ -13,4 +13,4 @@ const AddAssignmentDetail = () => {
   );
 };
 
-export default AddAssignmentDetail;
+export default AdminAddAssignmentDetail;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import Navbar from "@/components/navbar/navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import SearchCourse from "@/components/courses/search-course";
 import CourseCard from "../../components/courses/course-card";
@@ -24,6 +24,7 @@ export default function Course() {
   const limitCardPerPage = 12;
 
   const title = searchParams.get("title") || "";
+  const courseTitleRef = useRef(null);
 
   useEffect(() => {
     async function getCourseData() {
@@ -63,7 +64,10 @@ export default function Course() {
     <>
       <Navbar />
       <div className="sm:px-[160px] px-4">
-        <SearchCourse searchParams={searchParams} />
+        <SearchCourse
+          searchParams={searchParams}
+          courseTitleRef={courseTitleRef}
+        />
         {loading ? (
           <div className="flex flex-col justify-center items-center h-80">
             <h1 className="text-2xl font-medium">Loading</h1>
@@ -101,6 +105,7 @@ export default function Course() {
             color="primary"
             onChange={(_, page) => {
               setCurrentPage(page);
+              courseTitleRef.current.scrollIntoView({ behavior: "smooth" });
             }}
           />
         </Box>

@@ -45,7 +45,7 @@ export default function AddNewCourse() {
         <div className="flex flex-grow w-full mx-auto h-full relative">
           <AdminSidebar section="course" />
           <div className="flex flex-col w-full bg-[#F6F7FC]">
-            <AdminCreatingHeader section="Add Course" />
+            <AdminCreatingHeader section="Add Course" formId={"add-course"} />
             <AdminAddCourseForm
               isLoading={isLoading}
               setIsLoading={setIsLoading}

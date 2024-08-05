@@ -18,7 +18,8 @@ export default async function handler(req, res) {
       .from("user_courses")
       .delete()
       .eq("user_id", userId)
-      .eq("course_id", courseId);
+      .eq("course_id", courseId)
+      .eq("payment_status_id", 2);
 
     if (error) {
       return res.status(500).json({

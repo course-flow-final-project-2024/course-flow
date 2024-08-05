@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   try {
     const { data, error } = await supabase
       .from("user_courses")
-      .select("*, courses (*, lessons(count))")
+      .select("*, courses (*, lessons(*))")
       .eq("user_id", userId)
       .eq("payment_status_id", 2);
 

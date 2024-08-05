@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 export const CoursesDataContext = createContext();
 function CourseLearning() {
   const router = useRouter();
-  const { courseId } = router.query;
+  const { courseId, subLessonId } = router.query;
   const titleRef = useRef(null);
 
   const [courseData, setCourseData] = useState([]);
@@ -93,7 +93,26 @@ function CourseLearning() {
         courseId
       );
     }
-  }, [courseId]);
+  }, [courseId, router]);
+
+  useEffect(() => {
+    if (subLessonId && subLessonData.length > 0) {
+      const subLessonIndex = subLessonData.findIndex(
+        (subLesson) => subLesson.sub_lesson_id == subLessonId
+      );
+      const lessonIndex = lessonData.findIndex((lesson) =>
+        lesson.sub_lessons.some(
+          (subLesson) => subLesson.sub_lesson_id == subLessonId
+        )
+      );
+
+      if (subLessonIndex !== -1 && lessonIndex !== -1) {
+        setCurrentLessonIndex(lessonIndex);
+        setCurrentSubLessonIndex(subLessonIndex);
+        setCurrentSubLessonId(subLessonId);
+      }
+    }
+  }, [subLessonId, subLessonData, lessonData]);
 
   return (
     <CoursesDataContext.Provider value={valueInContext}>

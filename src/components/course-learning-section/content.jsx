@@ -1,6 +1,6 @@
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import axios from "axios";
-import { useContext, useEffect, useRef, useCallback, useState } from "react";
+import { useContext, useEffect, useRef, useCallback } from "react";
 import AssignmentCard from "./assignment-card";
 import { calculateProgress } from "./calculate-progress";
 

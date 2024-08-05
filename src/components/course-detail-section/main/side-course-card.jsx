@@ -28,7 +28,7 @@ function SideCourseCard() {
         THB {context.formattedPrice}
       </h3>
       <div className="border-t-[1px] flex flex-col gap-4 "></div>
-      <CourseCardAddAndRemove />
+      <CourseCardAddAndRemove customStyle="leading-5" />
       <PaymentModal />
     </div>
   );

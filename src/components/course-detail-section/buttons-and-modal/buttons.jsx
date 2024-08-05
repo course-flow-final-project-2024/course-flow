@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 function CourseCardAddAndRemove(props) {
   const router = useRouter();
   const context = useContext(CourseDetailContext);
+  const redirectId = context.courseId;
 
   const handleStartLearning = () => {
     router.push(`/courses/${context.courseId}/learning`);
@@ -76,7 +77,7 @@ function CourseCardAddAndRemove(props) {
             style="secondary"
             text="Get in Desire Course"
             onClick={() => {
-              router.push("/login");
+              router.push(`/login/?redirect=${redirectId}`);
             }}
             customStyle={props.customStyle}
           />
@@ -84,7 +85,7 @@ function CourseCardAddAndRemove(props) {
             style="primary"
             text="Subscribe This Course"
             onClick={() => {
-              router.push("/login");
+              router.push(`/login/?redirect=${redirectId}`);
             }}
             customStyle={props.customStyle}
           />

@@ -2,12 +2,14 @@ import Button from "@/utils/button";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import isNumber from "@/utils/numberChecking";
 
 export default function LogInForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signInError, setSignInError] = useState(null);
+  const { redirect } = router.query;
 
   const handle = async (e) => {
     e.preventDefault();
@@ -31,7 +33,11 @@ export default function LogInForm() {
 
       localStorage.setItem("token", JSON.stringify(response.data.token));
 
-      router.push("/");
+      if (redirect && isNumber(redirect)) {
+        router.push(`/courses/${redirect}`);
+      } else {
+        router.push(`/`);
+      }
     } catch (error) {
       setSignInError("Failed to sign in. Please try again later.");
     }

@@ -113,16 +113,25 @@ function CourseLearning() {
       }
     }
   }, [subLessonId, subLessonData, lessonData]);
-  console.log(courseData);
+
   return (
     <CoursesDataContext.Provider value={valueInContext}>
       <div className="w-full h-max">
         <Navbar />
-        <div className="w-full h-full flex flex-col sm:flex-row sm:justify-center max-[640px]:items-center ">
-          <CoursesProgress titleRef={titleRef} />
-          <CoursesContent titleRef={titleRef} />
-        </div>
-        <ActionBar titleRef={titleRef} />
+        {courseData.length === 0 ? (
+          <div className="flex flex-col justify-center items-center h-[700px]">
+            <h1 className="text-2xl font-medium">Loading</h1>
+            <span className="loading loading-dots loading-lg"></span>
+          </div>
+        ) : (
+          <>
+            <div className="w-full h-full flex flex-col sm:flex-row sm:justify-center max-[640px]:items-center">
+              <CoursesProgress titleRef={titleRef} />
+              <CoursesContent titleRef={titleRef} />
+            </div>
+            <ActionBar titleRef={titleRef} />
+          </>
+        )}
         <CommonFooter />
       </div>
     </CoursesDataContext.Provider>

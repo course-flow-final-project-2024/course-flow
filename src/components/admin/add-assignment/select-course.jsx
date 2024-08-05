@@ -61,7 +61,6 @@ const CourseSelect = ({
         className={dropDownStyle}
         onChange={handleCourseChange}
         defaultValue=""
-        required
       >
         <option value="" disabled hidden>
           Select course

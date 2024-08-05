@@ -67,7 +67,6 @@ const LessonSelect = ({
         className={dropDownStyle}
         onChange={handleLessonChange}
         defaultValue=""
-        required
       >
         <option value="" disabled hidden>
           Select lesson

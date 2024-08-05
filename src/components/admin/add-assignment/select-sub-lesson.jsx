@@ -55,7 +55,6 @@ const SubLessonSelect = ({
         className={dropDownStyle}
         onChange={handleSubLessonChange}
         defaultValue=""
-        required
       >
         <option value="" disabled hidden>
           Select sub-lesson

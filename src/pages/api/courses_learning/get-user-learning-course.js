@@ -20,11 +20,13 @@ export default async function getUserLearningCourse(req, res) {
           lessons (
             lesson_id,
             lesson_title,
+            index,
             sub_lessons (
               sub_lesson_id,
               lesson_id,
               sub_lesson_title,
               sub_lesson_video,
+              index,
               user_lessons (
                 sub_lesson_status_id
               ),
@@ -48,6 +50,17 @@ export default async function getUserLearningCourse(req, res) {
       .eq("course_id", courseId)
       .eq("user_id", userId)
       .eq("payment_status_id", "1");
+
+    if (courses.length > 0) {
+      const course = courses[0].courses;
+      if (course.lessons) {
+        course.lessons.map((lesson) => {
+          if (lesson.sub_lessons) {
+            lesson.sub_lessons.sort((a, b) => a.index - b.index);
+          }
+        });
+      }
+    }
 
     if (error) {
       return res.status(400).json({ error: "Course not found" });

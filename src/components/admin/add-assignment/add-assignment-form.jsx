@@ -4,6 +4,8 @@ import CourseSelect from "./select-course";
 import LessonSelect from "./select-lesson";
 import SubLessonSelect from "./select-sub-lesson";
 import axios from "axios";
+import { useRouter } from "next/router";
+import { useToast } from "@chakra-ui/react";
 
 const AdminAddAssignmentForm = () => {
   const [courses, setCourses] = useState([]);
@@ -17,17 +19,64 @@ const AdminAddAssignmentForm = () => {
   const [isLessonLoading, setLessonIsLoading] = useState(false);
   const [isSubLessonLoading, setSubLessonIsLoading] = useState(false);
 
+  const router = useRouter();
+  const toastId = "add-assignment";
+  const toast = useToast({
+    id: toastId,
+    position: "top",
+    isClosable: true,
+  });
+
   const handleAssignmentSubmit = async (e) => {
     e.preventDefault();
-    console.log("assignment", assignment);
-    console.log("subId: ", selectedSubLessonId);
-    console.log("lessonId: ", selectedLessonId);
+    if (
+      !selectedCourseId ||
+      !selectedLessonId ||
+      !selectedSubLessonId ||
+      !assignment
+    ) {
+      toast({
+        title: "Oops...",
+        description:
+          "Please complete all required field before creating assignment.",
+        status: "error",
+        duration: 6000,
+        isClosable: true,
+      });
+      return;
+    }
+
     if (selectedCourseId && selectedLessonId && selectedSubLessonId) {
-      const result = await axios.post(`/api/assignment/post`, {
+      const creatAssignment = axios.post(`/api/assignment/post`, {
         assignment_title: assignment,
         lesson_id: Number(selectedLessonId),
         sub_lesson_id: Number(selectedSubLessonId),
       });
+      if (!toast.isActive(toastId)) {
+        toast.promise(creatAssignment, {
+          success: {
+            title: "Good to go :)",
+            description: "Assignment has been created succesfully.",
+          },
+          error: {
+            title: "Oops.. :(",
+            description: "Something wrong.",
+          },
+          loading: {
+            title: "Creating Assignment",
+            description: "Please wait ~",
+          },
+        });
+      }
+      try {
+        const result = await creatAssignment;
+
+        if (result.status === 200) {
+          router.push("/admin/assignments");
+        }
+      } catch (error) {
+        console.error("Error creating assignment", error);
+      }
     }
   };
 

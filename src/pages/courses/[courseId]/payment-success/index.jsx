@@ -47,7 +47,7 @@ const PaymentSuccess = () => {
     <>
       <Navbar />
       <PageDecoration />
-      <div className="w-full h-max px-12 max-sm:px-8 min-h-[600px] xl:min-h-[860px] flex justify-center items-center ">
+      <div className="w-full h-max px-12 max-sm:px-8 min-h-[860px] flex justify-center items-center ">
         {actionStatus === "completed" ? (
           <div className="flex flex-col gap-8 lg:gap-12 items-center">
             <Image
@@ -78,7 +78,7 @@ const PaymentSuccess = () => {
                 text={`Browse more courses`}
                 customStyle="leading-5 "
                 onClick={() => {
-                  router.push(`/courses/`);
+                  router.push(`/courses`);
                 }}
               />
             </div>
@@ -90,19 +90,30 @@ const PaymentSuccess = () => {
           </div>
         ) : actionStatus === "error" ? (
           <div className="flex flex-col gap-8 lg:gap-12 items-center">
-            <p className="text-2xl font-semibold text-red-500">
-              Something went wrong while processing your request, please try
-              again later
+            <Image
+              src="/course-detail/error-icon.svg"
+              width={80}
+              height={80}
+              alt="error"
+            />
+            <p className="text-5xl font-semibold text-black max-sm:text-xl max-md:text-3xl">
+              Oops! Something went wrong
+            </p>
+            <p className="text-xl  max-sm:text-sm max-md:text-lg font-normal text-black">
+              An error occured while processing your request. Please try again
+              later
             </p>
 
-            <Button
-              style="primary"
-              text={`Back to course detail`}
-              customStyle="leading-5 px-4 "
-              onClick={() => {
-                router.push(`/courses/${courseId}`);
-              }}
-            />
+            <div className="w-full flex  ">
+              <Button
+                style="primary"
+                text={`Back to course detail`}
+                customStyle="leading-5 "
+                onClick={() => {
+                  router.push(`/courses/${courseId}`);
+                }}
+              />
+            </div>
           </div>
         ) : null}
       </div>

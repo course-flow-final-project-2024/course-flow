@@ -77,7 +77,7 @@ function CourseCardAddAndRemove(props) {
             style="secondary"
             text="Get in Desire Course"
             onClick={() => {
-              router.push(`/login/?redirect=${redirectId}`);
+              router.push(`/login/?redirectC=${redirectId}`);
             }}
             customStyle={props.customStyle}
           />
@@ -85,7 +85,7 @@ function CourseCardAddAndRemove(props) {
             style="primary"
             text="Subscribe This Course"
             onClick={() => {
-              router.push(`/login/?redirect=${redirectId}`);
+              router.push(`/login/?redirectC=${redirectId}`);
             }}
             customStyle={props.customStyle}
           />

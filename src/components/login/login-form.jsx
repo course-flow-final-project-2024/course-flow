@@ -9,7 +9,7 @@ export default function LogInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signInError, setSignInError] = useState(null);
-  const { redirect } = router.query;
+  const { redirectC } = router.query;
 
   const handle = async (e) => {
     e.preventDefault();
@@ -33,8 +33,8 @@ export default function LogInForm() {
 
       localStorage.setItem("token", JSON.stringify(response.data.token));
 
-      if (redirect && isNumber(redirect)) {
-        router.push(`/courses/${redirect}`);
+      if (redirectC && isNumber(redirectC)) {
+        router.push(`/courses/${redirectC}`);
       } else {
         router.push(`/`);
       }

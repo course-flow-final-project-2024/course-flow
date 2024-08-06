@@ -22,7 +22,7 @@ export default async function updateAssignmentStatus(req, res) {
     const userId = users[0].user_id;
 
     const { data, error } = await supabase
-      .from("user_assignment")
+      .from("user_assignments")
       .update({ assignment_status_id: status, answer: assignmentAnswer })
       .eq("user_id", userId)
       .eq("assignment_id", assignmentId)

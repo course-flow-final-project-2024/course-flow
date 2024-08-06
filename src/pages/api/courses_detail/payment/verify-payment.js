@@ -43,7 +43,7 @@ export default async function handler(req, res) {
 
       const { data: allCourseData, error: allCourseDataError } = await supabase
         .from("courses")
-        .select("*, lessons(*, sub_lessons(*))")
+        .select("*, lessons(*, sub_lessons(*, assignments (*)))")
         .eq("course_id", courseId);
 
       if (allCourseDataError) {
@@ -59,6 +59,16 @@ export default async function handler(req, res) {
           sub_lesson_id: sub_lesson.sub_lesson_id,
           sub_lesson_status_id: 3,
         }))
+      );
+
+      const combinedAssignments = allCourseData[0].lessons.flatMap((lesson) =>
+        lesson.sub_lessons.flatMap((sub_lesson) =>
+          sub_lesson.assignments.map((assignment) => ({
+            assignment_id: assignment.assignment_id,
+            user_id: userId,
+            assignment_status_id: 2,
+          }))
+        )
       );
 
       if (fetchedData.length === 0) {
@@ -85,6 +95,16 @@ export default async function handler(req, res) {
           return res
             .status(500)
             .json({ error: "Failed to insert lessons data" });
+        }
+
+        const { error: insertAssignmentError } = await supabase
+          .from("user_assignments")
+          .insert(combinedAssignments);
+
+        if (insertAssignmentError) {
+          return res
+            .status(500)
+            .json({ error: "Failed to insert assignments data" });
         }
 
         return res.status(201).json({
@@ -121,6 +141,16 @@ export default async function handler(req, res) {
           return res
             .status(500)
             .json({ error: "Failed to insert lessons data" });
+        }
+
+        const { error: insertAssignmentError } = await supabase
+          .from("user_assignments")
+          .insert(combinedAssignments);
+
+        if (insertAssignmentError) {
+          return res
+            .status(500)
+            .json({ error: "Failed to insert assignments data" });
         }
 
         return res.status(200).json({

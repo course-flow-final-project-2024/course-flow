@@ -1,11 +1,36 @@
 import Button from "@/utils/button";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import CommonModalBox from "@/utils/common-modal";
+import updateAssignment from "./update-assignment";
+import getUserAssignment from "@/pages/my-assignments/getUserAssignment";
+import { AssignmentContext } from "@/pages/my-assignments";
+import { useContext } from "react";
 
 export default function AnswerForm(prop) {
+  const { setAssingmentData, setOriginalData, setIsLoading, setIsError } =
+    useContext(AssignmentContext);
   const router = useRouter();
+  const [answer, setAnswer] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const handleClose = () => setIsOpen(false);
+  function handleOnChange(e) {
+    setAnswer(e.target.value);
+  }
+
+  async function handleOnSubmit(assignmentId) {
+    const { message } = await updateAssignment(assignmentId, 1, answer);
+    getUserAssignment(
+      setAssingmentData,
+      setOriginalData,
+      setIsLoading,
+      setIsError
+    );
+    handleClose();
+  }
   return (
     <div className="flex flex-col sm:flex-row gap-4 sm:gap-6  sm:items-start">
-      <label className="w-full flex flex-col gap-1 ">
+      <label className="w-full flex flex-col gap-3 ">
         <h3 className="text-base font-normal">
           {prop.assignment.assignments.assignment_title}
         </h3>
@@ -33,9 +58,32 @@ export default function AnswerForm(prop) {
             <textarea
               className="textarea textarea-bordered w-full min-h-24"
               placeholder="Answer..."
+              onChange={(e) => {
+                handleOnChange(e);
+              }}
             ></textarea>
             <div className="flex flex-col gap-3">
-              <Button text="Submit" style="primary" />
+              <Button
+                text="Submit"
+                style="primary"
+                onClick={() => {
+                  if (answer.length > 0) {
+                    setIsOpen(true);
+                  }
+                }}
+              />
+              <CommonModalBox
+                setOpen={setIsOpen}
+                open={isOpen}
+                text="Send Assigment"
+                AlertMessage="Do you want to send assignment answer? Please ensure that once sent, it cannot be edited."
+                leftOnClick={handleClose}
+                leftText="Cancel"
+                rightOnClick={() =>
+                  handleOnSubmit(prop.assignment.assignment_id)
+                }
+                rightText="Yes, send now"
+              />
               <a
                 role="button"
                 onClick={() => {

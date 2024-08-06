@@ -4,7 +4,7 @@ import AssignmentTabs from "@/components/assignment/tabs";
 import { createContext, useState, useEffect } from "react";
 import AssignmentCard from "@/components/assignment/card";
 import { useRouter } from "next/router";
-import axios from "axios";
+import getUserAssignment from "./getUserAssignment";
 
 export const AssignmentContext = createContext();
 
@@ -12,38 +12,31 @@ function UserAssignment() {
   const router = useRouter();
   const [assingmentData, setAssingmentData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
-  const [loadingStatus, setLoadingStatus] = useState(false);
-  const [errorStatus, setErrorStatus] = useState(false);
-
-  async function getUserAssignment() {
-    setErrorStatus(false);
-    const hasToken = Boolean(localStorage.getItem("token"));
-    if (!hasToken) {
-      router.push("/login");
-      return;
-    }
-
-    try {
-      setLoadingStatus(true);
-      const result = await axios.get("/api/assignment/get_user_assignments");
-      setAssingmentData(result.data);
-      setOriginalData(result.data);
-      setLoadingStatus(false);
-      return;
-    } catch (err) {
-      setLoadingStatus(false);
-      setErrorStatus(true);
-      return;
-    }
-  }
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const valueInContext = {
     assingmentData,
     setAssingmentData,
     originalData,
+    setOriginalData,
+    setIsLoading,
+    setIsError,
   };
   useEffect(() => {
-    getUserAssignment();
+    setIsError(false);
+    const hasToken = Boolean(localStorage.getItem("token"));
+    if (!hasToken) {
+      router.push("/login");
+      return;
+    } else {
+      getUserAssignment(
+        setAssingmentData,
+        setOriginalData,
+        setIsLoading,
+        setIsError
+      );
+    }
   }, []);
   return (
     <AssignmentContext.Provider value={valueInContext}>
@@ -57,7 +50,7 @@ function UserAssignment() {
             </div>
           </div>
           <div className="w-full max-w-[1120px]">
-            {loadingStatus ? (
+            {isLoading ? (
               <div className="w-full min-h-[350px] flex flex-col gap-4 items-center justify-center">
                 <span className="text-3xl">Loading</span>
                 <span className="loading loading-dots loading-lg"></span>
@@ -68,7 +61,7 @@ function UserAssignment() {
                   There are currently no assignment in your assignment list.
                 </span>
               </div>
-            ) : errorStatus ? (
+            ) : isError ? (
               <div className="w-full min-h-[350px] flex flex-col gap-2 items-center justify-center">
                 <span className="text-lg font-medium sm:text-xl md:text-2xl xl:text-3xl">
                   Something went wrong. Please try again later.

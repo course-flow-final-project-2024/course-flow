@@ -47,7 +47,7 @@ export default async function getUserLearningCourse(req, res) {
                 assignment_id,
                 sub_lesson_id,
                 assignment_title,
-                user_assignment (
+                user_assignments (
                   assignment_status_id,
                   answer,
                   assignment_status (

@@ -12,20 +12,20 @@ export default async function updateProfile(req, res) {
   }
 
   try {
-    const { data: session, error: sessionError } = await supabase
-      .from("loginsession")
-      .select("user_email")
-      .eq("sessionId", token)
-      .single();
+    // const { data: session, error: sessionError } = await supabase
+    //   .from("loginsession")
+    //   .select("user_email")
+    //   .eq("peyload", token)
+    //   .single();
 
-    if (sessionError || !session || !session.user_email) {
-      throw new Error(sessionError.message || "Session not valid");
-    }
+    // if (sessionError || !session || !session.user_email) {
+    //   throw new Error(sessionError.message || "Session not valid");
+    // }
 
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("*")
-      .eq("email", session.user_email)
+      .eq("email", payload.email)
       .single();
 
     if (userError || !user) {
@@ -46,7 +46,7 @@ export default async function updateProfile(req, res) {
     const { error: updateError } = await supabase
       .from("users")
       .update(updates)
-      .eq("email", session.user_email);
+      .eq("email", payload.email);
 
     if (updateError) {
       throw new Error(userError.message);
@@ -55,7 +55,7 @@ export default async function updateProfile(req, res) {
     const { data: updatedUser, error: updatedUserError } = await supabase
       .from("users")
       .select("*")
-      .eq("email", session.user_email)
+      .eq("email", payload.email)
       .single();
 
     if (updatedUserError) {

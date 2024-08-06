@@ -38,7 +38,7 @@ async function getImageUrl(filePath) {
 
 
 
-function updateProfile() {
+function UpdateProfile() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -266,4 +266,4 @@ function updateProfile() {
     </div>
   );
 }
-export default updateProfile;
+export default UpdateProfile;

@@ -11,25 +11,25 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { data: session, error: sessionError } = await supabase
-      .from("loginsession")
-      .select("user_email")
-      .eq("sessionId", token)
-      .single();
+    // const { data: session, error: sessionError } = await supabase
+    //   .from("loginsession")
+    //   .select("user_email")
+    //   .eq("sessionId", token)
+    //   .single();
 
-    if (sessionError) {
-      console.error("Session Error:", sessionError);
-      throw new Error(sessionError.message);
-    }
+    // if (sessionError) {
+    //   console.error("Session Error:", sessionError);
+    //   throw new Error(sessionError.message);
+    // }
 
-    if (!session || !session.user_email) {
-      return res.status(401).json({ error: "Session not found" });
-    }
+    // if (!session || !session.user_email) {
+    //   return res.status(401).json({ error: "Session not found" });
+    // }
 
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("*")
-      .eq("email", session.user_email)
+      .eq("email", payload.email)
       .single();
 
     if (userError) {

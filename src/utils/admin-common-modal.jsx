@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Button from "@/utils/button";
 import { Box, Modal } from "@mui/material";
 
-function CommonModalBox(props) {
+function AdminCommonModalBox(props) {
   return (
     <React.Fragment>
       <div className="flex">
@@ -49,7 +49,7 @@ function CommonModalBox(props) {
                         style="secondary"
                         text={props.leftText}
                         onClick={props.leftOnClick}
-                        customStyle="py-[18px] px-8"
+                        customStyle="py-[18px] px-6"
                       />
                     </div>
                     <div className="flex sm:mt-0 mt-4">
@@ -71,7 +71,7 @@ function CommonModalBox(props) {
   );
 }
 
-export default CommonModalBox;
+export default AdminCommonModalBox;
 
 // <CommonModalBox text="" AlertMessage="" leftOnClick="" leftText="" rightOnClick="" rightText="" />
 

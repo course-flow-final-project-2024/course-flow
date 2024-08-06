@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { AddCourseContext } from "@/pages/_app";
-import CommonModalBox from "@/utils/admin-common-modal";
+import AdminCommonModalBox from "@/utils/admin-common-modal";
 
 export function AdminEditLessonList() {
   const { course, setCourse } = useContext(AddCourseContext);
@@ -111,9 +111,9 @@ export function AdminEditLessonList() {
                       }}
                       className=" cursor-pointer"
                     />
-                    <CommonModalBox
+                    <AdminCommonModalBox
                       open={open}
-                      AlertMessage="Are you sure you want to delete this lesson?"
+                      AlertMessage="Do you want to delete this lesson?"
                       leftText="Yes, I want to delete this lesson"
                       rightText="No, keep it"
                       leftOnClick={() => {

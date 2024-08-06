@@ -4,25 +4,9 @@ export default async function getProfile(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-
-  const  token  = req.headers.authorization;
-
-  if (!token) {
-    return res.status(400).json({ error: "Not authorized" });
-  }
+  const payload = await validationToken(req, res);
 
   try {
-    const { data: session, error: sessionError } = await supabase
-      .from("loginsession")
-      .select("user_email")
-      .eq("sessionId", token)
-      .single();
-      console.log("Session Data:", session);
-    if (sessionError) {
-      console.log("sessionError", sessionError)
-      throw new Error(sessionError);
-    }
-
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("*")
@@ -45,12 +29,7 @@ export default async function getProfile(req, res) {
       },
     });
   } catch (error) {
-   
-    console.error("Error signing in:", util.inspect(error.message, {showHidden: false, depth: null, colors: true}));
-
-   
-    console.error("Error signing in:", util.inspect(error.message, {showHidden: false, depth: null, colors: true}));
-
+    console.error("Error signing in:", error.message);
     return res.status(500).json({ error: "Failed to sign in" });
   }
 }

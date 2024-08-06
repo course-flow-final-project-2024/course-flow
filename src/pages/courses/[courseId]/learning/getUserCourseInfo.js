@@ -13,7 +13,6 @@ const getUserCourseInfo = async (
       `/api/courses_learning/get-user-learning-course`,
       {
         params: {
-          userId: 17,
           courseId,
         },
       }

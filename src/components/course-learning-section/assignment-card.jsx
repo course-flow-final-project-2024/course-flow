@@ -22,7 +22,6 @@ export default function AssignmentCard({ id, question, status, answer }) {
   const { courseId } = router.query;
 
   const updateAssignmentStatus = async (
-    userId,
     assignmentId,
     status,
     assignmentAnswer
@@ -31,7 +30,6 @@ export default function AssignmentCard({ id, question, status, answer }) {
       const response = await axios.post(
         `/api/courses_learning/update-assignment-status`,
         {
-          userId,
           assignmentId,
           status,
           assignmentAnswer,
@@ -78,7 +76,7 @@ export default function AssignmentCard({ id, question, status, answer }) {
       alert("Please provide an answer before submitting.");
       return;
     }
-    await updateAssignmentStatus(17, id, 1, assignmentAnswer);
+    await updateAssignmentStatus(id, 1, assignmentAnswer);
   };
 
   return (
@@ -127,7 +125,7 @@ export default function AssignmentCard({ id, question, status, answer }) {
                 setOpen={setOpen}
                 open={open}
                 text="Send Assigment"
-                AlertMessage="Do you want to send this assignment? Please ensure that once sent, it cannot be edited."
+                AlertMessage="Do you want to send assignment answer? Please ensure that once sent, it cannot be edited."
                 leftOnClick={handleClose}
                 leftText="Cancel"
                 rightOnClick={() => handleOnSubmit(id)}

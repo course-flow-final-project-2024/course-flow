@@ -34,7 +34,6 @@ function CheckoutForm({ amount }) {
             "/api/stripe-payment/create-payment-intent",
             {
               amount: convertToSubcurrency(amount),
-              userId,
               courseId,
             }
           );

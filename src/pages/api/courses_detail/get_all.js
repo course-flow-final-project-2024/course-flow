@@ -11,17 +11,15 @@ export default async function handler(req, res) {
       .select(`*, lessons (*, sub_lessons(*))`);
 
     if (coursesError) {
-      console.error("Error fetching course data from supabase", coursesError);
+      console.error("Error fetching course data from server", coursesError);
       return res.status(500).json({
-        error: "Failed to fetch course data from supabase",
+        error: "Failed to fetch course data from server",
       });
     }
 
-    return res.status(200).json({ courses: coursesData });
+    return res.status(200).json({ coursesDetail: coursesData });
   } catch (error) {
-    console.error("Unexpected error occurred", error.message, error.stack);
-    return res.status(500).json({
-      error: "An unexpected error occurred: " + error.message,
-    });
+    console.error(error);
+    return res.status(500).json({ error: "Failed to fetch data from server" });
   }
 }

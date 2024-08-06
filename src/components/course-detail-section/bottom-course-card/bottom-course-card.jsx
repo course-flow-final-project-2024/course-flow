@@ -46,7 +46,7 @@ function BottomCourseCard() {
                           : "block text-[#646D89] sm:text-lg"
                       }
                     >
-                      THB ${context.formattedPrice}
+                      THB {context.formattedPrice}
                     </span>
                   </div>
                 </Box>

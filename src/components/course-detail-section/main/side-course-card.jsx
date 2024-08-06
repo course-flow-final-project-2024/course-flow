@@ -12,7 +12,11 @@ function SideCourseCard() {
       <div className="w-full text-sm text-[#F47E20]">Course</div>
       <div className="w-full flex flex-col gap-2">
         <h3 className="font-medium md:text-xl xl:text-2xl text-black">
-          {courseData.length > 0 && courseData[0].course_name}
+          {courseData.length > 0 ? (
+            courseData[0].course_name
+          ) : (
+            <span className="loading loading-dots loading-lg"></span>
+          )}
         </h3>
         <span className="text-[#646D89] md:text-sm xl:text-base ">
           {courseData.length > 0 && courseData[0].summary}

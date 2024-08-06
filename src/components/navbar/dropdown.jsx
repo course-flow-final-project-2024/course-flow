@@ -34,6 +34,7 @@ function NavbarDropdown(prop) {
         >
           <li>
             <a href="/user-profile">Profile</a>
+    
           </li>
           <li>
             <a href="/my-courses">My Courses</a>

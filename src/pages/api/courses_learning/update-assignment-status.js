@@ -1,7 +1,7 @@
 import { supabase } from "../../../../lib/supabase";
 import { validationToken } from "../validation-token";
 
-export default async function updateVideoStatus(req, res) {
+export default async function updateAssignmentStatus(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }

@@ -26,16 +26,32 @@ function CourseDetail() {
   const [formattedPrice, setFormattedPrice] = useState("");
   const [originalPrice, setOriginalPrice] = useState(0);
 
-  function checkLoginStatus() {
-    const getUserStatus = JSON.parse(localStorage.getItem("token"));
-    if (getUserStatus) {
-      setLoginStatus(true);
-      return true;
+  async function checkLoginStatus() {
+    const hasToken = Boolean(localStorage.getItem("token"));
+
+    if (hasToken) {
+      try {
+        const result = await axios.get("/api/user-profile/get");
+        const fetchedId = result.data.user.id;
+        if (fetchedId) {
+          setUserId(fetchedId);
+          setLoginStatus(true);
+          return true;
+        } else {
+          setLoginStatus(false);
+          return false;
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        setLoginStatus(false);
+        return false;
+      }
     } else {
       setLoginStatus(false);
       return false;
     }
   }
+
   const getallCoursesData = async () => {
     try {
       const result = await axios.get(`/api/courses_detail/get_all`);
@@ -56,26 +72,20 @@ function CourseDetail() {
     }
   };
 
-  const fetchUserId = async () => {
-    if (courseId) {
-      const token = JSON.parse(localStorage.getItem("token"));
-      const fetchedData = await axios.get(
-        `/api/user-profile/get?token=${token}`
-      );
-      setUserId(fetchedData.data.user.id);
-    }
-  };
-
   const getUserCourseDetail = async () => {
-    if (userId) {
+    if (courseId) {
       const fetchedCourseDetail = await axios.get(
         "/api/courses_detail/get_user_courses",
-        { params: { userId, courseId } }
+        { params: { courseId } }
       );
-      if (fetchedCourseDetail.data.data.length > 0) {
-        if (fetchedCourseDetail.data.data[0].payment_status_id === 1) {
+
+      const courseStatus = fetchedCourseDetail.data.userCourseData;
+      console.log(courseStatus);
+
+      if (courseStatus.length > 0) {
+        if (courseStatus[0].payment_status_id === 1) {
           setUserCourseStatus("bought");
-        } else if (fetchedCourseDetail.data.data[0].payment_status_id === 2) {
+        } else if (courseStatus[0].payment_status_id === 2) {
           setUserCourseStatus("added");
         }
       } else {
@@ -108,14 +118,12 @@ function CourseDetail() {
 
   useEffect(() => {
     const initFetch = async () => {
-      const isLoggedIn = checkLoginStatus();
+      const isLoggedIn = await checkLoginStatus();
+
       if (courseId) {
         await getallCoursesData();
         if (isLoggedIn) {
-          await fetchUserId();
-          if (userId) {
-            await getUserCourseDetail();
-          }
+          await getUserCourseDetail();
         } else {
           setUserCourseStatus("guest");
         }

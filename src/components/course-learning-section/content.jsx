@@ -4,12 +4,11 @@ import { useContext, useEffect, useRef, useCallback } from "react";
 import AssignmentCard from "./assignment-card";
 import { calculateProgress } from "./calculate-progress";
 
-const updateVideoStatus = async (userId, subLessonId, status) => {
+const updateVideoStatus = async (subLessonId, status) => {
   try {
     const response = await axios.post(
       `/api/courses_learning/update-video-status`,
       {
-        userId,
         subLessonId,
         status,
       }
@@ -32,10 +31,12 @@ const updateVideoStatus = async (userId, subLessonId, status) => {
   }
 };
 
-function CoursesContent({ titleRef }) {
+function CoursesContent({ titleRef, subLessonId }) {
   const {
     courseData,
+    lessonData,
     subLessonData,
+    setCurrentLessonIndex,
     currentSubLessonIndex,
     currentSubLessonId,
     setCurrentSubLessonId,
@@ -63,7 +64,6 @@ function CoursesContent({ titleRef }) {
     ) {
       setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, false);
       const response = await updateVideoStatus(
-        17,
         currentSubLesson.sub_lesson_id,
         2
       );
@@ -86,7 +86,6 @@ function CoursesContent({ titleRef }) {
     ) {
       setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, true);
       const response = await updateVideoStatus(
-        17,
         currentSubLesson.sub_lesson_id,
         1
       );
@@ -141,6 +140,25 @@ function CoursesContent({ titleRef }) {
     setCurrentSubLessonIndex,
     assignmentData,
   ]);
+
+  useEffect(() => {
+    if (subLessonId && subLessonData.length > 0) {
+      const subLessonIndex = subLessonData.findIndex(
+        (subLesson) => subLesson.sub_lesson_id == subLessonId
+      );
+      const lessonIndex = lessonData.findIndex((lesson) =>
+        lesson.sub_lessons.some(
+          (subLesson) => subLesson.sub_lesson_id == subLessonId
+        )
+      );
+
+      if (subLessonIndex !== -1 && lessonIndex !== -1) {
+        setCurrentLessonIndex(lessonIndex);
+        setCurrentSubLessonIndex(subLessonIndex);
+        setCurrentSubLessonId(subLessonId);
+      }
+    }
+  }, [subLessonId, subLessonData, lessonData]);
 
   if (!courseData || courseData.length === 0) {
     return <div></div>;

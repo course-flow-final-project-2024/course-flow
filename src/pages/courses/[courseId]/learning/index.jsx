@@ -127,7 +127,7 @@ function CourseLearning() {
           <>
             <div className="w-full h-full flex flex-col sm:flex-row sm:justify-center max-[640px]:items-center">
               <CoursesProgress titleRef={titleRef} />
-              <CoursesContent titleRef={titleRef} />
+              <CoursesContent titleRef={titleRef} subLessonId={subLessonId} />
             </div>
             <ActionBar titleRef={titleRef} />
           </>

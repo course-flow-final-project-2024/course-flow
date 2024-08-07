@@ -29,7 +29,7 @@ function OtherCourses() {
   }, [allCourseData, courseId]);
 
   return (
-    <div className="w-full h-max px-4 py-10 bg-[#F6F7FC] lg:px-69">
+    <div className="w-full h-max px-4 py-10 bg-[#F6F7FC] lg:px-69 max-[375px]:px-0">
       <div className="w-full h-max flex flex-col gap-4 lg:gap-8 items-center">
         <span className="font-medium text-2xl text-center">
           Other Interesting Course
@@ -39,10 +39,7 @@ function OtherCourses() {
             randomCourses.map((index) => {
               const course = allCourseData[index];
               return (
-                <div
-                  className="grid justify-center max-[375px]:scale-[0.8]"
-                  key={course.course_id}
-                >
+                <div className="grid justify-center" key={course.course_id}>
                   <CourseCard
                     course_id={course.course_id}
                     course_image={course.course_image}

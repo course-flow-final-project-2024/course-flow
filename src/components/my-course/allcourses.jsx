@@ -16,7 +16,7 @@ export default function Allcourses() {
         if (!token) {
           throw new Error("No token found");
         }
-
+        
         const userResponse = await axios.get("/api/user-profile/get", {
           headers: {
             Authorization: token,

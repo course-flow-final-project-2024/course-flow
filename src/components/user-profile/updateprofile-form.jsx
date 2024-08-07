@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { supabase } from "../../../lib/supabase";
-// import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 async function uploadImage(file) {
   const bucket = "userProfile";
   const foleder = "userImage";
-  const fileName = `${file.name}`;
+  const fileName = `${uuidv4()}_${file.name}`;
   const filePath = `${foleder}/${fileName}`;
 
   const{ data, error } = await supabase
@@ -24,7 +24,9 @@ async function uploadImage(file) {
 }
 
 async function getImageUrl(filePath) {
-  const { publicUrl, error} = supabase
+
+  try {
+  const { data, error } = supabase
   .storage
   .from("userProfile")
   .getPublicUrl(filePath);
@@ -33,9 +35,18 @@ async function getImageUrl(filePath) {
     console.error("Error getting image Url:", error);
     return null;
   }
-  return publicUrl;
-}
 
+  if (!data || !data.publicUrl) {
+    console.error("Public URL is not available in the response.");
+    return null;
+  }
+
+  console.log("Image URL:", data.publicUrl);
+  return data.publicUrl;
+} catch (error) {
+  console.error("Error getting image Url:", error.message);
+  return null;
+}}
 
 
 function UpdateProfile() {
@@ -115,9 +126,55 @@ function UpdateProfile() {
     }
   };
 
+  const handleRemoveImage = async () => {
+    if (profileImage && typeof profileImage === "string") {
+      try {
+       
+        const response = await axios.post("/api/user-profile/delete-image", {
+          filePath: profileImage,
+          userEmail: userData.email, 
+        });
+        
+        console.log(response.data.message);
+        setProfileImage(null);
+        setImagePreview("");
+      } catch (error) {
+        console.error("Error removing image:", error);
+      }
+    }
+  };
+  
+
+  // const handleRemoveImage = async () => {
+  //   if (profileImage && typeof profileImage === "string") {
+  //     try {
+  //       const response = await fetch("/api/user-profile/delete-image", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //         body: JSON.stringify({ filePath: profileImage }),
+  //       });
+  
+  //       if (!response.ok) {
+  //         throw new Error("Failed to delete image");
+  //       }
+  
+  //       const result = await response.json();
+  //       console.log(result.message); 
+  //       setProfileImage(null);
+  //       setImagePreview("");
+  //     } catch (error) {
+  //       console.error("Error removing image:", error);
+  //     }
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
 
     const token = JSON.parse(localStorage.getItem("token"));
     const { name, email, education_bg, birthday } = formData;
@@ -130,14 +187,16 @@ function UpdateProfile() {
 
     try {
       let imageUrl = userData.profileImage;
-      
+  
       if(profileImage && typeof profileImage === "object") {
         const filePath = await uploadImage(profileImage);
+        console.log("File Path:", filePath);
         if(filePath) {
           imageUrl = await getImageUrl(filePath);
         }
       }
-
+      console.log("Image URL:", imageUrl);
+  
       const data = {
         name,
         email,
@@ -145,23 +204,29 @@ function UpdateProfile() {
         birthday,
         image: imageUrl,
       };
-      
-      const token = req.headers.authorization;
-        const response = await axios.patch("/api/user-profile/update", data, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        });
-
+      console.log("Data to be sent:", data);
+  
+      const response = await axios.patch("/api/user-profile/update", data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      console.log(response.data.message);
+  
+      // if (response.data.message.includes("Please log in again")) {
+      //   // localStorage.removeItem("token");
+      //   // window.location.href = "/login";
+      // } else {
         setMessage(response.data.message || "Profile updated successfully");
-      } catch (error) {
-        console.log("update profile error", error);
-        setMessage(error.response?.data?.error || "Failed to update");
-      } finally {
-        setLoading(false);
-      }
-    };
+      // }
+    } catch (error) {
+      console.error("update profile error", error);
+      setMessage(error.response?.data?.error || "Failed to update");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="w-full h-max flex justify-center overflow-hidden">
       <div className="flex flex-col justify-center items-center gap-[72px] pt-[100px] pb-[217px]">
@@ -170,7 +235,37 @@ function UpdateProfile() {
           className="flex lg:flex-row flex-col gap-[120px] "
           onSubmit={handleSubmit}
         >
-          <div>
+
+<div className="relative inline-block min-[453px]:w-[358px] w-[343px] h-[358px] rounded-lg">
+  <input
+    id="profile-image"
+    type="file"
+    accept="image/*"
+    hidden
+    onChange={handleFileChange}
+  />
+  <label
+    className="relative block w-full h-full rounded-lg"
+    htmlFor="profile-image"
+  >
+    <img
+      src={imagePreview || userData.profileImage}
+      alt=""
+      width={358}
+      height={358}
+      className="rounded-lg w-full h-full object-cover"
+    />
+  </label>
+  <div
+    className="absolute right-[6px] top-[6px] w-[32px] h-[32px] bg-[#9B2FAC] flex justify-center items-center rounded-full text-white cursor-pointer z-10"
+    onClick={handleRemoveImage}
+  >
+    X
+  </div>
+</div>
+
+
+          {/* <div>
             <input
               id="profile-image"
               type="file"
@@ -182,7 +277,7 @@ function UpdateProfile() {
               className="relative inline-block min-[453px]:w-[358px] w-[343px] h-[358px] rounded-lg"
               htmlFor="profile-image"
             >
-              <div className="absolute right-[6px] top-[6px] w-[32px] h-[32px] bg-[#9B2FAC] flex justify-center items-center rounded-full text-white">
+              <div className="absolute right-[6px] top-[6px] w-[32px] h-[32px] bg-[#9B2FAC] flex justify-center items-center rounded-full text-white cursor-pointer z-10" onClick={handleRemoveImage}>
                 X
               </div>
               <img
@@ -194,7 +289,8 @@ function UpdateProfile() {
                 className="rounded-lg"
               />
             </label>
-          </div>
+            
+          </div> */}
           <div className="flex flex-col gap-[37px] min-[453px]:w-[453px] w-[343px]">
             <label>
               <span className="block">Name</span>

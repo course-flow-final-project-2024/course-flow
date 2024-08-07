@@ -17,8 +17,8 @@ function RegisterPage() {
           Register to start learning!
         </h1>
         <RegistrationForm />
-        <div>
-          Already have an account? {"\t"}
+        <div className="flex flex-row gap-2">
+          Already have an account?
           <Link
             href="/login"
             className="font-bold text-[#2F5FAC] hover:underline"

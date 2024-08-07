@@ -1,5 +1,6 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { validationToken } from "../validation-token";
+import { supabase } from "../../../../lib/supabase";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {

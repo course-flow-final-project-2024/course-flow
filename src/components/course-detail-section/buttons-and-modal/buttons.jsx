@@ -19,7 +19,7 @@ function CourseCardAddAndRemove(props) {
         <>
           <Button
             style="secondary"
-            text={"Get in Desire Course"}
+            text={isLoading ? "Please wait..." : "Get in Desire Course"}
             onClick={() => {
               if (context.loginStatus) {
                 context.setOpenCourseModal(true);
@@ -44,7 +44,7 @@ function CourseCardAddAndRemove(props) {
         <>
           <Button
             style="secondary"
-            text="Remove from Desire Course"
+            text={isLoading ? "Please wait..." : "Remove from Desire Course"}
             onClick={() => {
               if (context.loginStatus) {
                 context.setOpenCourseModal(true);

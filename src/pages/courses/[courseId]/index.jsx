@@ -9,11 +9,13 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import commaNumber from "comma-number";
 import CourseDetailModal from "@/components/course-detail-section/buttons-and-modal/modal";
+import { useToast } from "@chakra-ui/react";
 
 export const CourseDetailContext = React.createContext();
 
 function CourseDetail() {
   const router = useRouter();
+  const toast = useToast();
   const { courseId } = router.query;
   const [loginStatus, setLoginStatus] = useState(false);
   const [courseData, setCourseData] = useState([]);
@@ -26,6 +28,17 @@ function CourseDetail() {
   const [formattedPrice, setFormattedPrice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [buttonErrorMessage, setButtonErrorMessage] = useState(null);
+
+  const showToast = (message) => {
+    toast({
+      title: "Error",
+      description: message,
+      status: "error",
+      duration: 9000,
+      isClosable: true,
+    });
+  };
 
   async function checkLoginStatus() {
     const hasToken = Boolean(localStorage.getItem("token"));
@@ -39,6 +52,9 @@ function CourseDetail() {
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
+        setErrorMessage(
+          "There was an problem fetching user information. Please try again later"
+        );
       }
     }
   }
@@ -51,56 +67,82 @@ function CourseDetail() {
       const filteredResult = result.data.coursesDetail.filter(
         (item) => item.course_id === Number(courseId)
       );
-      if (filteredResult.length === 0) {
-        throw new Error("Course not found");
-      }
 
-      setCourseData(filteredResult);
-      setFormattedPrice(commaNumber(filteredResult[0].price));
-      setOriginalPrice(filteredResult[0].price);
+      if (filteredResult.length === 0) {
+        console.error("Course not found");
+        setErrorMessage("Course not found");
+      } else {
+        setCourseData(filteredResult);
+        setFormattedPrice(commaNumber(filteredResult[0].price));
+        setOriginalPrice(filteredResult[0].price);
+      }
     } catch (error) {
       console.error("Error fetching courses data", error);
+      setErrorMessage(
+        "There was an problem fetching course detail. Please try again later"
+      );
     }
   };
 
   const getUserCourseDetail = async () => {
     if (courseId) {
-      const result = await axios.get("/api/courses_detail/get_user_courses", {
-        params: { courseId },
-      });
-      const userCourseDetail = result.data.userCourseData;
-      console.log(userCourseDetail);
+      try {
+        setIsLoading(true);
+        const result = await axios.get("/api/courses_detail/get_user_courses", {
+          params: { courseId },
+        });
+        const userCourseDetail = result.data.userCourseData;
 
-      if (userCourseDetail.length > 0) {
-        if (userCourseDetail[0].payment_status_id === 1) {
-          setUserCourseStatus("bought");
-        } else if (userCourseDetail[0].payment_status_id === 2) {
-          setUserCourseStatus("added");
+        if (userCourseDetail.length > 0) {
+          if (userCourseDetail[0].payment_status_id === 1) {
+            setUserCourseStatus("bought");
+          } else if (userCourseDetail[0].payment_status_id === 2) {
+            setUserCourseStatus("added");
+          }
+        } else {
+          setUserCourseStatus("none");
         }
-      } else {
-        setUserCourseStatus("none");
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        console.error("Error fetching user's course detail", error);
+        setErrorMessage(
+          "There was an problem fetching user's course detail. Please try again later"
+        );
       }
     }
   };
 
   const handleAddDesiredCourse = async () => {
-    setIsLoading(true);
+    setButtonErrorMessage(false);
     setOpenCourseModal(false);
-    await axios.post("/api/courses_detail/post", {
-      courseId,
-    });
-    getUserCourseDetail();
-    setIsLoading(false);
+    try {
+      await axios.post("/api/courses_detail/post", {
+        courseId,
+      });
+      getUserCourseDetail();
+    } catch (error) {
+      console.error("Error adding to desired course");
+      setButtonErrorMessage(
+        "There was a problem adding course to desired course list. Please try again later"
+      );
+    }
   };
 
   const handleRemoveDesiredCourse = async () => {
-    setIsLoading(true);
+    setButtonErrorMessage(false);
     setOpenCourseModal(false);
-    await axios.delete("/api/courses_detail/delete", {
-      params: { courseId },
-    });
-    getUserCourseDetail();
-    setIsLoading(false);
+    try {
+      await axios.delete("/api/courses_detail/delete", {
+        params: { courseId },
+      });
+      getUserCourseDetail();
+    } catch (error) {
+      console.error("Error removing from desired course", error);
+      setButtonErrorMessage(
+        "There was a problem removing course from desired course list. Please try again later"
+      );
+    }
   };
 
   const handleSubscribeCourse = async () => {
@@ -124,8 +166,11 @@ function CourseDetail() {
     initFetch();
   }, [courseId]);
 
-  console.log(userCourseStatus);
-  console.log(loginStatus);
+  useEffect(() => {
+    if (errorMessage) {
+      showToast(errorMessage);
+    }
+  }, [errorMessage]);
 
   return (
     <div className="w-full h-max">
@@ -137,7 +182,6 @@ function CourseDetail() {
           courseId,
           loginStatus,
           userCourseStatus,
-          openCourseModal,
           setOpenCourseModal,
           openCourseModal,
           setButtonAction,
@@ -149,12 +193,13 @@ function CourseDetail() {
           handleSubscribeCourse,
           originalPrice,
           isLoading,
+          buttonErrorMessage,
         }}
       >
         <Navbar />
         <div className="w-full">
-          {courseData.length === 0 ? (
-            <div className="w-full min-h-[1000px] flex flex-col justify-center items-center gap-2">
+          {courseData.length === 0 || errorMessage ? (
+            <div className="w-full min-h-[1000px] max-sm:min-h-[800px] flex flex-col justify-center items-center gap-4">
               <span className="text-xl">Loading</span>
               <span className="loading loading-dots loading-lg"></span>
             </div>

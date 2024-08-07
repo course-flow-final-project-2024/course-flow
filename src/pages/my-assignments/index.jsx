@@ -26,20 +26,25 @@ function UserAssignment() {
   };
   useEffect(() => {
     setIsClient(true);
-    setIsError(false);
-    const hasToken = Boolean(localStorage.getItem("token"));
-    if (!hasToken) {
-      router.push("/login");
-      return;
-    } else {
-      getUserAssignment(
-        setAssingmentData,
-        setOriginalData,
-        setIsLoading,
-        setIsError
-      );
-    }
   }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      setIsError(false);
+      const hasToken = Boolean(localStorage.getItem("token"));
+      if (!hasToken) {
+        router.push("/login");
+        return;
+      } else {
+        getUserAssignment(
+          setAssingmentData,
+          setOriginalData,
+          setIsLoading,
+          setIsError
+        );
+      }
+    }
+  }, [isClient, router]);
   if (!isClient) {
     return;
   }

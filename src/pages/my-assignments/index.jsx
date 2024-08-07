@@ -14,6 +14,7 @@ function UserAssignment() {
   const [originalData, setOriginalData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   const valueInContext = {
     assingmentData,
@@ -24,6 +25,7 @@ function UserAssignment() {
     setIsError,
   };
   useEffect(() => {
+    setIsClient(true);
     setIsError(false);
     const hasToken = Boolean(localStorage.getItem("token"));
     if (!hasToken) {
@@ -38,6 +40,9 @@ function UserAssignment() {
       );
     }
   }, []);
+  if (!isClient) {
+    return;
+  }
   return (
     <AssignmentContext.Provider value={valueInContext}>
       <div>

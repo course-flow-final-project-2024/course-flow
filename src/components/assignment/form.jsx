@@ -8,8 +8,7 @@ import { AssignmentContext } from "@/pages/my-assignments";
 import { useContext } from "react";
 
 export default function AnswerForm(prop) {
-  const { setAssingmentData, setOriginalData, setIsLoading, setIsError } =
-    useContext(AssignmentContext);
+  const { getUserAssignment } = useContext(AssignmentContext);
   const router = useRouter();
   const [answer, setAnswer] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -20,12 +19,7 @@ export default function AnswerForm(prop) {
 
   async function handleOnSubmit(assignmentId) {
     const { message } = await updateAssignment(assignmentId, 1, answer);
-    getUserAssignment(
-      setAssingmentData,
-      setOriginalData,
-      setIsLoading,
-      setIsError
-    );
+    getUserAssignment();
     handleClose();
   }
   return (

@@ -1,3 +1,4 @@
+"use client";
 import Navbar from "@/components/navbar/navbar";
 import CommonFooter from "@/components/footer/common-footer";
 import AssignmentTabs from "@/components/assignment/tabs";
@@ -5,6 +6,7 @@ import { createContext, useState, useEffect } from "react";
 import AssignmentCard from "@/components/assignment/card";
 import { useRouter } from "next/router";
 import getUserAssignment from "./getUserAssignment";
+import axios from "axios";
 
 export const AssignmentContext = createContext();
 
@@ -16,14 +18,38 @@ function UserAssignment() {
   const [isError, setIsError] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
+  async function getUserAssignment() {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get("/api/assignment/get_user_assignments");
+      const completedSubLessonId = data.user_lessons
+        .filter((isComplete) => isComplete.sub_lesson_status_id === 1)
+        .map((sub_lesson) => sub_lesson.sub_lesson_id);
+
+      const filteredAssignments = data.user_assignments.filter((assignment) =>
+        completedSubLessonId.includes(
+          assignment.assignments.sub_lessons.sub_lesson_id
+        )
+      );
+      setAssingmentData(filteredAssignments);
+      setOriginalData(filteredAssignments);
+      setIsLoading(false);
+      return;
+    } catch (err) {
+      setIsLoading(false);
+      setIsError(true);
+      return;
+    }
+  }
+
   const valueInContext = {
     assingmentData,
     setAssingmentData,
     originalData,
     setOriginalData,
-    setIsLoading,
-    setIsError,
+    getUserAssignment,
   };
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -36,12 +62,7 @@ function UserAssignment() {
         router.push("/login");
         return;
       } else {
-        getUserAssignment(
-          setAssingmentData,
-          setOriginalData,
-          setIsLoading,
-          setIsError
-        );
+        getUserAssignment();
       }
     }
   }, [isClient, router]);

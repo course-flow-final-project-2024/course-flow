@@ -26,7 +26,7 @@ function LogInPage() {
         <h1 className="text-2xl font-medium text-[#22269E]">Welcome back!</h1>
         <LogInForm />
         <div className="flex flex-row gap-2">
-          Don't have an account?
+          {"Don't have an account?"}
           <Link
             href="/register"
             className="font-bold text-[#2F5FAC] hover:underline"

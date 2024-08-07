@@ -30,7 +30,7 @@ const PaymentSuccess = () => {
           setActionStatus("completed");
         } else if (response.data.status === "owned") {
           setActionStatus("none");
-          router.push(`/my-courses/`);
+          router.push(`/my-course/`);
         }
       } catch (error) {
         console.error("Error verifying payment", error);

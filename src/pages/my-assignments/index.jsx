@@ -5,7 +5,6 @@ import AssignmentTabs from "@/components/assignment/tabs";
 import { createContext, useState, useEffect } from "react";
 import AssignmentCard from "@/components/assignment/card";
 import { useRouter } from "next/router";
-import getUserAssignment from "./getUserAssignment";
 import axios from "axios";
 
 export const AssignmentContext = createContext();

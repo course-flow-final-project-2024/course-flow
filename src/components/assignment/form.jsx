@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import CommonModalBox from "@/utils/common-modal";
 import updateAssignment from "./update-assignment";
-import getUserAssignment from "@/pages/my-assignments/getUserAssignment";
 import { AssignmentContext } from "@/pages/my-assignments";
 import { useContext } from "react";
 

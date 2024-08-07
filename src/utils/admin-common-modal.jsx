@@ -9,11 +9,11 @@ function AdminCommonModalBox(props) {
       <div className="flex">
         <Modal
           open={props.open}
-          BackdropProps={{
-            style: {
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-            },
-          }}
+          // sx={{
+          //   "& .MuiBackdrop-root": {
+          //     backgroundColor: "transparent",
+          //   },
+          // }}
         >
           <Box
             display="flex"
@@ -49,7 +49,7 @@ function AdminCommonModalBox(props) {
                         style="secondary"
                         text={props.leftText}
                         onClick={props.leftOnClick}
-                        customStyle="py-[18px] px-6"
+                        customStyle="py-[18px] px-3"
                       />
                     </div>
                     <div className="flex sm:mt-0 mt-4">

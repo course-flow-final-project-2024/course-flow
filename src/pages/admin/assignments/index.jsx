@@ -1,7 +1,7 @@
 import AdminSidebar from "@/components/admin/sidebar";
-import AdminCoursesList from "@/components/admin/courses/courses-table";
 import AdminListingHeader from "@/components/admin/header/listing-page";
 import React from "react";
+import AdminAssignmentList from "@/components/admin/assignments/assignment-tabel";
 
 export default function AssignmentList() {
   return (
@@ -15,7 +15,7 @@ export default function AssignmentList() {
             href="/admin/add-assignment"
           />
           <div className="bg-[#F6F7FC] p-10 w-full h-full">
-            <p>Assignment Table</p>
+            <AdminAssignmentList />
           </div>
         </div>
       </div>

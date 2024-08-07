@@ -113,7 +113,7 @@ const AdminAddAssignmentForm = () => {
               setSubLessonIsLoading={setSubLessonIsLoading}
             />
           </div>
-          <div className="border border-b-[#D6D9E4] w-full"></div>
+          <div className="border-b border-b-[#D6D9E4] w-full pt-5"></div>
         </div>
         <AdminAddAssignmentDetail setAssignment={setAssignment} />
       </form>

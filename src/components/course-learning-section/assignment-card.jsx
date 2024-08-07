@@ -77,6 +77,7 @@ export default function AssignmentCard({ id, question, status, answer }) {
       return;
     }
     await updateAssignmentStatus(id, 1, assignmentAnswer);
+    handleClose();
   };
 
   return (

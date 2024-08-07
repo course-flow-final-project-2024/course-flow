@@ -73,7 +73,8 @@ const PaymentSuccess = () => {
               </h1>
               <p className="text-lg lg:text-xl">Thank you for your purchase</p>
               <p className="text-lg lg:text-xl text-center">
-                {courseTitle}has been added to your course list
+                <span className="font-semibold">{courseTitle}</span> has been
+                added to your course list
               </p>
             </div>
             <div className="w-full border-b-[1px] border-base "></div>

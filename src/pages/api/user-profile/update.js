@@ -6,11 +6,9 @@ export default async function updateProfile(req, res) {
   if (req.method !== "PATCH") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-  // const authHeader = req.headers.authorization;
-  // const token = authHeader && authHeader.split(' ')[1];
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
   const payload = await validationToken(req, res);
-  console.log("Payload from validationToken:", payload);
-  // console.log("Stored Token:", token);
   if (!payload) {
     return res.status(400).json({ error: "Not authorized" });
   }
@@ -26,7 +24,7 @@ export default async function updateProfile(req, res) {
       if (authError) {
         throw new Error(`Error updating email in Auth: ${authError.message}`);
       }
-      // return res.status(200).json({ message: "Please log in again" });
+
     }
 
     

@@ -1,16 +1,19 @@
-import { supabase } from "../../../../lib/supabase";
-
+import { supabase } from "./../../../../lib/supabase";
+import { validationToken } from "./../validation-token";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-  const token = req.headers.authorization;
-  if (!token) {
+  // const token = req.headers.authorization;
+  const payload = await validationToken(req, res);
+
+  if (!payload) {
     return res.status(400).json({ error: "Token is required" });
   }
 
   try {
+    
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("*")

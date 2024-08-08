@@ -1,61 +1,57 @@
 import { supabase } from "./../../../../lib/supabase";
+import { validationToken } from "../validation-token";
+import { supabaseAdmin } from "../../../../lib/supabase-admin";
 
 export default async function updateProfile(req, res) {
   if (req.method !== "PATCH") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-
-  const token = req.headers.authorization;
-
-  if (!token) {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+  const payload = await validationToken(req, res);
+  if (!payload) {
     return res.status(400).json({ error: "Not authorized" });
   }
 
   try {
-    // const { data: session, error: sessionError } = await supabase
-    //   .from("loginsession")
-    //   .select("user_email")
-    //   .eq("peyload", token)
-    //   .single();
+    const { name, email, education_bg, birthday, image } = req.body;
 
-    // if (sessionError || !session || !session.user_email) {
-    //   throw new Error(sessionError.message || "Session not valid");
-    // }
+    if (email) {
+      const { data: authData, error: authError } = await supabaseAdmin.auth.admin.updateUserById(payload.sub, {
+        email: email,
+      });
 
-    const { data: user, error: userError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("email", payload.email)
-      .single();
+      if (authError) {
+        throw new Error(`Error updating email in Auth: ${authError.message}`);
+      }
 
-    if (userError || !user) {
-      return res.status(401).json({ error: "User not found" });
     }
 
-    const { name, email, education_bg, birthday, image } = req.body;
-    const updates = {};
+    
+      const updates = {};
     if (name) updates.name = name;
     if (email) updates.email = email;
     if (education_bg) updates.education_bg = education_bg;
     if (birthday) updates.birthday = birthday;
     if (image) updates.image_user = image;
 
-    // if ((object, key(updates).length === 0)) {
-    //   return res.status(400).json({ error: "No fields to update" });
-    // }
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ error: "No fields to update" });
+    }
+
     const { error: updateError } = await supabase
       .from("users")
       .update(updates)
-      .eq("email", payload.email);
+      .eq("email", payload.email)
 
     if (updateError) {
-      throw new Error(userError.message);
+      throw new Error(updateError.message);
     }
-
+    
     const { data: updatedUser, error: updatedUserError } = await supabase
       .from("users")
       .select("*")
-      .eq("email", payload.email)
+      .eq("email", email)
       .single();
 
     if (updatedUserError) {
@@ -64,9 +60,9 @@ export default async function updateProfile(req, res) {
 
     return res
       .status(200)
-      .json({ message: "profile updated successfully", user: updatedUser });
+      .json({ message: "Profile updated successfully", user: updatedUser });
   } catch (error) {
-    console.error("Error update profile:", error.message);
+    console.error("Error updating profile:", error.message);
     return res.status(500).json({ error: "Failed to update" });
   }
 }

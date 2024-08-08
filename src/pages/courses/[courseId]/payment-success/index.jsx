@@ -39,7 +39,7 @@ const PaymentSuccess = () => {
           setActionStatus("completed");
         } else if (response.data.status === "owned") {
           setActionStatus("none");
-          router.push(`/my-course/`);
+          router.push(`/my-courses/`);
         }
       } catch (error) {
         console.error("Error verifying payment", error);
@@ -53,12 +53,12 @@ const PaymentSuccess = () => {
   }, [payment_intent, courseId, redirect_status]);
 
   return (
-    <>
+    <div>
       <Navbar />
-      <div className="mt-4">
+      <div className="w-full absolute pt-[100px] ">
         <PageDecoration />
       </div>
-      <div className="w-full h-max px-12 pb-36 max-sm:px-8 min-h-[860px] flex justify-center items-center overflow-scroll ">
+      <div className="w-full h-max px-12 pb-36 max-sm:px-8 min-h-[860px] flex justify-center items-center overflow-scroll relative z-10  ">
         {actionStatus === "completed" ? (
           <div className="flex flex-col gap-6 items-center ">
             <div className="flex flex-col items-center gap-5 ">
@@ -104,7 +104,7 @@ const PaymentSuccess = () => {
                 text={`Go to my course`}
                 customStyle="leading-5 "
                 onClick={() => {
-                  router.push(`/my-course`);
+                  router.push(`/my-courses`);
                 }}
               />
             </div>
@@ -145,7 +145,7 @@ const PaymentSuccess = () => {
       </div>
 
       <CommonFooter />
-    </>
+    </div>
   );
 };
 

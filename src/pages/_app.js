@@ -4,7 +4,7 @@ import { AppCacheProvider } from "@mui/material-nextjs/v13-pagesRouter";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Roboto } from "next/font/google";
 import { createContext, useState } from "react";
-import jwtInterceptor from "@/utils/jwtinterceptor";
+import jwtInterceptor from "./../utils/jwtinterceptor";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],

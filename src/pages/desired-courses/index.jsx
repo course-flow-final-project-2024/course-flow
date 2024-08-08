@@ -64,7 +64,7 @@ function DesiredCourses() {
   }, [userId]);
 
   return (
-    <div className="w-full h-max">
+    <div className="w-full h-max relative">
       <DesiredCoursesContext.Provider
         value={{
           userDesiredCourses,
@@ -73,7 +73,9 @@ function DesiredCourses() {
         }}
       >
         <Navbar />
-        <PageDecoration />
+        <div className=" w-full absolute mt-[100px] z-0 ">
+          <PageDecoration />
+        </div>
         <DesiredCourseContainer />
         <CommonFooter />
       </DesiredCoursesContext.Provider>

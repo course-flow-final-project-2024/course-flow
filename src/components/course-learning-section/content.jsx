@@ -1,10 +1,26 @@
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import axios from "axios";
 import { useContext, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/router";
 import AssignmentCard from "./assignment-card";
-import { calculateProgress } from "./calculate-progress";
 
-const updateVideoStatus = async (subLessonId, status) => {
+const updateVideoStatus = async (
+  subLessonId,
+  status,
+  courseId,
+  setCourseData,
+  setLessonData,
+  setSubLessonData,
+  setSubLessonsLength,
+  setAssignmentData,
+  router
+) => {
+  const hasToken = localStorage.getItem("token");
+  if (!hasToken) {
+    router.push("/login");
+    return;
+  }
+
   try {
     const response = await axios.post(
       `/api/courses_learning/update-video-status`,
@@ -13,7 +29,43 @@ const updateVideoStatus = async (subLessonId, status) => {
         status,
       }
     );
+
     if (response.status === 200) {
+      const getUserCourseInfo = async () => {
+        try {
+          const result = await axios.get(
+            `/api/courses_learning/get-user-learning-course`,
+            {
+              params: {
+                courseId,
+              },
+            }
+          );
+
+          if (result.data.courses.length !== 0) {
+            setCourseData(result.data.courses);
+            setLessonData(result.data.courses[0].courses.lessons);
+            const subLessons = result.data.courses[0].courses.lessons.flatMap(
+              (lesson) => lesson.sub_lessons
+            );
+            setSubLessonData(subLessons);
+            setSubLessonsLength(subLessons.length);
+            const assignments = subLessons.flatMap(
+              (sublesson) => sublesson.assignments
+            );
+            setAssignmentData(assignments);
+          } else {
+            router.push("/courses");
+          }
+        } catch (error) {
+          return {
+            message: "Server could not read courses due to database connection",
+          };
+        }
+      };
+
+      await getUserCourseInfo();
+
       return {
         message: "Video status updated successfully",
         videoStatus: response.data[0].sub_lesson_status_id,
@@ -36,22 +88,25 @@ function CoursesContent({ titleRef, subLessonId }) {
     courseData,
     lessonData,
     subLessonData,
+    setCourseData,
+    setLessonData,
+    setSubLessonData,
+    setSubLessonsLength,
+    setAssignmentData,
     setCurrentLessonIndex,
     currentSubLessonIndex,
     currentSubLessonId,
     setCurrentSubLessonId,
     setSubLessonPlayStatus,
     subLessonStatus,
-    progress,
-    setProgress,
-    isVideoEnded,
-    setisVideoEnded,
     assignmentData,
     setCurrentSubLessonIndex,
   } = useContext(CoursesDataContext);
 
+  const router = useRouter();
   const videoRef = useRef(null);
   const videoStatusRef = useRef({});
+  const { courseId } = router.query;
 
   const handlePlay = useCallback(async () => {
     const currentSubLesson = subLessonData[currentSubLessonIndex];
@@ -65,7 +120,14 @@ function CoursesContent({ titleRef, subLessonId }) {
       setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, false);
       const response = await updateVideoStatus(
         currentSubLesson.sub_lesson_id,
-        2
+        2,
+        courseId,
+        setCourseData,
+        setLessonData,
+        setSubLessonData,
+        setSubLessonsLength,
+        setAssignmentData,
+        router
       );
       videoStatusRef.current[currentSubLesson.sub_lesson_id] =
         response.videoStatus;
@@ -75,6 +137,13 @@ function CoursesContent({ titleRef, subLessonId }) {
     subLessonData,
     subLessonStatus,
     setSubLessonPlayStatus,
+    courseId,
+    setCourseData,
+    setLessonData,
+    setSubLessonData,
+    setSubLessonsLength,
+    setAssignmentData,
+    router,
   ]);
 
   const handleEnded = useCallback(async () => {
@@ -87,31 +156,29 @@ function CoursesContent({ titleRef, subLessonId }) {
       setSubLessonPlayStatus(currentSubLesson.sub_lesson_id, true, true);
       const response = await updateVideoStatus(
         currentSubLesson.sub_lesson_id,
-        1
+        1,
+        courseId,
+        setCourseData,
+        setLessonData,
+        setSubLessonData,
+        setSubLessonsLength,
+        setAssignmentData,
+        router
       );
       videoStatusRef.current[currentSubLesson.sub_lesson_id] =
         response.videoStatus;
-
-      if (courseData.length > 0) {
-        const course = courseData[0].courses;
-        const progressValue = calculateProgress(
-          course.lessons,
-          progress,
-          isVideoEnded,
-          setisVideoEnded
-        );
-        setProgress(progressValue);
-      }
     }
   }, [
     currentSubLessonIndex,
     subLessonData,
     setSubLessonPlayStatus,
-    courseData,
-    progress,
-    isVideoEnded,
-    setisVideoEnded,
-    setProgress,
+    courseId,
+    setCourseData,
+    setLessonData,
+    setSubLessonData,
+    setSubLessonsLength,
+    setAssignmentData,
+    router,
   ]);
 
   useEffect(() => {

@@ -1,26 +1,12 @@
 import AdminCommonModalBox from "@/utils/admin-common-modal";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { AddCourseContext } from "@/pages/_app";
 
-const AdminDeleteCourse = () => {
+const AdminDeleteAssignment = () => {
   const router = useRouter();
-  const courseId = router.query.courseId;
+  const assignmentId = router.query.assignmentId;
   const [open, setOpen] = useState(false);
-  const { setCourse } = useContext(AddCourseContext);
-
-  const courseInitialValue = {
-    course_name: "",
-    price: "",
-    duration: "",
-    summary: "",
-    detail: "",
-    course_image: null,
-    video_trailer: null,
-    attach_file: null,
-    lessons: [],
-  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -31,12 +17,13 @@ const AdminDeleteCourse = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/courses/delete`, {
-        data: { course_id: courseId },
+      const result = await axios.delete(`/api/assignment/delete`, {
+        data: { assignment_id: assignmentId },
       });
-      setCourse(courseInitialValue);
-      handleClose();
-      router.push(`/admin/courses`);
+      if (result.status === 200) {
+        handleClose();
+        router.push(`/admin/assignments`);
+      }
     } catch (error) {
       return {
         message: "Server could not delete courses due to database connection",
@@ -47,18 +34,18 @@ const AdminDeleteCourse = () => {
     <>
       <div>
         <p
-          className="text-[#2F5FAC] font-[700] text-end bg-[#F6F7FC] pb-20 pr-10 w-full h-full"
+          className="text-[#2F5FAC] font-[700] text-end bg-[#F6F7FC] py-20 pr-10 w-full h-full"
           role="button"
           onClick={() => {
             handleOpen();
           }}
         >
-          Delete Course
+          Delete Assignment
         </p>
         <AdminCommonModalBox
           open={open}
-          AlertMessage="Do you want to delete this course?"
-          leftText="Yes, I want to delete this course"
+          AlertMessage="Do you want to delete this assignment?"
+          leftText="Yes, I want to delete this assignment"
           rightText="No, keep it"
           leftOnClick={() => {
             handleDelete();
@@ -71,4 +58,4 @@ const AdminDeleteCourse = () => {
   );
 };
 
-export default AdminDeleteCourse;
+export default AdminDeleteAssignment;

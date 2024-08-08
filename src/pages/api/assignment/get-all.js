@@ -18,29 +18,6 @@ export default async function handler(req, res) {
     )
     .order("updated_at", { ascending: false });
 
-  // if (search) {
-  // const searchQuery = `sub_lessons.sub_lesson_title.ilike.%${search}%,sub_lessons.lessons.lesson_title.ilike.%${search}%,sub_lessons.lessons.courses.course_name.ilike.%${search}%`;
-  // const formattedSearchQuery = searchQuery.replace(/\s+/g, "");
-  // assignmentsQuery = assignmentsQuery.or(formattedSearchQuery);
-  // assignmentsQuery = assignmentsQuery.or(
-  //   `sub_lesson_title.ilike.%${search}%`,
-  //   {
-  //     referencedTable: "sub_lessons",
-  //   }
-  // );
-  //.ilike(
-  //   "sub_lesson_title",
-  //   `%${search}%`
-  // );
-  // .or(`lessons.lesson_title.ilike.%${search}%`, {
-  //   referencedTable: "lessons",
-  // });
-  // assignmentsQuery = assignmentsQuery.or(
-  //   `sub_lessons.sub_lesson_title.ilike.%${search}%`
-  // lessons.lesson_title.ilike.%${search}%,sub_lesson_title.ilike.%${search}%`
-  //);
-  // s
-
   const { data: allAssignment, error: totalAssignmentError } =
     await assignmentsQuery;
 
@@ -95,15 +72,6 @@ export default async function handler(req, res) {
     offset,
     offset + limit
   );
-
-  // let paginatedQuery = assignmentsQuery.range(offset, offset + limit - 1);
-  // const { data: assignments, error: paginatedError } = await paginatedQuery;
-
-  // if (paginatedError) {
-  //   return res.status(500).json({
-  //     message: "Server could not read assignments due to database connection",
-  //   });
-  // }
 
   const totalPages = Math.ceil(totalItems / limit);
   const safeCurrentPage = Math.min(Math.max(currentPage, 1), totalPages);

@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 
-const CourseSelect = ({
+const EditCourseSelect = ({
   selectedCourseId,
   setSelectedCourseId,
   courses,
   setCourses,
   isCourseLoading,
   setCourseIsLoading,
+  assignmentFromDb,
 }) => {
+  const [courseName, setCourseName] = useState("");
   const dropDownStyle =
-    "border border-[#D6D9E4] rounded-[8px] h-12 py-3 pl-3 pr-4 outline-none text-[#9AA1B9]";
+    "border border-[#D6D9E4] rounded-[8px] h-12 py-3 pl-3 pr-4 outline-none";
   const loadingDotStyle = "loading loading-dots loading-sm text-[#8DADE0]";
   const toast = useToast();
 
@@ -29,7 +31,13 @@ const CourseSelect = ({
 
   useEffect(() => {
     getCourseData();
-  }, []);
+    if (assignmentFromDb.sub_lessons) {
+      setSelectedCourseId(
+        assignmentFromDb.sub_lessons.lessons.courses.course_id
+      );
+      setCourseName(assignmentFromDb.sub_lessons.lessons.courses.course_name);
+    }
+  }, [assignmentFromDb]);
 
   const handleCourseChange = (e) => {
     setSelectedCourseId(e.target.value);
@@ -63,7 +71,7 @@ const CourseSelect = ({
         defaultValue=""
       >
         <option value="" disabled hidden>
-          Select course
+          {courseName}
         </option>
         {courses.map((course) => (
           <option key={course.course_id} value={course.course_id}>
@@ -75,4 +83,4 @@ const CourseSelect = ({
   );
 };
 
-export default CourseSelect;
+export default EditCourseSelect;

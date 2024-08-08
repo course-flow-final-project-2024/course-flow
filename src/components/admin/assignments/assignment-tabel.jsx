@@ -17,9 +17,10 @@ import { useSearchParams } from "next/navigation";
 import { Pagination } from "@mui/material";
 import AdminCommonModalBox from "@/utils/admin-common-modal";
 import Link from "next/link";
+import { Tooltip } from "@chakra-ui/react";
 
-const AdminCoursesList = () => {
-  const [course, setCourse] = useState([]);
+const AdminAssignmentList = () => {
+  const [assignment, setAssignment] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -28,7 +29,7 @@ const AdminCoursesList = () => {
     limit: 0,
   });
   const [open, setOpen] = useState(false);
-  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [selectedAssignmentId, setSelectedASsignmentId] = useState(null);
   const toastId = "fetch-data";
   const toast = useToast({
     id: toastId,
@@ -36,22 +37,12 @@ const AdminCoursesList = () => {
     isClosable: true,
   });
 
-  const handleOpen = (courseId) => {
-    setSelectedCourseId(courseId);
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const searchParams = useSearchParams();
-
   const limitCardPerPage = 8;
-
   const title = searchParams.get("title") || "";
 
-  async function getCourseData() {
-    const getCourseData = axios.get(`/api/courses/get`, {
+  async function getAssignmentData() {
+    const getAssignmentData = axios.get(`/api/assignment/get-all`, {
       params: {
         search: title,
         currentPage: currentPage,
@@ -59,7 +50,7 @@ const AdminCoursesList = () => {
       },
     });
     if (!toast.isActive(toastId)) {
-      toast.promise(getCourseData, {
+      toast.promise(getAssignmentData, {
         success: {
           title: "Dowload complete :)",
           description: "Let's go!",
@@ -69,16 +60,16 @@ const AdminCoursesList = () => {
           description: "Something wrong.",
         },
         loading: {
-          title: "Downloading course",
+          title: "Loading assignment",
           description: "Please wait.",
         },
       });
     }
     try {
-      const result = await getCourseData;
+      const result = await getAssignmentData;
 
       if (result.data.totalItems === 0) {
-        setCourse([]);
+        setAssignment([]);
         setPagination({
           currentPage: 1,
           allItem: 0,
@@ -87,7 +78,7 @@ const AdminCoursesList = () => {
         });
         setCurrentPage(1);
       } else {
-        setCourse(result.data.courses);
+        setAssignment(result.data.assignments);
         if (currentPage > result.data.totalPages) {
           setCurrentPage(result.data.totalPages);
         } else {
@@ -101,28 +92,38 @@ const AdminCoursesList = () => {
       }
     } catch (error) {
       return {
-        message: "Server could not read courses due to database connection",
+        message: "Server could not read assignments due to database connection",
       };
     }
   }
+  useEffect(() => {
+    getAssignmentData();
+  }, [title, currentPage]);
 
-  const handleDelete = async (courseId) => {
+  const handleOpen = (assignmentId) => {
+    setSelectedASsignmentId(assignmentId);
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleDelete = async (assignmentId) => {
     try {
-      await axios.delete(`/api/courses/delete`, {
-        data: { course_id: courseId },
+      let result = await axios.delete(`/api/assignment/delete`, {
+        data: { assignment_id: assignmentId },
       });
-      getCourseData();
-      handleClose();
+      if (result.status === 200) {
+        getAssignmentData();
+        handleClose();
+      }
     } catch (error) {
       return {
-        message: "Server could not delete courses due to database connection",
+        message:
+          "Server could not delete assignment due to database connection",
       };
     }
   };
-
-  useEffect(() => {
-    getCourseData();
-  }, [title, currentPage]);
 
   const dateFormat = (key) => {
     const result = `${key.slice(0, 4)}/${key.slice(5, 7)}/${key.slice(8, 10)} ${
@@ -132,7 +133,23 @@ const AdminCoursesList = () => {
     return result;
   };
 
-  const startIndex = (currentPage - 1) * limitCardPerPage;
+  const ShortenTitle = ({ title }) => {
+    const shortenTitle = title.length > 17 ? `${title.slice(0, 17)}...` : title;
+    const isToolTipDisable = title.length <= 17;
+    return (
+      <Tooltip
+        bg="gray.100"
+        color="gray.500"
+        label={title}
+        isDisabled={isToolTipDisable}
+        paddingX={3}
+        paddingY={1}
+        maxW={500}
+      >
+        {shortenTitle}
+      </Tooltip>
+    );
+  };
 
   return (
     <Box>
@@ -145,24 +162,20 @@ const AdminCoursesList = () => {
         >
           <Thead>
             <Tr bg="gray.200" color="#424C6B" height="41px">
-              <Th width="48px"></Th>
-              <Th width="96px" align="start" pl="16px" fontWeight="normal">
-                Image
+              <Th width="200px" align="start" pl="16px" fontWeight="normal">
+                Assignment detail
               </Th>
-              <Th width="268px" align="start" pl="16px" fontWeight="normal">
-                Course Name
+              <Th width="200px" align="start" pl="16px" fontWeight="normal">
+                Course
               </Th>
-              <Th width="105px" align="start" pl="16px" fontWeight="normal">
+              <Th width="200px" align="start" pl="16px" fontWeight="normal">
                 Lesson
               </Th>
-              <Th width="105px" align="start" pl="16px" fontWeight="normal">
-                Price
+              <Th width="200px" align="start" pl="16px" fontWeight="normal">
+                Sub-lesson
               </Th>
-              <Th width="188px" align="start" pl="16px" fontWeight="normal">
+              <Th width="200px" align="start" pl="16px" fontWeight="normal">
                 Created date
-              </Th>
-              <Th width="190px" align="start" pl="16px" fontWeight="normal">
-                Updated date
               </Th>
               <Th width="120px" align="center" fontWeight="normal">
                 Action
@@ -170,8 +183,8 @@ const AdminCoursesList = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {course.length > 0 ? (
-              course.map((item, index) => (
+            {assignment.length > 0 ? (
+              assignment.map((item, index) => (
                 <Tr
                   bg="white"
                   color="black"
@@ -180,54 +193,46 @@ const AdminCoursesList = () => {
                   key={index}
                   className="border-b border-[#F1F2F6]"
                 >
-                  <Td align="center">{startIndex + index + 1}</Td>
+                  <Td pl="16px" pr="16px">
+                    <ShortenTitle title={item.assignment_title} />
+                  </Td>
+
                   <Td pl="16px">
-                    <Image
-                      src={
-                        item.course_image
-                          ? item.course_image
-                          : "/logo/CourseFlowLogo.svg"
-                      }
-                      alt="course-image"
-                      width="64px"
-                      height="47px"
-                      style={{
-                        objectFit: "contain",
-                      }}
+                    <ShortenTitle
+                      title={item.sub_lessons.lessons.courses.course_name}
                     />
                   </Td>
-                  <Td pl="16px" pr="16px" whiteSpace="normal">
-                    {item.course_name}
-                  </Td>
-                  <Td pl="16px">{item.lessons[0].count} Lessons</Td>
                   <Td pl="16px">
-                    {item.price.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    })}
+                    <ShortenTitle
+                      title={item.sub_lessons.lessons.lesson_title}
+                    />
+                  </Td>
+                  <Td pl="16px">
+                    <ShortenTitle title={item.sub_lessons.sub_lesson_title} />
                   </Td>
                   <Td pl="16px">{dateFormat(item.created_at)}</Td>
-                  <Td pl="16px">{dateFormat(item.updated_at)}</Td>
                   <Td>
                     <Flex gap={2} align="start" justify="center">
                       <Image
                         src="/icons/delete.svg"
                         alt="delete icon"
                         onClick={() => {
-                          handleOpen(item.course_id);
+                          handleOpen(item.assignment_id);
                         }}
+                        role="button"
                       />
                       <AdminCommonModalBox
                         open={open}
-                        AlertMessage="Do you want to delete this course?"
-                        leftText="Yes, I want to delete this course"
+                        AlertMessage="Do you want to delete this assignment?"
+                        leftText="Yes, I want to delete this assignment"
                         rightText="No, keep it"
                         leftOnClick={() => {
-                          handleDelete(selectedCourseId);
+                          handleDelete(selectedAssignmentId);
                         }}
                         rightOnClick={handleClose}
                         crossClick={handleClose}
                       />
-                      <Link href={`/admin/courses/${item.course_id}`}>
+                      <Link href={`/admin/assignments/${item.assignment_id}`}>
                         <Image src="/icons/edit.svg" alt="edit icon" />
                       </Link>
                     </Flex>
@@ -265,4 +270,4 @@ const AdminCoursesList = () => {
   );
 };
 
-export default AdminCoursesList;
+export default AdminAssignmentList;

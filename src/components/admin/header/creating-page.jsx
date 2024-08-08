@@ -3,7 +3,7 @@ import Button from "@/utils/button";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 
-const AdminCreatingHeader = ({ section, onClick }) => {
+const AdminCreatingHeader = ({ section, onClick, formId }) => {
   const router = useRouter();
   const { setCourse } = useContext(AddCourseContext);
 
@@ -20,8 +20,14 @@ const AdminCreatingHeader = ({ section, onClick }) => {
   };
 
   const handleOnClick = () => {
-    router.push("/admin/courses");
-    setCourse(courseInitialValue);
+    if (formId === "add-course") {
+      router.push("/admin/courses");
+      setCourse(courseInitialValue);
+    }
+
+    if (formId === "add-assignment") {
+      router.push("/admin/assignments");
+    }
   };
 
   return (
@@ -39,7 +45,7 @@ const AdminCreatingHeader = ({ section, onClick }) => {
           style="primary"
           height="60px"
           type="submit"
-          form="add-course"
+          form={formId}
         />
       </div>
     </div>

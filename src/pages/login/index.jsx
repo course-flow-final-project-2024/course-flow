@@ -2,7 +2,7 @@ import Link from "next/link";
 import LogInForm from "@/components/login/login-form.jsx";
 import Navbar from "@/components/navbar/navbar.jsx";
 import BackgroundTemplate from "@/utils/bg-template";
-import {useEffect} from "react"
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 
 function LogInPage() {
@@ -12,7 +12,7 @@ function LogInPage() {
     if (userInfo) {
       router.push("/");
     }
-  }, [])
+  }, []);
 
   return (
     <div className="w-screen h-screen max-h-[700px] mx-0 sm:flex sm:justify-center sm:items-center relative z-0 ">
@@ -25,8 +25,8 @@ function LogInPage() {
       <div className="container max-w-[453px] mx-auto px-4 pt-[100px] sm:pt-[0px]  flex flex-col gap-8 relative z-40">
         <h1 className="text-2xl font-medium text-[#22269E]">Welcome back!</h1>
         <LogInForm />
-        <div>
-          Don't have an account? {"\t"}
+        <div className="flex flex-row gap-2">
+          Do not have an account?
           <Link
             href="/register"
             className="font-bold text-[#2F5FAC] hover:underline"

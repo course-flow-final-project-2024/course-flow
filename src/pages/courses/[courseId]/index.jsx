@@ -9,96 +9,140 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import commaNumber from "comma-number";
 import CourseDetailModal from "@/components/course-detail-section/buttons-and-modal/modal";
+import { useToast } from "@chakra-ui/react";
 
 export const CourseDetailContext = React.createContext();
 
 function CourseDetail() {
   const router = useRouter();
+  const toast = useToast();
   const { courseId } = router.query;
+  const [loginStatus, setLoginStatus] = useState(false);
   const [courseData, setCourseData] = useState([]);
   const [allCourseData, setAllCourseData] = useState([]);
-  const [userId, setUserId] = useState(null);
-  const [loginStatus, setLoginStatus] = useState(false);
   const [userCourseStatus, setUserCourseStatus] = useState(null);
   const [openCourseModal, setOpenCourseModal] = useState(false);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [buttonAction, setButtonAction] = useState(null);
-  const [formattedPrice, setFormattedPrice] = useState("");
   const [originalPrice, setOriginalPrice] = useState(0);
+  const [formattedPrice, setFormattedPrice] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [buttonErrorMessage, setButtonErrorMessage] = useState(null);
 
-  function checkLoginStatus() {
-    const getUserStatus = JSON.parse(localStorage.getItem("token"));
-    if (getUserStatus) {
-      setLoginStatus(true);
-      return true;
-    } else {
-      setLoginStatus(false);
-      return false;
+  const showToast = (message) => {
+    toast({
+      title: "Error",
+      description: message,
+      status: "error",
+      duration: 9000,
+      isClosable: true,
+    });
+  };
+
+  async function checkLoginStatus() {
+    const hasToken = Boolean(localStorage.getItem("token"));
+    if (hasToken) {
+      try {
+        const result = await axios.get("/api/user-profile/get");
+        const verification = result.data.user.id;
+        if (verification) {
+          setLoginStatus(true);
+          return true;
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        setErrorMessage(
+          "There was an problem fetching user information. Please try again later"
+        );
+      }
     }
   }
+
   const getallCoursesData = async () => {
     try {
       const result = await axios.get(`/api/courses_detail/get_all`);
-      const filteredResult = result.data.courses.filter(
+      setAllCourseData(result.data.coursesDetail);
+
+      const filteredResult = result.data.coursesDetail.filter(
         (item) => item.course_id === Number(courseId)
       );
 
       if (filteredResult.length === 0) {
-        throw new Error("Course not found");
+        console.error("Course not found");
+        setErrorMessage("Course not found");
+      } else {
+        setCourseData(filteredResult);
+        setFormattedPrice(commaNumber(filteredResult[0].price));
+        setOriginalPrice(filteredResult[0].price);
       }
-
-      setAllCourseData(result.data.courses);
-      setCourseData(filteredResult);
-      setFormattedPrice(commaNumber(filteredResult[0].price));
-      setOriginalPrice(filteredResult[0].price);
     } catch (error) {
       console.error("Error fetching courses data", error);
-    }
-  };
-
-  const fetchUserId = async () => {
-    if (courseId) {
-      const token = JSON.parse(localStorage.getItem("token"));
-      const fetchedData = await axios.get(
-        `/api/user-profile/get?token=${token}`
+      setErrorMessage(
+        "There was an problem fetching course detail. Please try again later"
       );
-      setUserId(fetchedData.data.user.id);
     }
   };
 
   const getUserCourseDetail = async () => {
-    if (userId) {
-      const fetchedCourseDetail = await axios.get(
-        "/api/courses_detail/get_user_courses",
-        { params: { userId, courseId } }
-      );
-      if (fetchedCourseDetail.data.data.length > 0) {
-        if (fetchedCourseDetail.data.data[0].payment_status_id === 1) {
-          setUserCourseStatus("bought");
-        } else if (fetchedCourseDetail.data.data[0].payment_status_id === 2) {
-          setUserCourseStatus("added");
+    if (courseId) {
+      try {
+        setIsLoading(true);
+        const result = await axios.get("/api/courses_detail/get_user_courses", {
+          params: { courseId },
+        });
+        const userCourseDetail = result.data.userCourseData;
+
+        if (userCourseDetail.length > 0) {
+          if (userCourseDetail[0].payment_status_id === 1) {
+            setUserCourseStatus("bought");
+          } else if (userCourseDetail[0].payment_status_id === 2) {
+            setUserCourseStatus("added");
+          }
+        } else {
+          setUserCourseStatus("none");
         }
-      } else {
-        setUserCourseStatus("none");
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        console.error("Error fetching user's course detail", error);
+        setErrorMessage(
+          "There was an problem fetching user's course detail. Please try again later"
+        );
       }
     }
   };
 
   const handleAddDesiredCourse = async () => {
+    setButtonErrorMessage(false);
     setOpenCourseModal(false);
-    await axios.post("/api/courses_detail/post", {
-      userId,
-      courseId,
-    });
-    getUserCourseDetail();
+    try {
+      await axios.post("/api/courses_detail/post", {
+        courseId,
+      });
+      getUserCourseDetail();
+    } catch (error) {
+      console.error("Error adding to desired course");
+      setButtonErrorMessage(
+        "There was a problem adding course to desired course list. Please try again later"
+      );
+    }
   };
 
   const handleRemoveDesiredCourse = async () => {
+    setButtonErrorMessage(false);
     setOpenCourseModal(false);
-    await axios.delete("/api/courses_detail/delete", {
-      params: { userId, courseId },
-    });
-    getUserCourseDetail();
+    try {
+      await axios.delete("/api/courses_detail/delete", {
+        params: { courseId },
+      });
+      getUserCourseDetail();
+    } catch (error) {
+      console.error("Error removing from desired course", error);
+      setButtonErrorMessage(
+        "There was a problem removing course from desired course list. Please try again later"
+      );
+    }
   };
 
   const handleSubscribeCourse = async () => {
@@ -108,14 +152,11 @@ function CourseDetail() {
 
   useEffect(() => {
     const initFetch = async () => {
-      const isLoggedIn = checkLoginStatus();
+      const isLoggedIn = await checkLoginStatus();
       if (courseId) {
         await getallCoursesData();
         if (isLoggedIn) {
-          await fetchUserId();
-          if (userId) {
-            await getUserCourseDetail();
-          }
+          await getUserCourseDetail();
         } else {
           setUserCourseStatus("guest");
         }
@@ -123,7 +164,13 @@ function CourseDetail() {
     };
 
     initFetch();
-  }, [courseId, userId, loginStatus]);
+  }, [courseId]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      showToast(errorMessage);
+    }
+  }, [errorMessage]);
 
   return (
     <div className="w-full h-max">
@@ -133,10 +180,8 @@ function CourseDetail() {
           formattedPrice,
           courseData,
           courseId,
-          userId,
           loginStatus,
           userCourseStatus,
-          openCourseModal,
           setOpenCourseModal,
           openCourseModal,
           setButtonAction,
@@ -147,11 +192,24 @@ function CourseDetail() {
           handleRemoveDesiredCourse,
           handleSubscribeCourse,
           originalPrice,
+          isLoading,
+          buttonErrorMessage,
         }}
       >
         <Navbar />
-        <MainDetail />
-        <OtherCourses />
+        <div className="w-full">
+          {courseData.length === 0 || errorMessage ? (
+            <div className="w-full min-h-[1000px] max-sm:min-h-[800px] flex flex-col justify-center items-center gap-4">
+              <span className="text-xl">Loading</span>
+              <span className="loading loading-dots loading-lg"></span>
+            </div>
+          ) : (
+            <>
+              <MainDetail />
+              <OtherCourses />
+            </>
+          )}
+        </div>
         <CommonBottomSection />
         <CommonFooter />
         <BottomCourseCard />

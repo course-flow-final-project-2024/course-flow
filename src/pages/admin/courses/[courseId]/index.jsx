@@ -39,7 +39,6 @@ export default function EditCourse() {
     const getCourseData = axios.get(
       `/api/courses_detail/get_by_id?courseId=${courseId}`
     );
-    console.log("before active", toast.isActive(toastId));
     if (!toast.isActive(toastId)) {
       toast.promise(getCourseData, {
         toastId,
@@ -52,8 +51,7 @@ export default function EditCourse() {
       const result = await getCourseData;
       setCourse(result.data.courses[0]);
     } catch (error) {
-      console.log("Failed to read course data");
-      console.error(error.message);
+      console.error("Failed to read course data", error.message);
     }
   };
 

@@ -15,7 +15,6 @@ import Button from "@/utils/button";
 function CheckoutForm({ amount }) {
   const context = useContext(CourseDetailContext);
   const courseId = context.courseId;
-  const userId = context.userId;
   const courseTitle = context.courseData[0].course_name;
   const stripe = useStripe();
   const elements = useElements();
@@ -28,13 +27,12 @@ function CheckoutForm({ amount }) {
     setIsLoading(true);
 
     const getClientSecret = async () => {
-      if (courseId && userId) {
+      if (courseId) {
         try {
           const response = await axios.post(
             "/api/stripe-payment/create-payment-intent",
             {
               amount: convertToSubcurrency(amount),
-              userId,
               courseId,
             }
           );

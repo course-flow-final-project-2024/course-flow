@@ -1,6 +1,5 @@
 import { AddCourseContext } from "@/pages/_app";
 import { useContext, useEffect } from "react";
-import axios from "axios";
 
 export default function EditCourseInput({ errors }) {
   const { course, setCourse } = useContext(AddCourseContext);

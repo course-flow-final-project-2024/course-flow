@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { Pagination } from "@mui/material";
-import CommonModalBox from "@/utils/admin-common-modal";
+import AdminCommonModalBox from "@/utils/admin-common-modal";
 import Link from "next/link";
 
 const AdminCoursesList = () => {
@@ -216,9 +216,9 @@ const AdminCoursesList = () => {
                           handleOpen(item.course_id);
                         }}
                       />
-                      <CommonModalBox
+                      <AdminCommonModalBox
                         open={open}
-                        AlertMessage="Are you sure you want to delete this course?"
+                        AlertMessage="Do you want to delete this course?"
                         leftText="Yes, I want to delete this course"
                         rightText="No, keep it"
                         leftOnClick={() => {

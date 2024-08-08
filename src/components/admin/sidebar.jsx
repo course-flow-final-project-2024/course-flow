@@ -40,7 +40,7 @@ const AdminSidebar = ({ section }) => {
       >
         <div
           id="sidebar-header"
-          className="flex flex-col gap-6 p-6 pt-10  items-center justify-center"
+          className="flex flex-col gap-6 p-6 pt-10 items-center justify-center"
         >
           <Image
             src="/logo/CourseFlowLogo.svg"

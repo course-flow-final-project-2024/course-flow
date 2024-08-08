@@ -1,4 +1,4 @@
-import CommonModalBox from "@/utils/admin-common-modal";
+import AdminCommonModalBox from "@/utils/admin-common-modal";
 import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
@@ -37,9 +37,9 @@ const AdminDeleteLesson = ({ courseId }) => {
         >
           Delete Lesson
         </p>
-        <CommonModalBox
+        <AdminCommonModalBox
           open={open}
-          AlertMessage="Are you sure you want to delete this lesson?"
+          AlertMessage="Do you want to delete this lesson?"
           leftText="Yes, I want to delete this lesson"
           rightText="No, keep it"
           leftOnClick={() => {

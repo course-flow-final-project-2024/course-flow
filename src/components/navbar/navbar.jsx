@@ -10,15 +10,18 @@ function Navbar() {
   const router = useRouter();
   const [username, setUsername] = useState(null);
   const [userImage, setUserImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const getUserProfile = async (email, auth) => {
     const hasToken = Boolean(localStorage.getItem("token"));
     const hasUserInfo = Boolean(sessionStorage.getItem("user"));
     if (!hasToken) {
+      setIsLoading(false);
       return;
     } else if (hasUserInfo) {
       const userInfo = JSON.parse(sessionStorage.getItem("user"));
       setUsername(userInfo.name);
       setUserImage(userInfo.image);
+      setIsLoading(false);
       return;
     }
     try {
@@ -34,8 +37,10 @@ function Navbar() {
       );
       setUsername(name);
       setUserImage(UrlImage);
+      setIsLoading(false);
       return;
     } catch (err) {
+      setIsLoading(false);
       return {
         message: "Server could not get user information",
       };
@@ -81,7 +86,9 @@ function Navbar() {
         >
           Our Courses
         </Link>
-        {username ? (
+        {isLoading ? (
+          <span className="loading loading-spinner loading-md"></span>
+        ) : username ? (
           <NavbarDropdown
             image={userImage}
             name={username}

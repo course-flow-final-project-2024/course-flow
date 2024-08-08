@@ -5,21 +5,36 @@ import CommonModalBox from "@/utils/common-modal";
 import updateAssignment from "./update-assignment";
 import { AssignmentContext } from "@/pages/my-assignments";
 import { useContext } from "react";
-
+import { useToast } from "@chakra-ui/react";
 export default function AnswerForm(prop) {
   const { getUserAssignment } = useContext(AssignmentContext);
   const router = useRouter();
   const [answer, setAnswer] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => setIsOpen(false);
+  const toastId = "fetch-data";
+  const toast = useToast({ id: toastId, position: "top", isClosable: true });
+  const errorToast = useToast({
+    title: "Oops...",
+    description: "Please provide an answer before submitting.",
+    status: "error",
+    position: "top",
+    duration: 4500,
+    isClosable: true,
+  });
+
   function handleOnChange(e) {
     setAnswer(e.target.value);
   }
 
   async function handleOnSubmit(assignmentId) {
-    const { message } = await updateAssignment(assignmentId, 1, answer);
-    getUserAssignment();
-    handleClose();
+    try {
+      await updateAssignment(assignmentId, 1, answer, toast, toastId);
+      getUserAssignment();
+      handleClose();
+    } catch (err) {
+      handleClose();
+    }
   }
   return (
     <div className="flex flex-col sm:flex-row gap-4 sm:gap-6  sm:items-start">
@@ -37,7 +52,7 @@ export default function AnswerForm(prop) {
                 role="button"
                 onClick={() => {
                   router.push(
-                    `/courses/${prop.assignment.assignments.sub_lessons.lessons.course_id}/learning?subLessonId=${prop.assignment.assignments.sub_lesson_id}`
+                    `/courses/${prop.assignment.assignments.sub_lessons.lessons.course_id}/learning?subLessonId=${prop.assignment.assignments.sub_lessons.sub_lesson_id}`
                   );
                 }}
                 className="text-base text-[#2F5FAC] font-bold flex justify-center whitespace-nowrap hover:underline"
@@ -60,7 +75,9 @@ export default function AnswerForm(prop) {
                 text="Submit"
                 style="primary"
                 onClick={() => {
-                  if (answer.length > 0) {
+                  if (answer.length === 0) {
+                    errorToast();
+                  } else if (answer.length > 0) {
                     setIsOpen(true);
                   }
                 }}
@@ -81,7 +98,7 @@ export default function AnswerForm(prop) {
                 role="button"
                 onClick={() => {
                   router.push(
-                    `/courses/${prop.assignment.assignments.sub_lessons.lessons.course_id}/learning?subLessonId=${prop.assignment.assignments.sub_lesson_id}`
+                    `/courses/${prop.assignment.assignments.sub_lessons.lessons.course_id}/learning?subLessonId=${prop.assignment.assignments.sub_lessons.sub_lesson_id}`
                   );
                 }}
                 className="text-base text-[#2F5FAC] font-bold flex justify-center whitespace-nowrap hover:underline"

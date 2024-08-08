@@ -3,7 +3,7 @@ const getUserCourseInfo = async (
   setCourseData,
   setLessonData,
   setSubLessonData,
-  setSubLessonsLenght,
+  setSubLessonsLength,
   setAssignmentData,
   router,
   courseId
@@ -24,7 +24,7 @@ const getUserCourseInfo = async (
         (lesson) => lesson.sub_lessons
       );
       setSubLessonData(subLessons);
-      setSubLessonsLenght(subLessons.length);
+      setSubLessonsLength(subLessons.length);
       const assignments = subLessons.flatMap(
         (sublesson) => sublesson.assignments
       );

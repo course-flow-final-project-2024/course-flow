@@ -32,7 +32,7 @@ function CoursesProgress({ titleRef }) {
       const progressValue = calProgress(course.lessons);
       setProgress(progressValue);
     }
-  }, [courseData]);
+  }, [courseData, setProgress]);
 
   const handleAccordionRendered = () => {
     setIsAccordionRendered(true);

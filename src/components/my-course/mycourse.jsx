@@ -17,7 +17,7 @@ export default function GetMyCourse ( ) {
     <Tab>Inprogress</Tab>
     <Tab>completed</Tab>
   </TabList>
-  {/* <TabIndicator mt='-1.5px' height='2px' bg='blue.500' borderRadius='1px' /> */}
+  <TabIndicator mt='-1.5px' height='2px' bg='blue.500' borderRadius='1px' />
   <TabPanels>
     <TabPanel>
       <Allcourses />

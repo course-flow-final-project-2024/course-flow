@@ -1,5 +1,4 @@
 import { supabase } from "../../../../../lib/supabase";
-import convertToSubcurrency from "@/utils/convertToSubcurrency";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
@@ -17,27 +16,63 @@ export default async function handler(req, res) {
     const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent);
     const amount = paymentIntent.amount;
 
+    const { userId, courseId } = paymentIntent.metadata;
     if (
       paymentIntent.status === "succeeded" &&
       paymentIntent.amount_received === amount
     ) {
-      const { userId, courseId } = paymentIntent.metadata;
-
-      const { data: fetchedData, error } = await supabase
+      const { data: fetchedData, error: fetchDataError } = await supabase
         .from("user_courses")
-        .select("*")
+        .select("*, courses(*, lessons(*, sub_lessons(*)))")
         .eq("user_id", userId)
         .eq("course_id", courseId);
 
-      if (error) {
+      if (fetchDataError) {
         return res.status(500).json({
-          message:
-            "Server could not read the data due to server connection problem",
+          error: "Error fetching user courses detail from server",
         });
       }
 
+      if (fetchedData.length > 0 && fetchedData[0].payment_status_id === 1) {
+        return res.status(200).json({
+          success: true,
+          message: "User has already owned this course",
+          status: "owned",
+        });
+      }
+
+      const { data: allCourseData, error: allCourseDataError } = await supabase
+        .from("courses")
+        .select("*, lessons(*, sub_lessons(*, assignments (*)))")
+        .eq("course_id", courseId);
+
+      if (allCourseDataError) {
+        return res.status(500).json({
+          error: "Error fetching courses detail from server",
+        });
+      }
+
+      const combinedLessons = allCourseData[0].lessons.flatMap((lesson) =>
+        lesson.sub_lessons.map((sub_lesson) => ({
+          user_id: userId,
+          lesson_id: lesson.lesson_id,
+          sub_lesson_id: sub_lesson.sub_lesson_id,
+          sub_lesson_status_id: 3,
+        }))
+      );
+
+      const combinedAssignments = allCourseData[0].lessons.flatMap((lesson) =>
+        lesson.sub_lessons.flatMap((sub_lesson) =>
+          sub_lesson.assignments.map((assignment) => ({
+            assignment_id: assignment.assignment_id,
+            user_id: userId,
+            assignment_status_id: 2,
+          }))
+        )
+      );
+
       if (fetchedData.length === 0) {
-        const { data: insertedData, error: insertError } = await supabase
+        const { error: insertError } = await supabase
           .from("user_courses")
           .insert([
             {
@@ -52,13 +87,36 @@ export default async function handler(req, res) {
           return res.status(500).json({ error: "Failed to insert data" });
         }
 
+        const { error: insertLessonsError } = await supabase
+          .from("user_lessons")
+          .insert(combinedLessons);
+
+        if (insertLessonsError) {
+          return res
+            .status(500)
+            .json({ error: "Failed to insert lessons data" });
+        }
+
+        const { error: insertAssignmentError } = await supabase
+          .from("user_assignments")
+          .insert(combinedAssignments);
+
+        if (insertAssignmentError) {
+          return res
+            .status(500)
+            .json({ error: "Failed to insert assignments data" });
+        }
+
         return res.status(201).json({
           success: true,
           message: "Successfully inserted data",
-          Data: insertedData,
+          status: "added",
         });
-      } else {
-        const { data: updatedData, error: updateError } = await supabase
+      } else if (
+        fetchedData.length > 0 &&
+        fetchedData[0].payment_status_id === 2
+      ) {
+        const { error: updateError } = await supabase
           .from("user_courses")
           .update([
             {
@@ -75,10 +133,30 @@ export default async function handler(req, res) {
           return res.status(500).json({ error: "Failed to update data" });
         }
 
+        const { error: insertLessonsError } = await supabase
+          .from("user_lessons")
+          .insert(combinedLessons);
+
+        if (insertLessonsError) {
+          return res
+            .status(500)
+            .json({ error: "Failed to insert lessons data" });
+        }
+
+        const { error: insertAssignmentError } = await supabase
+          .from("user_assignments")
+          .insert(combinedAssignments);
+
+        if (insertAssignmentError) {
+          return res
+            .status(500)
+            .json({ error: "Failed to insert assignments data" });
+        }
+
         return res.status(200).json({
           success: true,
           message: "Successfully updated data",
-          Data: updatedData,
+          status: "updated",
         });
       }
     } else {

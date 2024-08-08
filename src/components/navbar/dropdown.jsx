@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 function NavbarDropdown(prop) {
   const userImage = prop.image
     ? prop.image
@@ -18,7 +19,6 @@ function NavbarDropdown(prop) {
             </div>
           </div>
           <div className="max-[520px]:hidden ">
-            {" "}
             {prop.name ? prop.name : "Unknow"}
           </div>
           <Image
@@ -33,23 +33,23 @@ function NavbarDropdown(prop) {
           className="dropdown-content menu bg-base-100 rounded-box z-50 w-52 p-2 shadow text-sm font-medium text-[#646D89]"
         >
           <li>
-            <a href="/user-profile">Profile</a>
-    
+            <Link href="/user-profile">Profile</Link>
           </li>
           <li>
-            <a href="/my-course">My Courses</a>
+
+            <Link href="/my-courses">My Courses</Link>
           </li>
           <li>
-            <a href="/my-assignments">My Assignment</a>
+            <Link href="/my-assignments">My Assignments</Link>
           </li>
           <li>
-            <a href="/desired-courses">My Desire Courses</a>
+            <Link href="/desired-courses">My Desired Courses</Link>
           </li>
           <hr />
           <li>
-            <a role="button" onClick={prop.handleLogOut}>
+            <div role="button" onClick={prop.handleLogOut}>
               Log out
-            </a>
+            </div>
           </li>
         </ul>
       </div>

@@ -1,4 +1,4 @@
-import CommonModalBox from "@/utils/admin-common-modal";
+import AdminCommonModalBox from "@/utils/admin-common-modal";
 import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -55,9 +55,9 @@ const AdminDeleteCourse = () => {
         >
           Delete Course
         </p>
-        <CommonModalBox
+        <AdminCommonModalBox
           open={open}
-          AlertMessage="Are you sure you want to delete this course?"
+          AlertMessage="Do you want to delete this course?"
           leftText="Yes, I want to delete this course"
           rightText="No, keep it"
           leftOnClick={() => {

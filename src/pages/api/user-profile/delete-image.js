@@ -13,15 +13,18 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log(`Deleting file: ${filePath} for user: ${userEmail}`);
+    const fullPath = `userImage/${filePath}`;
     const { error: deleteError } = await supabase
       .storage
       .from("userProfile")
-      .remove([filePath]);
+      .remove([fullPath]);
 
     if (deleteError) {
+      console.error('Error deleting file:', deleteError.message);
       throw deleteError;
     }
-
+    console.log('File deleted successfully');
 
     const { error: updateError } = await supabase
       .from("users")
@@ -29,42 +32,12 @@ export default async function handler(req, res) {
       .eq("email", userEmail);
 
     if (updateError) {
+      console.error('Error updating database:', updateError.message);
       throw updateError;
     }
-
+    console.log('Database updated successfully');
     res.status(200).json({ message: 'Image deleted and database updated successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
-
-// export default async function handler(req, res) {
-//   if (req.method !== "POST") {
-//     return res.status(405).json({ error: 'Method not allowed' });
-//   }
-
-//   const { filePath } = req.body;
-
-//   if (!filePath) {
-//     return res.status(400).json({ error: 'File path is required' });
-//   }
-
-//   try {
-
-//     const filePathWithoutBaseURL = filePath.replace('https://lczppxvifxjwpejqxgoi.supabase.co/storage/v1/object/public/userProfile/', '');
-
-//     const { error } = await supabase
-//       .storage
-//       .from("userProfile")
-//       .remove([filePathWithoutBaseURL]);
-
-//     if (error) {
-//       throw error;
-//     }
-
-//     res.status(200).json({ message: 'Image deleted successfully' });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// }
-

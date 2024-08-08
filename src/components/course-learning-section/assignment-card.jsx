@@ -6,20 +6,15 @@ import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import CommonModalBox from "@/utils/common-modal";
 
 export default function AssignmentCard({ id, question, status, answer }) {
-  const {
-    setCourseData,
-    setLessonData,
-    setSubLessonData,
-    setSubLessonsLength,
-    setAssignmentData,
-    progress,
-  } = useContext(CoursesDataContext);
+  const { progress } = useContext(CoursesDataContext);
   const [assignmentAnswer, setAssignmentAnswer] = useState("");
   const [open, setOpen] = useState(false);
+  const [resultAllAssignment, setResultAllAssignment] = useState(null);
+  const [responseStatus, setResponseStatus] = useState(null);
+  const [responseAnswer, setResponseAnswer] = useState(null);
   const handleClose = () => setOpen(false);
 
   const router = useRouter();
-  const { courseId } = router.query;
 
   const updateAssignmentStatus = async (
     assignmentId,
@@ -31,7 +26,6 @@ export default function AssignmentCard({ id, question, status, answer }) {
       router.push("/login");
       return;
     }
-    console.log(assignmentId);
 
     try {
       const response = await axios.post(
@@ -43,24 +37,15 @@ export default function AssignmentCard({ id, question, status, answer }) {
         }
       );
       if (response.status === 200) {
-        let result = null;
         try {
-          console.log("gg");
-
           const getAllAssignmentStatus = async () => {
             try {
-              console.log("hh");
-
               const data = await axios.get(
-                `/api/courses_learning/get-all-assignment-status`,
-                { assignmentId }
+                `/api/courses_learning/get-all-assignment-status`
               );
-              console.log("LL");
 
               return data;
             } catch (error) {
-              console.log({ 1: error });
-
               return {
                 message:
                   "Server could not read assignments due to database connection",
@@ -68,17 +53,23 @@ export default function AssignmentCard({ id, question, status, answer }) {
             }
           };
 
-          result = await getAllAssignmentStatus();
+          const result = await getAllAssignmentStatus();
+          const updatedAssignment = result.data.assignments.find(
+            (assignment) => assignment.assignment_id === assignmentId
+          );
           console.log(result);
+
+          setResultAllAssignment(result.data.assignments);
+          setResponseStatus(updatedAssignment);
+          // setResponseAnswer(updatedAssignment)
         } catch (error) {
-          console.log(error.message, error.stack);
           return {
             message: "Server could not read courses due to database connection",
           };
         }
         return {
           message: "Assignment status updated successfully",
-          result: result,
+          // result: result.data.assignments,
         };
       } else {
         return {
@@ -133,18 +124,18 @@ export default function AssignmentCard({ id, question, status, answer }) {
 
   return (
     <div>
-      {status === "Submitted" ? (
+      {status === "Submitted" || responseStatus?.assignment_status_id === 1 ? (
         <div className=" flex flex-col gap-[25px] p-6 rounded-lg bg-[#E5ECF8]">
           <div className=" flex justify-between">
             <h1 className="text-xl">Assignment</h1>
-            <p className="rounded p-[4px_8px_4px_8px] bg-[#DDF9EF] text-[#0A7B60] font-medium">
+            <p className="rounded p-[4px_8px_4px_8px] bg-[#a9b3af] text-[#0A7B60] font-medium">
               {status}
             </p>
           </div>
           <div className="flex flex-col gap-3">
             <p>{question}</p>
             <div className="w-full text-[#646D89] border border-[#D6D9E4] bg-slate-100 rounded-lg p-[12px_16px_12px_12px] gap-2">
-              {answer}
+              {answer || responseStatus.answer}
             </div>
           </div>
         </div>

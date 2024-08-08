@@ -1,13 +1,12 @@
 import { supabase } from "../../../../lib/supabase";
 import { validationToken } from "../validation-token";
 
-export default async function updateVideoStatus(req, res) {
-  if (req.method !== "POST") {
+export default async function getAllAssignmentStatus(req, res) {
+  if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   const payload = await validationToken(req, res);
-  const { subLessonId, status } = req.body;
 
   try {
     const { data: users, error: userError } = await supabase
@@ -21,21 +20,20 @@ export default async function updateVideoStatus(req, res) {
 
     const userId = users[0].user_id;
 
-    const { data, error } = await supabase
-      .from("user_lessons")
-      .update({ sub_lesson_status_id: status })
-      .eq("user_id", userId)
-      .eq("sub_lesson_id", subLessonId)
-      .select();
+    const { data: assignments, error: assignmentError } = await supabase
+      .from("user_assignments")
+      .select(`*,assignment_status(*)`)
+      .eq("user_id", userId);
 
-    if (error) {
-      return res.status(500).json({ error: "Failed to update status" });
+    if (assignmentError) {
+      return res.status(400).json({ error: "Assignment not found" });
     }
 
-    return res.status(200).json(data);
+    res.status(200).json({ assignments });
   } catch (error) {
+    console.error("Error fetching assignments:", error);
     return res.status(500).json({
-      error: "Server could not update video status due to database connection",
+      message: "Server could not get assignments due to database connection",
     });
   }
 }

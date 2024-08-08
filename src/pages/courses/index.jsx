@@ -1,6 +1,6 @@
 import axios from "axios";
 import Navbar from "@/components/navbar/navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import SearchCourse from "@/components/courses/search-course";
 import CourseCard from "../../components/courses/course-card";
@@ -17,12 +17,14 @@ export default function Course() {
     page: 0,
     limit: 0,
   });
+  const [loading, setLoading] = useState(true);
 
   const searchParams = useSearchParams();
 
   const limitCardPerPage = 12;
 
   const title = searchParams.get("title") || "";
+  const courseTitleRef = useRef(null);
 
   useEffect(() => {
     async function getCourseData() {
@@ -47,6 +49,7 @@ export default function Course() {
             limit: limitCardPerPage,
           });
         }
+        setLoading(false);
       } catch (error) {
         return {
           message: "Server could not read courses due to database connection",
@@ -61,10 +64,18 @@ export default function Course() {
     <>
       <Navbar />
       <div className="sm:px-[160px] px-4">
-        <SearchCourse searchParams={searchParams} />
-        <div className="grid min-[2000px]:grid-cols-5 min-[1800px]:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:mt-[100px] gap-6 ">
-          {course.map((item, index) => {
-            return (
+        <SearchCourse
+          searchParams={searchParams}
+          courseTitleRef={courseTitleRef}
+        />
+        {loading ? (
+          <div className="flex flex-col justify-center items-center h-80">
+            <h1 className="text-2xl font-medium">Loading</h1>
+            <span className="loading loading-dots loading-lg"></span>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-[repeat(auto-fit,minmax(360px,1fr))] sm:mt-[100px] gap-6 ">
+            {course.map((item, index) => (
               <div className="grid justify-center" key={index}>
                 <CourseCard
                   course_id={item.course_id}
@@ -77,9 +88,9 @@ export default function Course() {
                   key={index + item.course_name}
                 />
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
         <Box
           sx={{
             margin: "10px 0px 30px 0px",
@@ -94,6 +105,7 @@ export default function Course() {
             color="primary"
             onChange={(_, page) => {
               setCurrentPage(page);
+              courseTitleRef.current.scrollIntoView({ behavior: "smooth" });
             }}
           />
         </Box>

@@ -179,8 +179,6 @@ function CourseDetail() {
     }
   }, [errorMessage]);
 
-  console.log(errorMessage);
-
   return (
     <div className="w-full h-max">
       <CourseDetailContext.Provider

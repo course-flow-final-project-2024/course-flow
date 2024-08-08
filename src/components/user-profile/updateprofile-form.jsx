@@ -3,43 +3,54 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { supabase } from "../../../lib/supabase";
-// import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
+import { useToast } from "@chakra-ui/react";
 
 async function uploadImage(file) {
   const bucket = "userProfile";
   const foleder = "userImage";
-  const fileName = `${file.name}`;
+  const fileName = `${uuidv4()}_${file.name}`;
   const filePath = `${foleder}/${fileName}`;
 
-  const{ data, error } = await supabase
-  .storage
-  .from(bucket)
-  .upload(filePath, file);
+  const { data, error } = await supabase.storage
+    .from(bucket)
+    .upload(filePath, file);
 
   if (error) {
     console.error("Error uploading image:", error);
     return null;
   }
-  return filePath
+  return filePath;
 }
 
 async function getImageUrl(filePath) {
-  const { publicUrl, error} = supabase
-  .storage
-  .from("userProfile")
-  .getPublicUrl(filePath);
+  try {
+    const { data, error } = supabase.storage
+      .from("userProfile")
+      .getPublicUrl(filePath);
 
-  if(error) {
-    console.error("Error getting image Url:", error);
+    if (error) {
+      console.error("Error getting image Url:", error);
+      return null;
+    }
+
+    if (!data || !data.publicUrl) {
+      console.error("Public URL is not available in the response.");
+      return null;
+    }
+
+    console.log("Image URL:", data.publicUrl);
+    return data.publicUrl;
+  } catch (error) {
+    console.error("Error getting image Url:", error.message);
     return null;
   }
-  return publicUrl;
 }
-
-
 
 function UpdateProfile() {
   const router = useRouter();
+  const toast = useToast();
+
   const [formData, setFormData] = useState({
     name: "",
     birthday: "",
@@ -52,13 +63,27 @@ function UpdateProfile() {
   const [userData, setUserData] = useState({});
   const [profileImage, setProfileImage] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const showToast = (message) => {
+    toast({
+      title: "Success",
+      description: message,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+  useEffect(() => {
+    if (message) {
+      showToast(message);
+    }
+  }, [message]);
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("token"));
-    if (!userInfo) {
+    const token = JSON.parse(localStorage.getItem("token"));
+    if (!token) {
       router.push("/login");
     }
-
+   
     const fetchUser = async () => {
       const token = await JSON.parse(localStorage.getItem("token"));
 
@@ -82,25 +107,23 @@ function UpdateProfile() {
           education_bg: education || "",
         });
 
-
         setUserData({
           name,
           email,
           birthday,
           education,
-          profileImage: image || "/default-profile.jpg",
+          profileImage: image,
         });
 
-
-        setProfileImage(image || "/default-profile.jpg");
-        setImagePreview(image || []);
-        } catch (error) {
+        setProfileImage(image);
+        setImagePreview(image);
+      } catch (error) {
         setMessage(error.message || "Failed to fetch user data");
       }
     };
 
     fetchUser();
-  }, []);
+  }, [router]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -115,6 +138,22 @@ function UpdateProfile() {
     }
   };
 
+  const handleRemoveImage = async () => {
+    if (profileImage && typeof profileImage === "string") {
+      try {
+        const response = await axios.post("/api/user-profile/delete-image", {
+          filePath: profileImage,
+          userEmail: userData.email,
+        });
+
+        console.log(response.data.message);
+        setProfileImage(null);
+        setImagePreview("");
+      } catch (error) {
+        console.error("Error removing image:", error);
+      }
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -130,13 +169,15 @@ function UpdateProfile() {
 
     try {
       let imageUrl = userData.profileImage;
-      
-      if(profileImage && typeof profileImage === "object") {
+
+      if (profileImage && typeof profileImage === "object") {
         const filePath = await uploadImage(profileImage);
-        if(filePath) {
+        console.log("File Path:", filePath);
+        if (filePath) {
           imageUrl = await getImageUrl(filePath);
         }
       }
+      console.log("Image URL:", imageUrl);
 
       const data = {
         name,
@@ -145,32 +186,44 @@ function UpdateProfile() {
         birthday,
         image: imageUrl,
       };
-      
-      const token = req.headers.authorization;
-        const response = await axios.patch("/api/user-profile/update", data, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        });
+      console.log("Data to be sent:", data);
 
+      const response = await axios.patch("/api/user-profile/update", data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      console.log("Response:", response.data.message);
+
+      if (email !== userData.email) {
+        setMessage("Please log in again to confirm your email change.");
+
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          router.push("/login");
+        }, 3000);
+      } else {
         setMessage(response.data.message || "Profile updated successfully");
-      } catch (error) {
-        console.log("update profile error", error);
-        setMessage(error.response?.data?.error || "Failed to update");
-      } finally {
-        setLoading(false);
+        setUserData({ ...userData, ...data });
       }
-    };
+     
+    } catch (error) {
+      console.error("update profile error", error);
+      setMessage(error.response?.data?.error || "Failed to update");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="w-full h-max flex justify-center overflow-hidden">
       <div className="flex flex-col justify-center items-center gap-[72px] pt-[100px] pb-[217px]">
         <div className="text-4xl font-medium text-center">Profile</div>
         <form
-          className="flex lg:flex-row flex-col gap-[120px] "
+          className="flex lg:flex-row flex-col gap-[120px]"
           onSubmit={handleSubmit}
         >
-          <div>
+          <div className="relative inline-block min-[453px]:w-[358px] w-[343px] h-[358px] rounded-lg">
             <input
               id="profile-image"
               type="file"
@@ -178,22 +231,33 @@ function UpdateProfile() {
               hidden
               onChange={handleFileChange}
             />
-            <label
-              className="relative inline-block min-[453px]:w-[358px] w-[343px] h-[358px] rounded-lg"
-              htmlFor="profile-image"
-            >
-              <div className="absolute right-[6px] top-[6px] w-[32px] h-[32px] bg-[#9B2FAC] flex justify-center items-center rounded-full text-white">
-                X
+            {imagePreview ? (
+              <div className="image-preview w-full h-full relative flex justify-center items-center rounded-[8px] bg-[#F6F7FC] overflow-hidden">
+                <img
+                  src={imagePreview ? imagePreview : ""}
+                  alt=""
+                  className="w-full h-full object-cover rounded-lg"
+                />
+                <button
+                  className="rounded-full bg-[#9B2FAC] w-8 h-8 text-center text-white text-[12px] top-[6px] right-[6px] absolute"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleRemoveImage();
+                  }}
+                  aria-label="Remove profile image"
+                >
+                  X
+                </button>
               </div>
-              <img
-                 src={imagePreview || userData.profileImage}
-                objectFit="cover"
-                alt=""
-                width={358}
-                height={358}
-                className="rounded-lg"
-              />
-            </label>
+            ) : (
+              <label
+                htmlFor="profile-image"
+                className="flex flex-col justify-center items-center bg-[#F6F7FC] w-full h-full rounded-[8px] cursor-pointer relative z-10"
+              >
+                <p className="text-[#5483D0] text-center text-2xl">+</p>
+                <p className="text-[#5483D0] text-center">Upload Image</p>
+              </label>
+            )}
           </div>
           <div className="flex flex-col gap-[37px] min-[453px]:w-[453px] w-[343px]">
             <label>
@@ -261,7 +325,6 @@ function UpdateProfile() {
             />
           </div>
         </form>
-        {message && <div className="mt-4 text-red-500">{message}</div>}
       </div>
     </div>
   );

@@ -2,16 +2,12 @@ import { supabase } from "../../../../lib/supabase";
 import { validationToken } from "../validation-token";
 
 export default async function getAllAssignmentStatus(req, res) {
-  console.log("45555");
-
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-  console.log("132415");
 
   const payload = await validationToken(req, res);
-  const { assignmentId } = req.body;
-  console.log(req.query);
+
   try {
     const { data: users, error: userError } = await supabase
       .from("users")
@@ -23,14 +19,11 @@ export default async function getAllAssignmentStatus(req, res) {
     }
 
     const userId = users[0].user_id;
-    console.log(userId);
 
     const { data: assignments, error: assignmentError } = await supabase
       .from("user_assignments")
-      .select(`*`)
-      .eq("user_id", userId)
-      .eq("assignment_id", assignmentId)
-      .select();
+      .select(`*,assignment_status(*)`)
+      .eq("user_id", userId);
 
     if (assignmentError) {
       return res.status(400).json({ error: "Assignment not found" });
@@ -38,6 +31,7 @@ export default async function getAllAssignmentStatus(req, res) {
 
     res.status(200).json({ assignments });
   } catch (error) {
+    console.error("Error fetching assignments:", error);
     return res.status(500).json({
       message: "Server could not get assignments due to database connection",
     });

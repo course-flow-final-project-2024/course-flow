@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export default function jwtInterceptor() {
-  axios.interceptors.request.use((req) => {
+
+axios.interceptors.request.use((req) => {
     const hasToken = Boolean(localStorage.getItem("token"));
 
     if (hasToken) {

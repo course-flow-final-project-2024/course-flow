@@ -54,10 +54,10 @@ export default function CompletedCard() {
       <div className="flex flex-col items-center gap-6 py-8 px-6 rounded-[8px] shadow-lg sticky top-0 h-[396px] max-[1024px]:hidden">
       <img
           src={user.image}
-          alt="Profile Image"
+          alt=""
           width={120}
           height={120}
-          className="rounded-full object-cover bg-black"
+          className="rounded-full object-cover bg-teal-600"
         />
         <div>{user.name}</div>
         <div className="flex flex-row gap-6 w-[309px]">

@@ -34,7 +34,6 @@ export default function CompletedCard() {
           }
         );
 
-        
         setCourses(coursesResponse.data.completed);
         setCompletedCount(coursesResponse.data.completedCount);
         setInprogressCount(coursesResponse.data.inprogressCount);

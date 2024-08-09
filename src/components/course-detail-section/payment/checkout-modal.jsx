@@ -99,7 +99,15 @@ function PaymentModal() {
                       role="tabpanel"
                       className="tab-content bg-base-100 border-base-300 rounded-box p-6 "
                     >
-                      <div className="skeleton min-h-[400px] min-w-[215px] w-full"></div>
+                      <div className="skeleton min-h-[400px] min-w-[215px] w-full flex flex-col justify-center items-center gap-4">
+                        <Image
+                          src="/course-detail/coming-soon.svg"
+                          width={50}
+                          height={50}
+                          alt="coming soon"
+                        />
+                        <span className="text-gray-600 ">Coming Soon...</span>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -205,7 +205,9 @@ function UpdateProfile() {
         }, 3000);
       } else {
         setMessage(response.data.message || "Profile updated successfully");
-        setUserData({ ...userData, ...data });
+        location.reload();
+        sessionStorage.removeItem("user")
+        // setUserData({ ...userData, ...data });
       }
      
     } catch (error) {
@@ -213,6 +215,7 @@ function UpdateProfile() {
       setMessage(error.response?.data?.error || "Failed to update");
     } finally {
       setLoading(false);
+      
     }
   };
   return (

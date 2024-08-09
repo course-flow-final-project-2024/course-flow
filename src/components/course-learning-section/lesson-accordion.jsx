@@ -24,7 +24,7 @@ function LessonAccordion({ onRendered, titleRef }) {
 
   const [expandedIndex, setExpandedIndex] = useState([currentLessonIndex]);
 
-  const handleOnClick = (id) => {
+  const handleOnClick = async (id) => {
     const newIndex = subLessonData.findIndex(
       (subLesson) => subLesson.sub_lesson_id === id
     );
@@ -131,7 +131,6 @@ function LessonAccordion({ onRendered, titleRef }) {
                 } else {
                   statusImage = defaultStatusImage;
                 }
-
                 return (
                   <li
                     className="list-none "
@@ -141,7 +140,7 @@ function LessonAccordion({ onRendered, titleRef }) {
                   >
                     <div
                       className={
-                        subLesson.sub_lesson_id === currentSubLessonId
+                        subLesson.sub_lesson_id === Number(currentSubLessonId)
                           ? "w-full h-12 px-2 py-3  flex flex-row gap-4 items-center bg-[#F6F7FC]"
                           : "w-full h-12 px-2 py-3  flex flex-row gap-4 items-center hover:bg-[#F6F7FC]"
                       }

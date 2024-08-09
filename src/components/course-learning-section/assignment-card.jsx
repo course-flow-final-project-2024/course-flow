@@ -64,7 +64,7 @@ export default function AssignmentCard({ id, question, status, answer }) {
             title: "Completed!!!",
             description: "Assignment has been sent successfully.",
             status: "success",
-            duration: 9000,
+            duration: 6000,
             isClosable: true,
           });
 
@@ -130,7 +130,7 @@ export default function AssignmentCard({ id, question, status, answer }) {
         description:
           "Please complete answer field before sending assignment answer.",
         status: "error",
-        duration: 9000,
+        duration: 6000,
         isClosable: true,
       });
       return;

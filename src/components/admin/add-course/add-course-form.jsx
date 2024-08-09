@@ -148,11 +148,9 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
 
           const subLessonUploadedResults = await Promise.all(
             course.lessons.map(async (item) => {
-              console.log("1", item);
               const lessonId = uploadedLesson[item.lesson_title];
               const subLessonsWithUrls = await Promise.all(
                 item.sub_lessons.map(async (item) => {
-                  console.log("2", item);
                   const subLessonUrl = await uploadFile(
                     item.sub_lesson_video,
                     "sub_lessons"

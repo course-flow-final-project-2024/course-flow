@@ -130,7 +130,8 @@ const AdminCoursesList = () => {
         if (result.data.user.role !== 1) {
           router.push("/");
           return;
-        } else {
+        }
+        if (result.data.user.role === 1) {
           getCourseData();
         }
       } catch (error) {

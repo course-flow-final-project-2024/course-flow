@@ -54,7 +54,7 @@ export default function EditLesson() {
 
   return (
     <>
-      <div className="flex flex-grow w-full mx-auto h-full relative">
+      <div className="flex flex-grow w-full mx-auto min-h-screen">
         <AdminSidebar section="course" />
         <div className="flex flex-col w-full bg-[#F6F7FC]">
           {lessons ? (

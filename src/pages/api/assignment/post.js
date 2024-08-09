@@ -37,39 +37,41 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: "Access denied. Admins only." });
     }
 
-    const validatedData = schema.safeParse(req.body);
+    if (user.role === 1) {
+      const validatedData = schema.safeParse(req.body);
 
-    if (!validatedData.success) {
-      return res.status(400).json({
-        message: "Invalid input data",
-        error: validatedData.error.errors,
+      if (!validatedData.success) {
+        return res.status(400).json({
+          message: "Invalid input data",
+          error: validatedData.error.errors,
+        });
+      }
+
+      const { data, error } = await supabase
+        .from("assignments")
+        .insert([
+          {
+            ...validatedData.data,
+            created_at: new Date(),
+            updated_at: new Date(),
+            user_id: user.user_id,
+          },
+        ])
+        .select();
+
+      if (error) {
+        console.error(error);
+        return res.status(500).json({
+          message:
+            "Server could not create assignment due to database connection",
+          error: error,
+        });
+      }
+
+      return res.status(200).json({
+        message: "Assignment has been created successfully",
       });
     }
-
-    const { data, error } = await supabase
-      .from("assignments")
-      .insert([
-        {
-          ...validatedData.data,
-          created_at: new Date(),
-          updated_at: new Date(),
-          user_id: user.user_id,
-        },
-      ])
-      .select();
-
-    if (error) {
-      console.error(error);
-      return res.status(500).json({
-        message:
-          "Server could not create assignment due to database connection",
-        error: error,
-      });
-    }
-
-    return res.status(200).json({
-      message: "Assignment has been created successfully",
-    });
   } catch (error) {
     return res.status(500).json({
       message: "Server could not create assignment due to database connection",

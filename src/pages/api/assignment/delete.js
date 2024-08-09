@@ -23,24 +23,26 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: "Access denied. Admins only." });
     }
 
-    const assignment_id = req.body.assignment_id;
+    if (user.role === 1) {
+      const assignment_id = req.body.assignment_id;
 
-    const { error } = await supabase
-      .from("assignments")
-      .delete()
-      .eq("assignment_id", assignment_id);
+      const { error } = await supabase
+        .from("assignments")
+        .delete()
+        .eq("assignment_id", assignment_id);
 
-    if (error) {
-      return res.status(500).json({
-        message:
-          "Server could not delete assignment due to database connection",
-        error: error.message,
-      });
+      if (error) {
+        return res.status(500).json({
+          message:
+            "Server could not delete assignment due to database connection",
+          error: error.message,
+        });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Assignment has been deleted successfully" });
     }
-
-    return res
-      .status(200)
-      .json({ message: "Assignment has been deleted successfully" });
   } catch (error) {
     return res.status(500).json({
       message: "Server could not delete assignment due to database connection",

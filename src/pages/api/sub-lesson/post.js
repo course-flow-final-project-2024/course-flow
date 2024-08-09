@@ -33,48 +33,50 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: "Access denied. Admins only." });
     }
 
-    const subLessons = req.body;
+    if (user.role === 1) {
+      const subLessons = req.body;
 
-    const results = await Promise.all(
-      subLessons.map(async (item) => {
-        const lessonId = item.lesson_id;
-        const validatedData = schema.safeParse(item);
-        if (!validatedData.success) {
-          return res.status(400).json({
-            message: "Invalid input data",
-            error: validatedData.error.errors,
-          });
-        }
+      const results = await Promise.all(
+        subLessons.map(async (item) => {
+          const lessonId = item.lesson_id;
+          const validatedData = schema.safeParse(item);
+          if (!validatedData.success) {
+            return res.status(400).json({
+              message: "Invalid input data",
+              error: validatedData.error.errors,
+            });
+          }
 
-        const { data, error } = await supabase
-          .from("sub_lessons")
-          .insert([
-            {
-              user_id: user.user_id,
-              sub_lesson_title: validatedData.data.sub_lesson_title,
-              lesson_id: lessonId,
-              sub_lesson_video: validatedData.data.sub_lesson_video,
-              created_at: new Date(),
-              updated_at: new Date(),
-              index: validatedData.data.index,
-            },
-          ])
-          .select();
+          const { data, error } = await supabase
+            .from("sub_lessons")
+            .insert([
+              {
+                user_id: user.user_id,
+                sub_lesson_title: validatedData.data.sub_lesson_title,
+                lesson_id: lessonId,
+                sub_lesson_video: validatedData.data.sub_lesson_video,
+                created_at: new Date(),
+                updated_at: new Date(),
+                index: validatedData.data.index,
+              },
+            ])
+            .select();
 
-        if (error) {
-          return res.status(500).json({
-            message:
-              "Server could not create sub-lessons due to database connection",
-            error: error,
-          });
-        }
-        return data;
-      })
-    );
-    return res.status(200).json({
-      message: "Sub-lessons have been created successfully",
-      data: results,
-    });
+          if (error) {
+            return res.status(500).json({
+              message:
+                "Server could not create sub-lessons due to database connection",
+              error: error,
+            });
+          }
+          return data;
+        })
+      );
+      return res.status(200).json({
+        message: "Sub-lessons have been created successfully",
+        data: results,
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       message: "Server could not create sub-lessons due to database connection",

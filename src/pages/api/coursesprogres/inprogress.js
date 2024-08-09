@@ -49,7 +49,8 @@ export default async function handler(req, res) {
       .from("user_courses")
       .select("*, courses (*, lessons(*))")
       .eq("user_id", user_id)
-      .eq("course_progress_id", 2);
+      .eq("course_progress_id", 2)
+      .ep("payment_status_id", 1);
       if (inProgressError) {
         throw inProgressError;
       }
@@ -58,8 +59,8 @@ const { data: completed, error: completedError } = await supabase
 .from("user_courses")
 .select("*, courses (*, lessons(*))")
 .eq("user_id", user_id)
-.eq("course_progress_id", 1);
-
+.eq("course_progress_id", 1)
+.ep("payment_status_id", 1);
 if (completedError) {
 throw completedError;
 }

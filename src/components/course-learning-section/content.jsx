@@ -251,14 +251,6 @@ function CoursesContent({ titleRef, subLessonId }) {
   ]);
 
   useEffect(() => {
-    console.log({ assignmentData });
-  }, [assignmentData]);
-
-  useEffect(() => {
-    console.log({ assignmentData });
-  }, [assignmentData]);
-
-  useEffect(() => {
     if (subLessonId && subLessonData.length > 0) {
       const subLessonIndex = subLessonData.findIndex(
         (subLesson) => subLesson.sub_lesson_id == subLessonId

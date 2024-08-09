@@ -2,11 +2,18 @@ import AdminCommonModalBox from "@/utils/admin-common-modal";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { useToast } from "@chakra-ui/react";
 
 const AdminDeleteAssignment = () => {
   const router = useRouter();
   const assignmentId = router.query.assignmentId;
   const [open, setOpen] = useState(false);
+  const toastId = "delete-assignment";
+  const toast = useToast({
+    id: toastId,
+    position: "top",
+    isClosable: true,
+  });
 
   const handleOpen = () => {
     setOpen(true);
@@ -16,10 +23,27 @@ const AdminDeleteAssignment = () => {
   };
 
   const handleDelete = async () => {
-    try {
-      const result = await axios.delete(`/api/assignment/delete`, {
-        data: { assignment_id: assignmentId },
+    const deleteAssignment = axios.delete(`/api/assignment/delete`, {
+      data: { assignment_id: assignmentId },
+    });
+    if (!toast.isActive(toastId)) {
+      toast.promise(deleteAssignment, {
+        success: {
+          title: "Good to go :)",
+          description: "Assignment has been deleted succesfully.",
+        },
+        error: {
+          title: "Oops... :(",
+          description: "Something wrong.",
+        },
+        loading: {
+          title: "Deleting Assignment...",
+          description: "Please wait.",
+        },
       });
+    }
+    try {
+      const result = await deleteAssignment;
       if (result.status === 200) {
         handleClose();
         router.push(`/admin/assignments`);

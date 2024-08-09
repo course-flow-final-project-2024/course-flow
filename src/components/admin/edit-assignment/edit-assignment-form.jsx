@@ -38,7 +38,7 @@ const AdminEditAssignmentForm = ({ assignmentFromDb, assignmentId }) => {
       toast({
         title: "Oops...",
         description:
-          "Please complete all required field before creating assignment.",
+          "Please complete all required field before updating assignment.",
         status: "error",
         duration: 6000,
         isClosable: true,
@@ -47,11 +47,6 @@ const AdminEditAssignmentForm = ({ assignmentFromDb, assignmentId }) => {
     }
 
     if (selectedCourseId && selectedLessonId && selectedSubLessonId) {
-      console.log("goooooood");
-      console.log("course: ", selectedCourseId);
-      console.log("lesson: ", selectedLessonId);
-      console.log("sub-lesson: ", selectedSubLessonId);
-      console.log("assignment", assignmentTitle);
       const updateAssignment = axios.put(
         `/api/assignment/put?assignmentId=${assignmentId}`,
         {
@@ -72,8 +67,8 @@ const AdminEditAssignmentForm = ({ assignmentFromDb, assignmentId }) => {
             description: "Something wrong.",
           },
           loading: {
-            title: "Creating Assignment",
-            description: "Please wait ~",
+            title: "Updating Assignment",
+            description: "Please wait.",
           },
         });
       }

@@ -18,6 +18,7 @@ import { Pagination } from "@mui/material";
 import AdminCommonModalBox from "@/utils/admin-common-modal";
 import Link from "next/link";
 import { Tooltip } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 const AdminAssignmentList = () => {
   const [assignment, setAssignment] = useState([]);
@@ -30,9 +31,17 @@ const AdminAssignmentList = () => {
   });
   const [open, setOpen] = useState(false);
   const [selectedAssignmentId, setSelectedASsignmentId] = useState(null);
-  const toastId = "fetch-data";
-  const toast = useToast({
-    id: toastId,
+  const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
+
+  const toastFetch = useToast({
+    id: "fetch",
+    position: "top",
+    isClosable: true,
+  });
+
+  const toastDelete = useToast({
+    id: "delete",
     position: "top",
     isClosable: true,
   });
@@ -42,17 +51,17 @@ const AdminAssignmentList = () => {
   const title = searchParams.get("title") || "";
 
   async function getAssignmentData() {
-    const getAssignmentData = axios.get(`/api/assignment/get-all`, {
+    const getAssignmentData = axios.get(`/api/assignment/get_all`, {
       params: {
         search: title,
         currentPage: currentPage,
         limit: limitCardPerPage,
       },
     });
-    if (!toast.isActive(toastId)) {
-      toast.promise(getAssignmentData, {
+    if (!toastFetch.isActive("fetch")) {
+      toastFetch.promise(getAssignmentData, {
         success: {
-          title: "Dowload complete :)",
+          title: "Completed download :)",
           description: "Let's go!",
         },
         error: {
@@ -96,9 +105,22 @@ const AdminAssignmentList = () => {
       };
     }
   }
+
   useEffect(() => {
-    getAssignmentData();
-  }, [title, currentPage]);
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      const hasToken = Boolean(localStorage.getItem("token"));
+      if (!hasToken) {
+        router.push("/admin/login");
+        return;
+      } else {
+        getAssignmentData();
+      }
+    }
+  }, [isClient, router, title, currentPage]);
 
   const handleOpen = (assignmentId) => {
     setSelectedASsignmentId(assignmentId);
@@ -109,10 +131,27 @@ const AdminAssignmentList = () => {
   };
 
   const handleDelete = async (assignmentId) => {
-    try {
-      let result = await axios.delete(`/api/assignment/delete`, {
-        data: { assignment_id: assignmentId },
+    const deleteAssignment = axios.delete(`/api/assignment/delete`, {
+      data: { assignment_id: assignmentId },
+    });
+    if (!toastDelete.isActive("delete")) {
+      toastDelete.promise(deleteAssignment, {
+        success: {
+          title: "Good to go :)",
+          description: "Assignment has been deleted succesfully.",
+        },
+        error: {
+          title: "Oops... :(",
+          description: "Something wrong.",
+        },
+        loading: {
+          title: "Deleting Assignment...",
+          description: "Please wait.",
+        },
       });
+    }
+    try {
+      let result = await deleteAssignment;
       if (result.status === 200) {
         getAssignmentData();
         handleClose();
@@ -242,7 +281,7 @@ const AdminAssignmentList = () => {
             ) : (
               <Tr>
                 <Td colSpan="8" align="center">
-                  No courses found.
+                  No assignments found.
                 </Td>
               </Tr>
             )}

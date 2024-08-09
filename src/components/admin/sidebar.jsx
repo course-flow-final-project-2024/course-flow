@@ -18,7 +18,6 @@ const AdminSidebar = ({ section }) => {
   const router = useRouter();
 
   const handleLogOut = async () => {
-    console.log("logout");
     try {
       const token = await JSON.parse(localStorage.getItem("token"));
       const response = await axios.post("/api/auth/logout", { token });

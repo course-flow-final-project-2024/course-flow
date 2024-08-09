@@ -14,6 +14,8 @@ export default function EditCourse() {
   const courseId = router.query.courseId;
   const { course, setCourse } = useContext(AddCourseContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
   const toastId = "fetch-course";
   const toast = useToast({
     id: toastId,
@@ -55,11 +57,40 @@ export default function EditCourse() {
     }
   };
 
-  useEffect(() => {
-    if (courseId && isEmptyCourse()) {
-      getData();
+  async function checkLoginStatus() {
+    const hasToken = Boolean(localStorage.getItem("token"));
+    if (hasToken) {
+      try {
+        const result = await axios.get("/api/user-profile/get");
+        if (result.data.user.role !== 1) {
+          router.push("/");
+          return;
+        }
+
+        if (result.data.user.role === 1) {
+          if (courseId && isEmptyCourse()) {
+            getData();
+          }
+        }
+      } catch (error) {
+        router.push("/admin/login");
+      }
     }
-  }, [courseId]);
+    if (!hasToken) {
+      router.push("/admin/login");
+      return;
+    }
+  }
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      checkLoginStatus();
+    }
+  }, [isClient, router, courseId]);
 
   return (
     <>

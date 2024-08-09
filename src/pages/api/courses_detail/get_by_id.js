@@ -1,4 +1,5 @@
 import { supabase } from "../../../../lib/supabase";
+import { validationToken } from "../validation-token";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -12,34 +13,53 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { data: courses, error } = await supabase
-      .from("courses")
-      .select(`*,lessons (*, sub_lessons(*))`)
-      .eq("course_id", courseId)
-      .order("updated_at", { ascending: false })
-      .order("index", { referencedTable: "lessons", ascending: true });
+    const payload = await validationToken(req, res);
+    const email = payload.email;
 
-    if (error) {
-      throw error;
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("user_id, role")
+      .eq("email", email)
+      .single();
+
+    if (userError || !user) {
+      return res.status(400).json({ error: "Invalid username or password." });
     }
 
-    if (!courses || courses.length === 0) {
-      return res.status(404).json({ error: "Course not found" });
+    if (user.role !== 1) {
+      return res.status(401).json({ error: "Access denied. Admins only." });
     }
 
-    if (courses.length > 0) {
-      const course = courses[0];
+    if (user.role === 1) {
+      const { data: courses, error } = await supabase
+        .from("courses")
+        .select(`*,lessons (*, sub_lessons(*))`)
+        .eq("course_id", courseId)
+        .order("updated_at", { ascending: false })
+        .order("index", { referencedTable: "lessons", ascending: true });
 
-      if (course.lessons) {
-        course.lessons.map((lesson) => {
-          if (lesson.sub_lessons) {
-            lesson.sub_lessons.sort((a, b) => a.index - b.index);
-          }
-        });
+      if (error) {
+        throw error;
       }
-    }
 
-    return res.status(200).json({ courses });
+      if (!courses || courses.length === 0) {
+        return res.status(404).json({ error: "Course not found" });
+      }
+
+      if (courses.length > 0) {
+        const course = courses[0];
+
+        if (course.lessons) {
+          course.lessons.map((lesson) => {
+            if (lesson.sub_lessons) {
+              lesson.sub_lessons.sort((a, b) => a.index - b.index);
+            }
+          });
+        }
+      }
+
+      return res.status(200).json({ courses });
+    }
   } catch (error) {
     console.error("Error fetching course data", error);
     return res.status(500).json({

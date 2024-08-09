@@ -156,7 +156,7 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
                 item.sub_lessons.map(async (item) => {
                   const subLessonUrl = await uploadFile(
                     item.sub_lesson_video,
-                    "sub-lessons"
+                    "sub_lessons"
                   );
                   return {
                     ...item,
@@ -186,7 +186,7 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
       }
     } catch (error) {
       console.error(
-        "Server could not create course due to database connection",
+        "Server could not update course due to database connection",
         error
       );
       setIsLoading(false);
@@ -194,7 +194,7 @@ const AdminEditCourseForm = ({ setIsLoading }) => {
   };
 
   return (
-    <div className=" bg-white  w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">
+    <div className=" bg-white w-full rounded-2xl px-[100px] pt-10 pb-[60px]">
       <form
         id="edit-course"
         onSubmit={handleEditCourse}

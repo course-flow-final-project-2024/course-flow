@@ -3,12 +3,18 @@ import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { AddCourseContext } from "@/pages/_app";
+import { useToast } from "@chakra-ui/react";
 
 const AdminDeleteCourse = () => {
   const router = useRouter();
   const courseId = router.query.courseId;
   const [open, setOpen] = useState(false);
   const { setCourse } = useContext(AddCourseContext);
+  const toast = useToast({
+    id: "delete",
+    position: "top",
+    isClosable: true,
+  });
 
   const courseInitialValue = {
     course_name: "",
@@ -30,10 +36,27 @@ const AdminDeleteCourse = () => {
   };
 
   const handleDelete = async () => {
-    try {
-      await axios.delete(`/api/courses/delete`, {
-        data: { course_id: courseId },
+    const deleteCourse = axios.delete(`/api/courses/delete`, {
+      data: { course_id: courseId },
+    });
+    if (!toast.isActive("delete")) {
+      toast.promise(deleteCourse, {
+        success: {
+          title: "Good to go :)",
+          description: "Course has been deleted succesfully.",
+        },
+        error: {
+          title: "Oops... :(",
+          description: "Something wrong.",
+        },
+        loading: {
+          title: "Deleting Course...",
+          description: "Please wait.",
+        },
       });
+    }
+    try {
+      await deleteCourse;
       setCourse(courseInitialValue);
       handleClose();
       router.push(`/admin/courses`);

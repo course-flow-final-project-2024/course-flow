@@ -8,8 +8,8 @@ function MyCourses () {
     return (
       <>
         <Navbar />
-        <GetMyCourse />
         <PageDecoration />
+        <GetMyCourse />
         <CommonFooter />
       </>
     );

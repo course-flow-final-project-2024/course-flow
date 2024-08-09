@@ -7,8 +7,8 @@ function UserProfile (){
     return (
     <>
     <Navbar />
-    <UpdateProfile />
     <PageDecoration />
+    <UpdateProfile />
     <CommonFooter />
     </>
 

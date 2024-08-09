@@ -250,6 +250,8 @@ function CoursesContent({ titleRef, subLessonId }) {
     assignmentData,
   ]);
 
+  useEffect(() => {}, [assignmentData]);
+
   useEffect(() => {
     console.log({ assignmentData });
   }, [assignmentData]);

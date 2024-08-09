@@ -13,7 +13,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log(`Deleting file: ${filePath} for user: ${userEmail}`);
     const fullPath = `userImage/${filePath}`;
     const { error: deleteError } = await supabase
       .storage

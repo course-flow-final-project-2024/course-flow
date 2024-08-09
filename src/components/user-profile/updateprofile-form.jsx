@@ -39,7 +39,6 @@ async function getImageUrl(filePath) {
       return null;
     }
 
-    console.log("Image URL:", data.publicUrl);
     return data.publicUrl;
   } catch (error) {
     console.error("Error getting image Url:", error.message);
@@ -83,7 +82,7 @@ function UpdateProfile() {
     if (!token) {
       router.push("/login");
     }
-   
+
     const fetchUser = async () => {
       const token = await JSON.parse(localStorage.getItem("token"));
 
@@ -177,7 +176,6 @@ function UpdateProfile() {
           imageUrl = await getImageUrl(filePath);
         }
       }
-      console.log("Image URL:", imageUrl);
 
       const data = {
         name,
@@ -186,7 +184,7 @@ function UpdateProfile() {
         birthday,
         image: imageUrl,
       };
-      console.log("Data to be sent:", data);
+  
 
       const response = await axios.patch("/api/user-profile/update", data, {
         headers: {
@@ -194,7 +192,7 @@ function UpdateProfile() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      console.log("Response:", response.data.message);
+      // console.log("Response:", response.data.message);
 
       if (email !== userData.email) {
         setMessage("Please log in again to confirm your email change.");
@@ -205,9 +203,10 @@ function UpdateProfile() {
         }, 3000);
       } else {
         setMessage(response.data.message || "Profile updated successfully");
-        setUserData({ ...userData, ...data });
+        location.reload();
+        sessionStorage.removeItem("user");
+        // setUserData({ ...userData, ...data });
       }
-     
     } catch (error) {
       console.error("update profile error", error);
       setMessage(error.response?.data?.error || "Failed to update");
@@ -216,11 +215,11 @@ function UpdateProfile() {
     }
   };
   return (
-    <div className="w-full h-max flex justify-center overflow-hidden">
-      <div className="flex flex-col justify-center items-center gap-[72px] pt-[100px] pb-[217px]">
+    <div className="w-full min-h-[1000px] flex justify-center overflow-hidden">
+      <div className="flex flex-col justify-center items-center gap-[72px] pt-[100px] pb-[217px] max-sm:overflow-scroll">
         <div className="text-4xl font-medium text-center">Profile</div>
         <form
-          className="flex lg:flex-row flex-col gap-[120px]"
+          className="flex lg:flex-row flex-col gap-[120px] max-lg:items-center"
           onSubmit={handleSubmit}
         >
           <div className="relative inline-block min-[453px]:w-[358px] w-[343px] h-[358px] rounded-lg">

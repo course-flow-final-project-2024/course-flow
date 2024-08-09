@@ -1,6 +1,7 @@
 import Button from "@/utils/button";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import { useContext } from "react";
+import { useRouter } from "next/router";
 
 function ActionBar({ titleRef }) {
   const {
@@ -10,7 +11,10 @@ function ActionBar({ titleRef }) {
     setCurrentLessonIndex,
     currentSubLessonIndex,
     setCurrentSubLessonIndex,
+    currentSubLessonId,
   } = useContext(CoursesDataContext);
+
+  const router = useRouter();
 
   const handleNextLesson = () => {
     if (currentSubLessonIndex < subLessonsLenght - 1) {
@@ -26,6 +30,12 @@ function ActionBar({ titleRef }) {
     if (titleRef.current) {
       titleRef.current.scrollIntoView({ behavior: "smooth" });
     }
+    console.log("1", currentSubLessonIndex);
+
+    console.log("2", newIndex);
+
+    const courseId = router.query.courseId;
+    router.push(`/courses/${courseId}/learning`);
   };
 
   const handlePreviousLesson = () => {
@@ -42,6 +52,9 @@ function ActionBar({ titleRef }) {
     if (titleRef.current) {
       titleRef.current.scrollIntoView({ behavior: "smooth" });
     }
+
+    const courseId = router.query.courseId;
+    router.push(`/courses/${courseId}/learning`);
   };
 
   return (

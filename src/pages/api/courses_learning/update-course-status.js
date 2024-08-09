@@ -1,14 +1,13 @@
 import { supabase } from "../../../../lib/supabase";
 import { validationToken } from "../validation-token";
 
-export default async function updateAssignmentStatus(req, res) {
+export default async function updateCourseStatus(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   const payload = await validationToken(req, res);
-  const { assignmentId, status, assignmentAnswer } = req.body;
-  console.log(req.body);
+  const { courseId, courseStatus } = req.body;
 
   try {
     const { data: users, error: userError } = await supabase
@@ -23,10 +22,10 @@ export default async function updateAssignmentStatus(req, res) {
     const userId = users[0].user_id;
 
     const { data, error } = await supabase
-      .from("user_assignments")
-      .update({ assignment_status_id: status, answer: assignmentAnswer })
+      .from("user_courses")
+      .update({ course_progress_id: courseStatus })
       .eq("user_id", userId)
-      .eq("assignment_id", assignmentId)
+      .eq("course_id", courseId)
       .select();
 
     if (error) {
@@ -34,12 +33,11 @@ export default async function updateAssignmentStatus(req, res) {
     }
 
     if (data.length === 0) {
-      return res.status(404).json({ message: "No matching assignment found" });
+      return res.status(404).json({ message: "No matching course found" });
     }
 
     return res.status(200).json({
-      message: "Assignment status updated successfully",
-      updatedAssignment: data,
+      message: "Course status updated successfully",
     });
   } catch (error) {
     return res.status(500).json({

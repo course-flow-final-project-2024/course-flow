@@ -4,17 +4,17 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import CommonModalBox from "@/utils/common-modal";
+import { useToast } from "@chakra-ui/react";
 
 export default function AssignmentCard({ id, question, status, answer }) {
   const { progress } = useContext(CoursesDataContext);
   const [assignmentAnswer, setAssignmentAnswer] = useState("");
   const [open, setOpen] = useState(false);
-  const [resultAllAssignment, setResultAllAssignment] = useState(null);
   const [responseStatus, setResponseStatus] = useState(null);
-  const [responseAnswer, setResponseAnswer] = useState(null);
   const handleClose = () => setOpen(false);
-
   const router = useRouter();
+  const { courseId } = router.query;
+  const toast = useToast();
 
   const updateAssignmentStatus = async (
     assignmentId,
@@ -36,6 +36,7 @@ export default function AssignmentCard({ id, question, status, answer }) {
           assignmentAnswer,
         }
       );
+
       if (response.status === 200) {
         try {
           const getAllAssignmentStatus = async () => {
@@ -54,23 +55,29 @@ export default function AssignmentCard({ id, question, status, answer }) {
           };
 
           const result = await getAllAssignmentStatus();
-          const updatedAssignment = result.data.assignments.find(
+          const resultAllAssignments = result.data.assignments;
+          const updatedAssignment = resultAllAssignments.find(
             (assignment) => assignment.assignment_id === assignmentId
           );
-          console.log(result);
 
-          setResultAllAssignment(result.data.assignments);
-          setResponseStatus(updatedAssignment);
-          // setResponseAnswer(updatedAssignment)
+          toast({
+            title: "Completed!!!",
+            description: "Assignment has been sent successfully.",
+            status: "success",
+            duration: 6000,
+            isClosable: true,
+          });
+
+          return {
+            message: "Assignment status updated successfully",
+            resultAllAssignments,
+            updatedAssignment,
+          };
         } catch (error) {
           return {
             message: "Server could not read courses due to database connection",
           };
         }
-        return {
-          message: "Assignment status updated successfully",
-          // result: result.data.assignments,
-        };
       } else {
         return {
           message: "Failed to update assignment status",
@@ -84,41 +91,63 @@ export default function AssignmentCard({ id, question, status, answer }) {
     }
   };
 
-  // const checkAssignmentStatus = (data) => {
-  //   const courses = data.courses || [];
-  //   console.log(courses);
+  const updateCourseStatus = async (courseId, courseStatus) => {
+    const hasToken = localStorage.getItem("token");
+    if (!hasToken) {
+      router.push("/login");
+      return;
+    }
 
-  //   for (const course of data.courses) {
-  //     for (const lesson of course.courses.lessons) {
-  //       for (const subLesson of lesson.sub_lessons) {
-  //         for (const assignment of subLesson.assignments) {
-  //           if (
-  //             assignment.user_assignments[1] &&
-  //             assignment.user_assignments[1].assignment_status_id !== 1
-  //           ) {
-  //             return false;
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   return true;
-  // };
+    try {
+      const response = await axios.post(
+        `/api/courses_learning/update-course-status`,
+        {
+          courseId,
+          courseStatus,
+        }
+      );
+      if (response.status === 200) {
+        return {
+          message: "Course status updated successfully",
+        };
+      } else {
+        return {
+          message: "Failed to update course status",
+        };
+      }
+    } catch (error) {
+      return {
+        message:
+          "Server could not update course status due to database connection",
+      };
+    }
+  };
 
   const handleOnSubmit = async (id, progress) => {
     if (assignmentAnswer.trim() === "") {
-      alert("Please provide an answer before submitting.");
+      toast({
+        title: "Oops...",
+        description:
+          "Please complete answer field before sending assignment answer.",
+        status: "error",
+        duration: 6000,
+        isClosable: true,
+      });
       return;
     }
-    const response = await updateAssignmentStatus(id, 1, assignmentAnswer);
-    console.log(response);
+    const { message, resultAllAssignments, updatedAssignment } =
+      await updateAssignmentStatus(id, 1, assignmentAnswer);
+    setResponseStatus(updatedAssignment);
 
-    // if (Math.round(progress) === 100) {
-    //   console.log("Hello100");
-    //   const allAssignmentsStatus = checkAssignmentStatus(response.result.data);
-    //   console.log(allAssignmentsStatus);
-    // }
+    if (Math.round(progress) === 100) {
+      const allAssignmentsSubmitted = resultAllAssignments.every(
+        (assignment) => assignment.assignment_status_id === 1
+      );
+      if (allAssignmentsSubmitted) {
+        await updateCourseStatus(courseId, 1);
+      }
+    }
+
     handleClose();
   };
 
@@ -128,9 +157,15 @@ export default function AssignmentCard({ id, question, status, answer }) {
         <div className=" flex flex-col gap-[25px] p-6 rounded-lg bg-[#E5ECF8]">
           <div className=" flex justify-between">
             <h1 className="text-xl">Assignment</h1>
-            <p className="rounded p-[4px_8px_4px_8px] bg-[#a9b3af] text-[#0A7B60] font-medium">
-              {status}
-            </p>
+            {responseStatus?.assignment_status_id === 1 ? (
+              <p className="rounded p-[4px_8px_4px_8px] bg-[#DDF9EF] text-[#0A7B60] font-medium">
+                {responseStatus.assignment_status.status}
+              </p>
+            ) : (
+              <p className="rounded p-[4px_8px_4px_8px] bg-[#DDF9EF] text-[#0A7B60] font-medium">
+                {status}
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-3">
             <p>{question}</p>

@@ -1,5 +1,6 @@
 import { supabase } from "../../../../lib/supabase";
 import { z } from "zod";
+import { validationToken } from "../validation-token";
 
 const schema = z.object({
   sub_lesson_title: z
@@ -15,44 +16,71 @@ export default async function handler(req, res) {
   }
 
   try {
-    const subLessons = req.body;
+    const payload = await validationToken(req, res);
+    const email = payload.email;
 
-    const results = await Promise.all(
-      subLessons.map(async (item) => {
-        const lessonId = item.lesson_id;
-        const validatedData = schema.safeParse(item);
-        console.log("sub post validated", validatedData.data);
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("user_id, role")
+      .eq("email", email)
+      .single();
 
-        const { data, error } = await supabase
-          .from("sub_lessons")
-          .insert([
-            {
-              user_id: 1,
-              sub_lesson_title: validatedData.data.sub_lesson_title,
-              lesson_id: lessonId,
-              sub_lesson_video: validatedData.data.sub_lesson_video,
-              created_at: new Date(),
-              updated_at: new Date(),
-              index: validatedData.data.index,
-            },
-          ])
-          .select();
+    if (userError || !user) {
+      return res.status(400).json({ error: "Invalid username or password." });
+    }
 
-        if (error) {
-          console.error(error);
-        }
-        return data;
-      })
-    );
-    return res.status(200).json({
-      message: "Sub-lessons have been created successfully",
-      data: results,
-    });
+    if (user.role !== 1) {
+      return res.status(401).json({ error: "Access denied. Admins only." });
+    }
+
+    if (user.role === 1) {
+      const subLessons = req.body;
+
+      const results = await Promise.all(
+        subLessons.map(async (item) => {
+          const lessonId = item.lesson_id;
+          const validatedData = schema.safeParse(item);
+          if (!validatedData.success) {
+            return res.status(400).json({
+              message: "Invalid input data",
+              error: validatedData.error.errors,
+            });
+          }
+
+          const { data, error } = await supabase
+            .from("sub_lessons")
+            .insert([
+              {
+                user_id: user.user_id,
+                sub_lesson_title: validatedData.data.sub_lesson_title,
+                lesson_id: lessonId,
+                sub_lesson_video: validatedData.data.sub_lesson_video,
+                created_at: new Date(),
+                updated_at: new Date(),
+                index: validatedData.data.index,
+              },
+            ])
+            .select();
+
+          if (error) {
+            return res.status(500).json({
+              message:
+                "Server could not create sub-lessons due to database connection",
+              error: error,
+            });
+          }
+          return data;
+        })
+      );
+      return res.status(200).json({
+        message: "Sub-lessons have been created successfully",
+        data: results,
+      });
+    }
   } catch (error) {
-    console.log("500", error);
     return res.status(500).json({
-      message: "Server could not create lessons due to database connection",
-      error: error.message,
+      message: "Server could not create sub-lessons due to database connection",
+      error: error,
     });
   }
 }

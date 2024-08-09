@@ -11,6 +11,7 @@ export default function EditAssignment() {
   const router = useRouter();
   const assignmentId = router.query.assignmentId;
   const [assignmentFromDb, setAssignmentFromDb] = useState({});
+  const [isClient, setIsClient] = useState(false);
   const toastId = "fetch-assignment";
   const toast = useToast({
     id: toastId,
@@ -25,7 +26,7 @@ export default function EditAssignment() {
     if (!toast.isActive(toastId)) {
       toast.promise(getAssignment, {
         toastId,
-        success: { title: "Dowload complete :)", description: "Let's go!" },
+        success: { title: "Assignment loaded :)", description: "Let's go!" },
         error: { title: "Oops.. :(", description: "Something wrong." },
         loading: {
           title: "Downloading assignment",
@@ -42,11 +43,39 @@ export default function EditAssignment() {
     }
   };
 
-  useEffect(() => {
-    if (assignmentId) {
-      getAssignmentData();
+  async function checkLoginStatus() {
+    const hasToken = Boolean(localStorage.getItem("token"));
+    if (hasToken) {
+      try {
+        const result = await axios.get("/api/user-profile/get");
+        if (result.data.user.role !== 1) {
+          router.push("/");
+          return;
+        }
+        if (result.data.user.role === 1) {
+          if (assignmentId) {
+            getAssignmentData();
+          }
+        }
+      } catch (error) {
+        router.push("/admin/login");
+      }
     }
-  }, [assignmentId]);
+    if (!hasToken) {
+      router.push("/admin/login");
+      return;
+    }
+  }
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      checkLoginStatus();
+    }
+  }, [isClient, router, assignmentId]);
 
   return (
     <>

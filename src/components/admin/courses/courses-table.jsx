@@ -17,6 +17,7 @@ import { useSearchParams } from "next/navigation";
 import { Pagination } from "@mui/material";
 import AdminCommonModalBox from "@/utils/admin-common-modal";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const AdminCoursesList = () => {
   const [course, setCourse] = useState([]);
@@ -29,9 +30,16 @@ const AdminCoursesList = () => {
   });
   const [open, setOpen] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
-  const toastId = "fetch-data";
-  const toast = useToast({
-    id: toastId,
+  const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
+
+  const toastFetch = useToast({
+    id: "fetch",
+    position: "top",
+    isClosable: true,
+  });
+  const toastDelete = useToast({
+    id: "delete",
     position: "top",
     isClosable: true,
   });
@@ -45,9 +53,7 @@ const AdminCoursesList = () => {
   };
 
   const searchParams = useSearchParams();
-
   const limitCardPerPage = 8;
-
   const title = searchParams.get("title") || "";
 
   async function getCourseData() {
@@ -58,10 +64,10 @@ const AdminCoursesList = () => {
         limit: limitCardPerPage,
       },
     });
-    if (!toast.isActive(toastId)) {
-      toast.promise(getCourseData, {
+    if (!toastFetch.isActive("fetch")) {
+      toastFetch.promise(getCourseData, {
         success: {
-          title: "Dowload complete :)",
+          title: "Courses loaded :)",
           description: "Let's go!",
         },
         error: {
@@ -69,7 +75,7 @@ const AdminCoursesList = () => {
           description: "Something wrong.",
         },
         loading: {
-          title: "Downloading course",
+          title: "Downloading courses",
           description: "Please wait.",
         },
       });
@@ -107,10 +113,27 @@ const AdminCoursesList = () => {
   }
 
   const handleDelete = async (courseId) => {
-    try {
-      await axios.delete(`/api/courses/delete`, {
-        data: { course_id: courseId },
+    const deleteCourse = axios.delete(`/api/courses/delete`, {
+      data: { course_id: courseId },
+    });
+    if (!toastDelete.isActive("delete")) {
+      toastDelete.promise(deleteCourse, {
+        success: {
+          title: "Good to go :)",
+          description: "Course has been deleted succesfully.",
+        },
+        error: {
+          title: "Oops... :(",
+          description: "Something wrong.",
+        },
+        loading: {
+          title: "Deleting Course...",
+          description: "Please wait.",
+        },
       });
+    }
+    try {
+      await deleteCourse;
       getCourseData();
       handleClose();
     } catch (error) {
@@ -120,9 +143,37 @@ const AdminCoursesList = () => {
     }
   };
 
+  async function checkLoginStatus() {
+    const hasToken = Boolean(localStorage.getItem("token"));
+    if (hasToken) {
+      try {
+        const result = await axios.get("/api/user-profile/get");
+        if (result.data.user.role !== 1) {
+          router.push("/");
+          return;
+        }
+        if (result.data.user.role === 1) {
+          getCourseData();
+        }
+      } catch (error) {
+        router.push("/admin/login");
+      }
+    }
+    if (!hasToken) {
+      router.push("/admin/login");
+      return;
+    }
+  }
+
   useEffect(() => {
-    getCourseData();
-  }, [title, currentPage]);
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      checkLoginStatus();
+    }
+  }, [isClient, router, title, currentPage]);
 
   const dateFormat = (key) => {
     const result = `${key.slice(0, 4)}/${key.slice(5, 7)}/${key.slice(8, 10)} ${
@@ -199,7 +250,7 @@ const AdminCoursesList = () => {
                   <Td pl="16px" pr="16px" whiteSpace="normal">
                     {item.course_name}
                   </Td>
-                  <Td pl="16px">{item.lessons[0].count} Lessons</Td>
+                  <Td pl="16px">{item.lessons.length} Lessons</Td>
                   <Td pl="16px">
                     {item.price.toLocaleString(undefined, {
                       minimumFractionDigits: 2,

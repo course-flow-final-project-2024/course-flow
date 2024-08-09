@@ -12,22 +12,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    // const { data: session, error: sessionError } = await supabase
-    //   .from("loginsession")
-    //   .select("user_email")
-    //   .eq("sessionId", token)
-    //   .single();
-
-    // if (sessionError) {
-    //   console.error("Session Error:", sessionError);
-    //   throw new Error(sessionError.message);
-    // }
-
-    // if (!session || !session.user_email) {
-    //   return res.status(401).json({ error: "Session not found" });
-    // }
-
-    const { data: user, error: userError } = await supabase
+    
+const { data: user, error: userError } = await supabase
       .from("users")
       .select("*")
       .eq("email", payload.email)
@@ -49,7 +35,8 @@ export default async function handler(req, res) {
       .from("user_courses")
       .select("*, courses (*, lessons(*))")
       .eq("user_id", user_id)
-      .eq("course_progress_id", 1);
+      .eq("course_progress_id", 1)
+      .eq("payment_status_id", 1);
       if (completedError) {
         throw completedError;
         }
@@ -58,8 +45,8 @@ const { data: inProgress, error: inProgressError } = await supabase
 .from("user_courses")
 .select("*, courses (*, lessons(*))")
 .eq("user_id", user_id)
-.eq("course_progress_id", 2);
-
+.eq("course_progress_id", 2)
+.eq("payment_status_id", 1);
 if (inProgressError) {
 throw inProgressError;
 }

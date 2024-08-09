@@ -51,8 +51,11 @@ export default function EditAssignment() {
         if (result.data.user.role !== 1) {
           router.push("/");
           return;
-        } else if (assignmentId) {
-          getAssignmentData();
+        }
+        if (result.data.user.role === 1) {
+          if (assignmentId) {
+            getAssignmentData();
+          }
         }
       } catch (error) {
         router.push("/admin/login");

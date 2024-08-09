@@ -33,9 +33,13 @@ const AdminCoursesList = () => {
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
-  const toastId = "fetch-data";
-  const toast = useToast({
-    id: toastId,
+  const toastFetch = useToast({
+    id: "fetch",
+    position: "top",
+    isClosable: true,
+  });
+  const toastDelete = useToast({
+    id: "delete",
     position: "top",
     isClosable: true,
   });
@@ -60,8 +64,8 @@ const AdminCoursesList = () => {
         limit: limitCardPerPage,
       },
     });
-    if (!toast.isActive(toastId)) {
-      toast.promise(getCourseData, {
+    if (!toastFetch.isActive("fetch")) {
+      toastFetch.promise(getCourseData, {
         success: {
           title: "Courses loaded :)",
           description: "Let's go!",
@@ -109,10 +113,27 @@ const AdminCoursesList = () => {
   }
 
   const handleDelete = async (courseId) => {
-    try {
-      await axios.delete(`/api/courses/delete`, {
-        data: { course_id: courseId },
+    const deleteCourse = axios.delete(`/api/courses/delete`, {
+      data: { course_id: courseId },
+    });
+    if (!toastDelete.isActive("delete")) {
+      toastDelete.promise(deleteCourse, {
+        success: {
+          title: "Good to go :)",
+          description: "Course has been deleted succesfully.",
+        },
+        error: {
+          title: "Oops... :(",
+          description: "Something wrong.",
+        },
+        loading: {
+          title: "Deleting Course...",
+          description: "Please wait.",
+        },
       });
+    }
+    try {
+      await deleteCourse;
       getCourseData();
       handleClose();
     } catch (error) {

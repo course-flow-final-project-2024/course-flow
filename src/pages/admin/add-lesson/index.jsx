@@ -4,6 +4,7 @@ import AdminLessonHeader from "@/components/admin/header/creating-lesson-page";
 import AdminLessonForm from "@/components/admin/add-lesson/lesson-form";
 import { useRouter } from "next/router";
 import { AddCourseContext } from "@/pages/_app";
+import axios from "axios";
 
 export default function AddNewLesson() {
   const router = useRouter();
@@ -11,17 +12,32 @@ export default function AddNewLesson() {
   const [isClient, setIsClient] = useState(false);
   const { course } = useContext(AddCourseContext);
 
+  async function checkLoginStatus() {
+    const hasToken = Boolean(localStorage.getItem("token"));
+    if (hasToken) {
+      try {
+        const result = await axios.get("/api/user-profile/get");
+        if (result.data.user.role !== 1) {
+          router.push("/");
+          return;
+        }
+      } catch (error) {
+        router.push("/admin/login");
+      }
+    }
+    if (!hasToken) {
+      router.push("/admin/login");
+      return;
+    }
+  }
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
     if (isClient) {
-      const hasToken = Boolean(localStorage.getItem("token"));
-      if (!hasToken) {
-        router.push("/admin/login");
-        return;
-      }
+      checkLoginStatus();
     }
   }, [isClient, router]);
 

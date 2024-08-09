@@ -201,20 +201,6 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
     }
   };
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (isClient) {
-      const hasToken = Boolean(localStorage.getItem("token"));
-      if (!hasToken) {
-        router.push("/admin/login");
-        return;
-      }
-    }
-  }, [isClient, router]);
-
   return (
     <div className="p-10">
       <div className=" bg-white  w-full  rounded-2xl px-[100px] pt-10 pb-[60px]">

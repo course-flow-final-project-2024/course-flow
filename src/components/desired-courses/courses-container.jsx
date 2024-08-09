@@ -14,7 +14,7 @@ function DesiredCourseContainer() {
     if (errorStatus) {
       toast({
         title: "Error",
-        description: `There was a problem retrieving your desired courses.\nPlease try again later.`,
+        description: `There was a problem retrieving your desired courses. Please try again later.`,
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -23,9 +23,9 @@ function DesiredCourseContainer() {
   }, [errorStatus, toast]);
 
   return (
-    <div className="w-full h-max min-h-[980px] px-4 py-12 sm:py-24 sm:px-16 lg:px-40 min-[1800px]:px-96">
-      <div className="w-full sm:pt-8 flex flex-col items-center gap-14 ">
-        <h2 className="w-full text-center text-4xl font-medium ">
+    <div className="w-full h-max min-h-[980px] px-4 py-12 sm:py-24 sm:px-16 lg:px-40 min-[1800px]:px-96 z-10 relative">
+      <div className="w-full flex flex-col items-center gap-14 ">
+        <h2 className="w-full text-center text-4xl font-medium justify-self-start ">
           Desired Courses
         </h2>
 
@@ -37,7 +37,7 @@ function DesiredCourseContainer() {
         ) : courseData.length === 0 ? (
           <div className="w-full min-h-[350px] flex flex-col gap-2 items-center justify-center">
             <span className="text-lg font-medium sm:text-xl md:text-2xl xl:text-3xl">
-              There are currently no courses in your desired courses list.
+              There are currently no course in your desired courses list.
             </span>
           </div>
         ) : (

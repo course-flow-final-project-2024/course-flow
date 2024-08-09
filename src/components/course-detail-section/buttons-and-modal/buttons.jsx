@@ -17,17 +17,26 @@ function CourseCardAddAndRemove(props) {
     <>
       {context.userCourseStatus === "none" ? (
         <>
-          <Button
-            style="secondary"
-            text={isLoading ? "Please wait..." : "Get in Desire Course"}
-            onClick={() => {
-              if (context.loginStatus) {
-                context.setOpenCourseModal(true);
-                context.setButtonAction("add");
-              }
-            }}
-            customStyle={props.customStyle}
-          />
+          {!isLoading ? (
+            <Button
+              style="secondary"
+              text="Get in Desired Course"
+              onClick={() => {
+                if (context.loginStatus) {
+                  context.setOpenCourseModal(true);
+                  context.setButtonAction("add");
+                }
+              }}
+              customStyle={props.customStyle}
+            />
+          ) : (
+            <Button
+              style="secondary"
+              text={<span className="loading loading-dots loading-md"></span>}
+              customStyle={props.customStyle}
+            />
+          )}
+
           <Button
             style="primary"
             text="Subscribe This Course"
@@ -42,17 +51,26 @@ function CourseCardAddAndRemove(props) {
         </>
       ) : context.userCourseStatus === "added" ? (
         <>
-          <Button
-            style="secondary"
-            text={isLoading ? "Please wait..." : "Remove from Desire Course"}
-            onClick={() => {
-              if (context.loginStatus) {
-                context.setOpenCourseModal(true);
-                context.setButtonAction("delete");
-              }
-            }}
-            customStyle={props.customStyle}
-          />
+          {!isLoading ? (
+            <Button
+              style="secondary"
+              text="Remove from Desired Course"
+              onClick={() => {
+                if (context.loginStatus) {
+                  context.setOpenCourseModal(true);
+                  context.setButtonAction("delete");
+                }
+              }}
+              customStyle={props.customStyle}
+            />
+          ) : (
+            <Button
+              style="secondary"
+              text={<span className="loading loading-dots loading-md"></span>}
+              customStyle={props.customStyle}
+            />
+          )}
+
           <Button
             style="primary"
             text="Subscribe This Course"
@@ -76,7 +94,7 @@ function CourseCardAddAndRemove(props) {
         <>
           <Button
             style="secondary"
-            text="Get in Desire Course"
+            text="Get in Desired Course"
             onClick={() => {
               router.push(`/login/?redirectC=${redirectId}`);
             }}

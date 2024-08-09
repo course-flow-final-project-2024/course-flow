@@ -43,7 +43,7 @@ function TopContent({ courseData, courseId }) {
         {videoUrl ? (
           <video
             ref={videoRef}
-            className="w-full max-h-[600px] bg-black object-cover"
+            className="w-full max-h-[600px] bg-black "
             width={1000}
             height={300}
             controls

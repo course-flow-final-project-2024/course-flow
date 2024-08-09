@@ -16,7 +16,7 @@ function BottomCourseCard() {
 
   return (
     <div className="w-full h-28 relative bg-[#183056] lg:hidden">
-      <div className="w-full h-max fixed bottom-0 bg-white rounded-t-xl shadow-[rgba(60,64,67,0.3)_0px_1px_2px_0px,rgba(60,64,67,0.15)_0px_2px_6px_2px] lg:hidden sm:px-10 ease-in-out duration-200  ">
+      <div className="w-full h-max fixed bottom-0 bg-white rounded-t-xl shadow-[rgba(60,64,67,0.3)_0px_1px_2px_0px,rgba(60,64,67,0.15)_0px_2px_6px_2px] lg:hidden duration-200  ">
         <Accordion allowToggle border="none">
           <AccordionItem border="none" p={3} pt={2}>
             <div className="flex flex-col gap-2  ">

@@ -53,11 +53,25 @@ function CheckoutForm({ amount }) {
             return;
           }
 
+          const formatDate = (date) => {
+            const options = {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+            };
+            return new Intl.DateTimeFormat("en-US", options).format(date);
+          };
+
+          const paymentTime = formatDate(new Date());
+
           const { error: confirmError } = await stripe.confirmPayment({
             elements,
             clientSecret,
             confirmParams: {
-              return_url: `http://localhost:3000/courses/${courseId}/payment-success?&courseTitle=${courseTitle}&payment_intent=${
+              return_url: `http://localhost:3000/courses/${courseId}/payment-success?&courseTitle=${courseTitle}&amount=${amount}&time=${paymentTime}&payment_intent=${
                 clientSecret.split("_secret_")[0]
               }`,
             },

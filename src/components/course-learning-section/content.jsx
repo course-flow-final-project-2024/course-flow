@@ -182,6 +182,48 @@ function CoursesContent({ titleRef, subLessonId }) {
   ]);
 
   useEffect(() => {
+    async function getUserCourseInfo() {
+      const hasToken = localStorage.getItem("token");
+      if (!hasToken) {
+        router.push("/login");
+      }
+      try {
+        const result = await axios.get(
+          `/api/courses_learning/get-user-learning-course`,
+          {
+            params: {
+              courseId,
+            },
+          }
+        );
+        if (result.data.courses.length !== 0) {
+          setCourseData(result.data.courses);
+          setLessonData(result.data.courses[0].courses.lessons);
+          const subLessons = result.data.courses[0].courses.lessons.flatMap(
+            (lesson) => lesson.sub_lessons
+          );
+          setSubLessonData(subLessons);
+          setSubLessonsLength(subLessons.length);
+          const assignments = subLessons.flatMap(
+            (sublesson) => sublesson.assignments
+          );
+          setAssignmentData(assignments);
+        } else {
+          router.push("/courses");
+        }
+      } catch (error) {
+        return {
+          message: "Server could not read courses due to database connection",
+        };
+      }
+    }
+
+    if (courseId) {
+      getUserCourseInfo();
+    }
+  }, [courseId, router, currentSubLessonIndex]);
+
+  useEffect(() => {
     const videoElement = videoRef.current;
     if (videoElement) {
       videoElement.addEventListener("play", handlePlay);
@@ -208,7 +250,9 @@ function CoursesContent({ titleRef, subLessonId }) {
     assignmentData,
   ]);
 
-  useEffect(() => {}, [assignmentData]);
+  useEffect(() => {
+    console.log({ assignmentData });
+  }, [assignmentData]);
 
   useEffect(() => {
     if (subLessonId && subLessonData.length > 0) {
@@ -250,7 +294,7 @@ function CoursesContent({ titleRef, subLessonId }) {
       {(videoStatusRef.current[currentSubLesson.sub_lesson_id] === 1 ||
         currentSubLesson.user_lessons[0].sub_lesson_status_id === 1) &&
         assignmentData.map((item, index) => {
-          if (currentSubLessonId === item.sub_lesson_id) {
+          if (Number(currentSubLessonId) === item.sub_lesson_id) {
             return (
               <AssignmentCard
                 id={item.assignment_id}

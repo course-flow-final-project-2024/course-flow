@@ -31,7 +31,6 @@ export default function CompletedCard() {
           },
         });
 
-        console.log("Courses Response Data:", coursesResponse.data);
         
         setCourses(coursesResponse.data.completed);
         setCompletedCount(coursesResponse.data.completedCount);

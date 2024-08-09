@@ -39,7 +39,6 @@ async function getImageUrl(filePath) {
       return null;
     }
 
-    console.log("Image URL:", data.publicUrl);
     return data.publicUrl;
   } catch (error) {
     console.error("Error getting image Url:", error.message);
@@ -177,7 +176,6 @@ function UpdateProfile() {
           imageUrl = await getImageUrl(filePath);
         }
       }
-      console.log("Image URL:", imageUrl);
 
       const data = {
         name,
@@ -186,7 +184,7 @@ function UpdateProfile() {
         birthday,
         image: imageUrl,
       };
-      console.log("Data to be sent:", data);
+  
 
       const response = await axios.patch("/api/user-profile/update", data, {
         headers: {
@@ -194,7 +192,7 @@ function UpdateProfile() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      console.log("Response:", response.data.message);
+      // console.log("Response:", response.data.message);
 
       if (email !== userData.email) {
         setMessage("Please log in again to confirm your email change.");

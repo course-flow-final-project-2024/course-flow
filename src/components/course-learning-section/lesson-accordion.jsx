@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { CoursesDataContext } from "@/pages/courses/[courseId]/learning";
 import StatusImage from "./select-status-image";
+import { useRouter } from "next/router";
 
 function LessonAccordion({ onRendered, titleRef }) {
   const {
@@ -23,6 +24,7 @@ function LessonAccordion({ onRendered, titleRef }) {
   } = useContext(CoursesDataContext);
 
   const [expandedIndex, setExpandedIndex] = useState([currentLessonIndex]);
+  const router = useRouter();
 
   const handleOnClick = async (id) => {
     const newIndex = subLessonData.findIndex(
@@ -41,6 +43,9 @@ function LessonAccordion({ onRendered, titleRef }) {
     if (!expandedIndex.includes(lessonIndex)) {
       setExpandedIndex([...expandedIndex, lessonIndex]);
     }
+
+    const courseId = router.query.courseId;
+    router.push(`/courses/${courseId}/learning?subLessonId=${id}`);
   };
 
   useEffect(() => {

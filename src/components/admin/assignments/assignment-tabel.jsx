@@ -18,6 +18,7 @@ import { Pagination } from "@mui/material";
 import AdminCommonModalBox from "@/utils/admin-common-modal";
 import Link from "next/link";
 import { Tooltip } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 const AdminAssignmentList = () => {
   const [assignment, setAssignment] = useState([]);
@@ -30,6 +31,8 @@ const AdminAssignmentList = () => {
   });
   const [open, setOpen] = useState(false);
   const [selectedAssignmentId, setSelectedASsignmentId] = useState(null);
+  const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
   const toastId = "fetch-data";
   const toast = useToast({
     id: toastId,
@@ -42,7 +45,7 @@ const AdminAssignmentList = () => {
   const title = searchParams.get("title") || "";
 
   async function getAssignmentData() {
-    const getAssignmentData = axios.get(`/api/assignment/get-all`, {
+    const getAssignmentData = axios.get(`/api/assignment/get_all`, {
       params: {
         search: title,
         currentPage: currentPage,
@@ -52,7 +55,7 @@ const AdminAssignmentList = () => {
     if (!toast.isActive(toastId)) {
       toast.promise(getAssignmentData, {
         success: {
-          title: "Dowload complete :)",
+          title: "Completed download :)",
           description: "Let's go!",
         },
         error: {
@@ -96,9 +99,22 @@ const AdminAssignmentList = () => {
       };
     }
   }
+
   useEffect(() => {
-    getAssignmentData();
-  }, [title, currentPage]);
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      const hasToken = Boolean(localStorage.getItem("token"));
+      if (!hasToken) {
+        router.push("/admin/login");
+        return;
+      } else {
+        getAssignmentData();
+      }
+    }
+  }, [isClient, router, title, currentPage]);
 
   const handleOpen = (assignmentId) => {
     setSelectedASsignmentId(assignmentId);

@@ -17,6 +17,7 @@ import { useSearchParams } from "next/navigation";
 import { Pagination } from "@mui/material";
 import AdminCommonModalBox from "@/utils/admin-common-modal";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const AdminCoursesList = () => {
   const [course, setCourse] = useState([]);
@@ -29,6 +30,9 @@ const AdminCoursesList = () => {
   });
   const [open, setOpen] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
+
   const toastId = "fetch-data";
   const toast = useToast({
     id: toastId,
@@ -45,9 +49,7 @@ const AdminCoursesList = () => {
   };
 
   const searchParams = useSearchParams();
-
   const limitCardPerPage = 8;
-
   const title = searchParams.get("title") || "";
 
   async function getCourseData() {
@@ -61,7 +63,7 @@ const AdminCoursesList = () => {
     if (!toast.isActive(toastId)) {
       toast.promise(getCourseData, {
         success: {
-          title: "Dowload complete :)",
+          title: "Completed download :)",
           description: "Let's go!",
         },
         error: {
@@ -121,8 +123,20 @@ const AdminCoursesList = () => {
   };
 
   useEffect(() => {
-    getCourseData();
-  }, [title, currentPage]);
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      const hasToken = Boolean(localStorage.getItem("token"));
+      if (!hasToken) {
+        router.push("/admin/login");
+        return;
+      } else {
+        getCourseData();
+      }
+    }
+  }, [isClient, router, title, currentPage]);
 
   const dateFormat = (key) => {
     const result = `${key.slice(0, 4)}/${key.slice(5, 7)}/${key.slice(8, 10)} ${
@@ -199,7 +213,7 @@ const AdminCoursesList = () => {
                   <Td pl="16px" pr="16px" whiteSpace="normal">
                     {item.course_name}
                   </Td>
-                  <Td pl="16px">{item.lessons[0].count} Lessons</Td>
+                  <Td pl="16px">{item.lessons.length} Lessons</Td>
                   <Td pl="16px">
                     {item.price.toLocaleString(undefined, {
                       minimumFractionDigits: 2,

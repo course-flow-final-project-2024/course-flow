@@ -12,6 +12,7 @@ import { useToast } from "@chakra-ui/react";
 const AdminAddCourseForm = ({ setIsLoading }) => {
   const { course, setCourse } = useContext(AddCourseContext);
   const [errors, setErrors] = useState({});
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const toast = useToast();
 
@@ -199,6 +200,20 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      const hasToken = Boolean(localStorage.getItem("token"));
+      if (!hasToken) {
+        router.push("/admin/login");
+        return;
+      }
+    }
+  }, [isClient, router]);
 
   return (
     <div className="p-10">

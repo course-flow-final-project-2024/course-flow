@@ -157,7 +157,7 @@ function CourseLearning() {
               <CoursesProgress titleRef={titleRef} />
               <CoursesContent titleRef={titleRef} subLessonId={subLessonId} />
             </div>
-            <ActionBar titleRef={titleRef} />
+            <ActionBar titleRef={titleRef} subLessonId={subLessonId} />
           </>
         )}
         <CommonFooter />

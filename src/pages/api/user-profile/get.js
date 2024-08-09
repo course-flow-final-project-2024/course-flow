@@ -26,6 +26,7 @@ export default async function getProfile(req, res) {
         education: user.education_bg,
         id: user.user_id,
         email: user.email,
+        role: user.role,
       },
     });
   } catch (error) {

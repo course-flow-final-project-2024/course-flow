@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import commaNumber from "comma-number";
 import CourseDetailModal from "@/components/course-detail-section/buttons-and-modal/modal";
 import { useToast } from "@chakra-ui/react";
+import isNumber from "@/utils/numberChecking";
 
 export const CourseDetailContext = React.createContext();
 
@@ -31,13 +32,15 @@ function CourseDetail() {
   const [buttonErrorMessage, setButtonErrorMessage] = useState(null);
 
   const showToast = (message) => {
-    toast({
-      title: "Error",
-      description: message,
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-    });
+    if (message !== "Course not found") {
+      toast({
+        title: "Error",
+        description: message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
   };
 
   async function checkLoginStatus() {
@@ -53,7 +56,7 @@ function CourseDetail() {
       } catch (error) {
         console.error("Error fetching user profile:", error);
         setErrorMessage(
-          "There was an problem fetching user information. Please try again later"
+          "There was a problem retrieving user information. Please try again later."
         );
       }
     }
@@ -79,7 +82,7 @@ function CourseDetail() {
     } catch (error) {
       console.error("Error fetching courses data", error);
       setErrorMessage(
-        "There was an problem fetching course detail. Please try again later"
+        "There was a problem retrieving course detail. Please try again later"
       );
     }
   };
@@ -107,7 +110,7 @@ function CourseDetail() {
         setIsLoading(false);
         console.error("Error fetching user's course detail", error);
         setErrorMessage(
-          "There was an problem fetching user's course detail. Please try again later"
+          "There was a problem retrieving user's course detail. Please try again later"
         );
       }
     }
@@ -152,13 +155,17 @@ function CourseDetail() {
 
   useEffect(() => {
     const initFetch = async () => {
-      const isLoggedIn = await checkLoginStatus();
       if (courseId) {
-        await getallCoursesData();
-        if (isLoggedIn) {
-          await getUserCourseDetail();
+        const isLoggedIn = await checkLoginStatus();
+        if (isNumber(courseId)) {
+          await getallCoursesData();
+          if (isLoggedIn) {
+            await getUserCourseDetail();
+          } else {
+            setUserCourseStatus("guest");
+          }
         } else {
-          setUserCourseStatus("guest");
+          setErrorMessage("Course not found");
         }
       }
     };
@@ -198,7 +205,19 @@ function CourseDetail() {
       >
         <Navbar />
         <div className="w-full">
-          {courseData.length === 0 || errorMessage ? (
+          {courseData.length === 0 && errorMessage === "Course not found" ? (
+            <div className="w-full min-h-[1000px] pb-36 max-sm:min-h-[800px] flex flex-col justify-center items-center gap-8 p-4">
+              <span className="text-9xl font-bold text-center">Oops</span>
+              <span className="text-4xl font-semibold text-center">
+                404 - Page not found
+              </span>
+              <span className="text-xl text-center">
+                The page you are looking for might have been moved, removed, or
+                is temporarily unavaliable.
+              </span>
+            </div>
+          ) : courseData.length === 0 ||
+            (errorMessage && errorMessage !== "Course not found") ? (
             <div className="w-full min-h-[1000px] max-sm:min-h-[800px] flex flex-col justify-center items-center gap-4">
               <span className="text-xl">Loading</span>
               <span className="loading loading-dots loading-lg"></span>
@@ -212,7 +231,7 @@ function CourseDetail() {
         </div>
         <CommonBottomSection />
         <CommonFooter />
-        <BottomCourseCard />
+        {!errorMessage && courseData.length > 0 && <BottomCourseCard />}
         <CourseDetailModal />
       </CourseDetailContext.Provider>
     </div>

@@ -11,7 +11,7 @@ const CourseSelect = ({
   setCourseIsLoading,
 }) => {
   const dropDownStyle =
-    "border border-[#D6D9E4] rounded-[8px] h-12 py-3 pl-3 pr-4 outline-none text-[#9AA1B9]";
+    "border border-[#D6D9E4] rounded-[8px] h-12 py-3 pl-3 pr-4 outline-none";
   const loadingDotStyle = "loading loading-dots loading-sm text-[#8DADE0]";
   const toast = useToast();
 

@@ -12,6 +12,7 @@ import { useToast } from "@chakra-ui/react";
 const AdminAddCourseForm = ({ setIsLoading }) => {
   const { course, setCourse } = useContext(AddCourseContext);
   const [errors, setErrors] = useState({});
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const toast = useToast();
 
@@ -147,11 +148,9 @@ const AdminAddCourseForm = ({ setIsLoading }) => {
 
           const subLessonUploadedResults = await Promise.all(
             course.lessons.map(async (item) => {
-              console.log("1", item);
               const lessonId = uploadedLesson[item.lesson_title];
               const subLessonsWithUrls = await Promise.all(
                 item.sub_lessons.map(async (item) => {
-                  console.log("2", item);
                   const subLessonUrl = await uploadFile(
                     item.sub_lesson_video,
                     "sub_lessons"

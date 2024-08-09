@@ -3,14 +3,18 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import BottomProgressCard from "./bottom-progress-card";
 
+
 export default function Allcourses() {
   const [user, setUser] = useState(null);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [completedCount, setCompletedCount] = useState(0);
   const [inprogressCount, setInprogressCount] = useState(0);
+ 
 
+  
   useEffect(() => {
+
     const getMyCourses = async () => {
       try {
         const token = JSON.parse(localStorage.getItem("token"));
@@ -63,7 +67,7 @@ export default function Allcourses() {
             height={120}
             className="rounded-full object-cover bg-teal-600"
           />
-          <div className="text-2xl font-bold text-[#424C6B]">{user.name}</div>
+          <div className="text-2xl font-bold text-[#424C6B]">{user?.name}</div>
           <div className="flex flex-row gap-6 w-[309px]">
             <div className="flex flex-col gap-6 p-4 bg-[#F1F2F6] rounded-[8px] w-full">
               <p className="text-gray-600 text-xl font-normal">

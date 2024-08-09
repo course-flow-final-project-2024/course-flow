@@ -2,8 +2,19 @@ import Navbar from "@/components/navbar/navbar";
 import CommonFooter from "@/components/footer/common-footer";
 import PageDecoration from "@/components/courses/page-decoration";
 import GetMyCourse from "@/components/my-course/mycourse.jsx";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 function MyCourses() {
+  const router = useRouter();
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("token"));
+    if (!userInfo) {
+      sessionStorage.removeItem("user");
+      router.push("/login");
+    }
+  }, []);
+
   return (
     <>
       <Navbar />

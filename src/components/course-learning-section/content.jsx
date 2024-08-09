@@ -208,6 +208,8 @@ function CoursesContent({ titleRef, subLessonId }) {
     assignmentData,
   ]);
 
+  useEffect(() => {}, [assignmentData]);
+
   useEffect(() => {
     if (subLessonId && subLessonData.length > 0) {
       const subLessonIndex = subLessonData.findIndex(

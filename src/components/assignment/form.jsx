@@ -37,7 +37,7 @@ export default function AnswerForm(prop) {
                 role="button"
                 onClick={() => {
                   router.push(
-                    `/courses/${prop.assignment.assignments.sub_lessons.lessons.course_id}/learning?subLessonId=${prop.assignment.assignments.sub_lesson_id}`
+                    `/courses/${prop.assignment.assignments.sub_lessons.lessons.course_id}/learning?subLessonId=${prop.assignment.assignments.sub_lessons.sub_lesson_id}`
                   );
                 }}
                 className="text-base text-[#2F5FAC] font-bold flex justify-center whitespace-nowrap hover:underline"
@@ -81,7 +81,7 @@ export default function AnswerForm(prop) {
                 role="button"
                 onClick={() => {
                   router.push(
-                    `/courses/${prop.assignment.assignments.sub_lessons.lessons.course_id}/learning?subLessonId=${prop.assignment.assignments.sub_lesson_id}`
+                    `/courses/${prop.assignment.assignments.sub_lessons.lessons.course_id}/learning?subLessonId=${prop.assignment.assignments.sub_lessons.sub_lesson_id}`
                   );
                 }}
                 className="text-base text-[#2F5FAC] font-bold flex justify-center whitespace-nowrap hover:underline"

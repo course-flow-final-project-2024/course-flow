@@ -63,7 +63,7 @@ const AdminCoursesList = () => {
     if (!toast.isActive(toastId)) {
       toast.promise(getCourseData, {
         success: {
-          title: "Completed download :)",
+          title: "Courses loaded :)",
           description: "Let's go!",
         },
         error: {
@@ -71,7 +71,7 @@ const AdminCoursesList = () => {
           description: "Something wrong.",
         },
         loading: {
-          title: "Downloading course",
+          title: "Downloading courses",
           description: "Please wait.",
         },
       });
@@ -122,19 +122,34 @@ const AdminCoursesList = () => {
     }
   };
 
+  async function checkLoginStatus() {
+    const hasToken = Boolean(localStorage.getItem("token"));
+    if (hasToken) {
+      try {
+        const result = await axios.get("/api/user-profile/get");
+        if (result.data.user.role !== 1) {
+          router.push("/");
+          return;
+        } else {
+          getCourseData();
+        }
+      } catch (error) {
+        router.push("/admin/login");
+      }
+    }
+    if (!hasToken) {
+      router.push("/admin/login");
+      return;
+    }
+  }
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
     if (isClient) {
-      const hasToken = Boolean(localStorage.getItem("token"));
-      if (!hasToken) {
-        router.push("/admin/login");
-        return;
-      } else {
-        getCourseData();
-      }
+      checkLoginStatus();
     }
   }, [isClient, router, title, currentPage]);
 

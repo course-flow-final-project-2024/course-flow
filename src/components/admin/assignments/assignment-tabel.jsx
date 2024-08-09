@@ -258,7 +258,7 @@ const AdminAssignmentList = () => {
             ) : (
               <Tr>
                 <Td colSpan="8" align="center">
-                  No courses found.
+                  No assignments found.
                 </Td>
               </Tr>
             )}

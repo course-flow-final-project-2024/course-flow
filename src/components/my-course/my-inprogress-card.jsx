@@ -48,7 +48,7 @@ export default function InprogressCard() {
     return <div>Loading...</div>;
   }
   return (
-    <div className="w-full h-[1000px] flex gap-6 mt-10 relative ">
+    <div className="w-full h-max flex gap-6 mt-10 relative ">
       <div className="flex flex-col items-center gap-6 py-8 px-6 rounded-[8px] shadow-lg sticky top-0 h-[396px]">
         <img
           src={user.image}

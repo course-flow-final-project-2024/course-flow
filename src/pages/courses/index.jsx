@@ -74,7 +74,7 @@ export default function Course() {
             <span className="loading loading-dots loading-lg"></span>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-[repeat(auto-fit,minmax(360px,1fr))] sm:mt-[100px] gap-6 ">
+          <div className="grid sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] sm:mt-[100px] gap-6 ">
             {course.map((item, index) => (
               <div className="grid justify-center" key={index}>
                 <CourseCard

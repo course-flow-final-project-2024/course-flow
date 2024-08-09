@@ -25,35 +25,26 @@ export default async function getUserLearningCourse(req, res) {
       .from("user_courses")
       .select(
         `
-        course_id,
-        courses (
-          course_name,
-          detail,
-          summary,
-          lessons (
-            lesson_id,
-            lesson_title,
-            index,
-            sub_lessons (
-              sub_lesson_id,
-              lesson_id,
-              sub_lesson_title,
-              sub_lesson_video,
-              index,
-              user_lessons (
+        *,
+        courses (*,
+          lessons (*,
+            sub_lessons (*,
+              user_lessons!inner (
+                user_id,
+                lesson_id,
                 sub_lesson_id,
+                user_lesson_id,
                 sub_lesson_status_id
               ),
               assignments (
                 assignment_id,
                 sub_lesson_id,
                 assignment_title,
-                user_assignments (
-                  assignment_status_id,
+                assignment_video,
+                user_assignments!inner (
+                  user_id,
                   answer,
-                  assignment_status (
-                    status
-                  )
+                  assignment_status (status)
                 )
               )
             )
@@ -63,7 +54,8 @@ export default async function getUserLearningCourse(req, res) {
       )
       .eq("course_id", courseId)
       .eq("user_id", userId)
-      .eq("payment_status_id", "1");
+      .eq("payment_status_id", "1")
+      .eq("courses.lessons.sub_lessons.user_lessons.user_id", userId);
 
     if (courseError) {
       return res.status(400).json({ error: "Course not found" });
@@ -75,6 +67,21 @@ export default async function getUserLearningCourse(req, res) {
         course.lessons.forEach((lesson) => {
           if (lesson.sub_lessons) {
             lesson.sub_lessons.sort((a, b) => a.index - b.index);
+            lesson.sub_lessons = lesson.sub_lessons.map((subLesson) => {
+              subLesson.user_lessons = subLesson.user_lessons.filter(
+                (userLesson) => userLesson.user_id === userId
+              );
+              subLesson.assignments = subLesson.assignments.map(
+                (assignment) => {
+                  assignment.user_assignments =
+                    assignment.user_assignments.filter(
+                      (userAssignment) => userAssignment.user_id === userId
+                    );
+                  return assignment;
+                }
+              );
+              return subLesson;
+            });
           }
         });
       }
@@ -83,7 +90,7 @@ export default async function getUserLearningCourse(req, res) {
     res.status(200).json({ courses });
   } catch (error) {
     return res.status(500).json({
-      message: "Server could not read courses due to database connection",
+      message: "Server could not read courses due to database connection error",
     });
   }
 }

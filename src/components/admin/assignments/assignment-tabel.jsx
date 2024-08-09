@@ -33,9 +33,15 @@ const AdminAssignmentList = () => {
   const [selectedAssignmentId, setSelectedASsignmentId] = useState(null);
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
-  const toastId = "fetch-data";
-  const toast = useToast({
-    id: toastId,
+
+  const toastFetch = useToast({
+    id: "fetch",
+    position: "top",
+    isClosable: true,
+  });
+
+  const toastDelete = useToast({
+    id: "delete",
     position: "top",
     isClosable: true,
   });
@@ -52,8 +58,8 @@ const AdminAssignmentList = () => {
         limit: limitCardPerPage,
       },
     });
-    if (!toast.isActive(toastId)) {
-      toast.promise(getAssignmentData, {
+    if (!toastFetch.isActive("fetch")) {
+      toastFetch.promise(getAssignmentData, {
         success: {
           title: "Completed download :)",
           description: "Let's go!",
@@ -125,10 +131,27 @@ const AdminAssignmentList = () => {
   };
 
   const handleDelete = async (assignmentId) => {
-    try {
-      let result = await axios.delete(`/api/assignment/delete`, {
-        data: { assignment_id: assignmentId },
+    const deleteAssignment = axios.delete(`/api/assignment/delete`, {
+      data: { assignment_id: assignmentId },
+    });
+    if (!toastDelete.isActive("delete")) {
+      toastDelete.promise(deleteAssignment, {
+        success: {
+          title: "Good to go :)",
+          description: "Assignment has been deleted succesfully.",
+        },
+        error: {
+          title: "Oops... :(",
+          description: "Something wrong.",
+        },
+        loading: {
+          title: "Deleting Assignment...",
+          description: "Please wait.",
+        },
       });
+    }
+    try {
+      let result = await deleteAssignment;
       if (result.status === 200) {
         getAssignmentData();
         handleClose();

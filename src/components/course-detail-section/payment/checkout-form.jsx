@@ -11,6 +11,7 @@ import convertToSubcurrency from "@/utils/convertToSubcurrency";
 import { CourseDetailContext } from "@/pages/courses/[courseId]";
 import commaNumber from "comma-number";
 import Button from "@/utils/button";
+import Image from "next/image";
 
 function CheckoutForm({ amount }) {
   const context = useContext(CourseDetailContext);
@@ -71,7 +72,7 @@ function CheckoutForm({ amount }) {
             elements,
             clientSecret,
             confirmParams: {
-              return_url: `http://localhost:3000/courses/${courseId}/payment-success?&courseTitle=${courseTitle}&amount=${amount}&time=${paymentTime}&payment_intent=${
+              return_url: `https://courseflowth.vercel.app/courses/${courseId}/payment-success?&courseTitle=${courseTitle}&amount=${amount}&time=${paymentTime}&payment_intent=${
                 clientSecret.split("_secret_")[0]
               }`,
             },
@@ -87,7 +88,7 @@ function CheckoutForm({ amount }) {
           setIsLoading(false);
         } catch (error) {
           console.error("Error fetching data", error);
-          setErrorMessage("An error occurred. Please try again.");
+          setErrorMessage("An unexpected error occurred. Please try again.");
           setIsLoading(false);
         }
       }
@@ -107,26 +108,57 @@ function CheckoutForm({ amount }) {
   return (
     <form
       onSubmit={handlePaymentSubmit}
-      className="w-full flex flex-col justify-center items-center gap-8 p-4"
+      className="w-full flex flex-col justify-center items-center gap-6 p-4"
     >
-      <div className="w-full">
+      <div className="w-full min-h-[220px]">
         {errorMessage ? (
-          <p className="text-base text-red-600 text-center min-h-[100px] flex items-center justify-center">
-            {errorMessage}
-          </p>
+          <div className="flex flex-col w-full min-h-[270px] justify-around items-center gap-12 pt-6 ">
+            <div className="flex flex-col items-center gap-3">
+              <Image
+                src="/course-detail/warning.svg"
+                width={60}
+                height={60}
+                alt="refresh"
+              />
+              <p className="text-base sm:text-xl h-max text-[#666666] text-center  ">
+                {errorMessage}
+              </p>
+            </div>
+            <button
+              className="sm:w-[300px] w-[200px] border-[1px] border-gray-400 px-4 py-2 rounded-lg hover:scale-[1.05] duration-200  "
+              type="button"
+              onClick={() => {
+                setErrorMessage(false);
+              }}
+            >
+              <div className="flex gap-2 justify-center">
+                <Image
+                  src="/course-detail/refresh.svg"
+                  width={25}
+                  height={25}
+                  alt="refresh"
+                />
+                <span className="text-base sm:text-lg">Try Again</span>
+              </div>
+            </button>
+          </div>
         ) : (
           <PaymentElement />
         )}
       </div>
-      <div className="flex flex-col w-full">
-        <div className="flex">
-          <Button
-            style="primary"
-            text={!isLoading ? `Pay ${commaNumber(amount)}฿` : `Processing...`}
-            customStyle="py-[18px] px-8 "
-          />
+      {errorMessage ? null : (
+        <div className="flex flex-col w-full">
+          <div className="flex">
+            <Button
+              style="primary"
+              text={
+                !isLoading ? `Pay ${commaNumber(amount)}฿` : `Processing...`
+              }
+              customStyle="py-[18px] px-8 "
+            />
+          </div>
         </div>
-      </div>
+      )}
     </form>
   );
 }

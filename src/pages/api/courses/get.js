@@ -71,14 +71,12 @@ export default async function handler(req, res) {
       const totalPages = Math.ceil(totalItems / limit);
       const safeCurrentPage = Math.min(Math.max(currentPage, 1), totalPages);
 
-      return res
-        .status(200)
-        .json({
-          courses,
-          totalItems,
-          totalPages,
-          currentPage: safeCurrentPage,
-        });
+      return res.status(200).json({
+        courses,
+        totalItems,
+        totalPages,
+        currentPage: safeCurrentPage,
+      });
     }
   } catch (error) {
     return res.status(500).json({

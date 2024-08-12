@@ -39,7 +39,7 @@ export default function LogInForm() {
         router.push(`/`);
       }
     } catch (error) {
-      setSignInError("Failed to sign in. Please try again later.");
+      setSignInError("Invalid email or password.");
     }
   };
 

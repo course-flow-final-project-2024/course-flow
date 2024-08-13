@@ -56,7 +56,7 @@ function CourseDetail() {
       } catch (error) {
         console.error("Error fetching user profile:", error);
         setErrorMessage(
-          "There was a problem retrieving user information. Please try again later."
+          "There was a problem retrieving user information. Please try logging in again."
         );
       }
     }

@@ -7,6 +7,7 @@ import CourseCard from "../../components/courses/course-card";
 import { Pagination, Box } from "@mui/material";
 import CommonFooter from "@/components/footer/common-footer";
 import CommonBottomSection from "@/components/bottom-section/common-bottom-section";
+import { useRouter } from "next/router";
 
 export default function Course() {
   const [course, setCourse] = useState([]);
@@ -26,6 +27,15 @@ export default function Course() {
   const title = searchParams.get("title") || "";
   const courseTitleRef = useRef(null);
 
+  const router = useRouter();
+  const [isAdminRoute, setIsAdminRoute] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsAdminRoute(window.location.pathname.includes("/admin"));
+    }
+  }, [router]);
+
   useEffect(() => {
     async function getCourseData() {
       try {
@@ -34,6 +44,7 @@ export default function Course() {
             search: title,
             currentPage: currentPage,
             limit: limitCardPerPage,
+            isAdminRoute: isAdminRoute,
           },
         });
 

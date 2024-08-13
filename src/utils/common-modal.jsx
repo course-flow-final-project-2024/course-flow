@@ -33,7 +33,7 @@ function CommonModalBox(props) {
                     width={20}
                     alt="cross"
                     onClick={handleClose}
-                    className="active:scale-[0.8] duration-100 hover:scale-[1.05] "
+                    className="active:scale-[0.8] duration-100 hover:scale-[1.05] hover:cursor-pointer "
                   />
                 </div>
                 <div className="p-6">

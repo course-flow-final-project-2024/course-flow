@@ -6,6 +6,14 @@ import CheckoutForm from "./checkout-form";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import convertToSubcurrency from "@/utils/convertToSubcurrency";
+import {
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  TabIndicator,
+} from "@chakra-ui/react";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is required");
@@ -53,64 +61,84 @@ function PaymentModal() {
                     width={20}
                     alt="cross"
                     onClick={handleClose}
-                    className="active:scale-[0.8] duration-100 hover:scale-[1.05] "
+                    className="active:scale-[0.8] duration-100 hover:scale-[1.05] hover:cursor-pointer "
                   />
                 </div>
-                <div className="w-full p-4 ">
-                  <div
-                    role="tablist"
-                    className="tabs tabs-lifted tabs-lg bg-white "
-                  >
-                    <input
-                      type="radio"
-                      name="my_tabs_2"
-                      role="tab"
-                      className="tab text-base font-semibold flex justify-center min-w-[120px]   "
-                      aria-label="Credit / Debit Card"
-                      defaultChecked
-                    />
 
-                    <div
-                      role="tabpanel"
-                      className="tab-content bg-base-100 border-base-300 rounded-box "
-                    >
-                      {originalPrice > 0 && (
-                        <Elements
-                          stripe={stripePromise}
-                          options={{
-                            mode: "payment",
-                            amount: convertToSubcurrency(originalPrice),
-                            currency: "thb",
-                          }}
-                        >
-                          <CheckoutForm amount={originalPrice} />
-                        </Elements>
-                      )}
+                <div className="w-full sm:min-w-[600px]  "></div>
+
+                <Tabs position="relative" variant="unstyled">
+                  <div className="flex flex-col gap-5 pt-2 pb-3 px-3 sm:pt-4 sm:pb-6 sm:px-6 ">
+                    <div className="relative border-b-2 border-base-200 mx-6 pb-[7px] pt-[5px] ">
+                      <TabList>
+                        <Tab w="100%">
+                          <div className="flex gap-[1px] sm:gap-2 items-center ">
+                            <Image
+                              src="/course-detail/credit-card.svg"
+                              width={30}
+                              height={30}
+                              alt="credit-card"
+                            />
+                            <span className="text-sm sm:text-lg font-medium leading-4">
+                              Credit/Debit Card
+                            </span>
+                          </div>
+                        </Tab>
+
+                        <Tab w="100%">
+                          <div className="flex gap-[1px] sm:gap-2 items-center ">
+                            <Image
+                              src="/course-detail/qr-code.svg"
+                              width={30}
+                              height={30}
+                              alt="credit-card"
+                            />
+                            <span className="text-sm sm:text-lg font-medium">
+                              QR Code
+                            </span>
+                          </div>
+                        </Tab>
+                      </TabList>
+                      <TabIndicator
+                        mt="7px"
+                        height="3px"
+                        bg="black"
+                        borderRadius="2px"
+                      />
                     </div>
-
-                    <input
-                      type="radio"
-                      name="my_tabs_2"
-                      role="tab"
-                      className="tab text-base font-semibold min-w-[120px] "
-                      aria-label="QR Code"
-                    />
-                    <div
-                      role="tabpanel"
-                      className="tab-content bg-base-100 border-base-300 rounded-box p-6 "
-                    >
-                      <div className="skeleton min-h-[400px] min-w-[215px] w-full flex flex-col justify-center items-center gap-4">
-                        <Image
-                          src="/course-detail/coming-soon.svg"
-                          width={50}
-                          height={50}
-                          alt="coming soon"
-                        />
-                        <span className="text-gray-600 ">Coming Soon...</span>
-                      </div>
+                    <div className="border-2 rounded-3xl p-1 border-base-200 ">
+                      <TabPanels>
+                        <TabPanel>
+                          {originalPrice > 0 && (
+                            <Elements
+                              stripe={stripePromise}
+                              options={{
+                                mode: "payment",
+                                amount: convertToSubcurrency(originalPrice),
+                                currency: "thb",
+                              }}
+                            >
+                              <CheckoutForm amount={originalPrice} />
+                            </Elements>
+                          )}
+                        </TabPanel>
+                        <TabPanel>
+                          <div className=" min-h-[340px] min-w-[260px] w-full flex flex-col justify-center items-center gap-4">
+                            <Image
+                              src="/course-detail/coming-soon.svg"
+                              width={50}
+                              height={50}
+                              alt="coming soon"
+                            />
+                            <span className="text-gray-600 ">
+                              Coming Soon...
+                            </span>
+                          </div>
+                        </TabPanel>
+                      </TabPanels>
                     </div>
                   </div>
-                </div>
+                </Tabs>
               </div>
             </Box>
           </Box>

@@ -195,8 +195,8 @@ const AdminAssignmentList = () => {
       <TableContainer borderRadius="lg">
         <Table
           variant="simple"
-          minwidth="1120px"
           width="100%"
+          minwidth="1120px"
           className="table-fixed"
         >
           <Thead>

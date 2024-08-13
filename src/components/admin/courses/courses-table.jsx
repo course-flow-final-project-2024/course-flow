@@ -31,7 +31,15 @@ const AdminCoursesList = () => {
   const [open, setOpen] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [isClient, setIsClient] = useState(false);
+  const [isAdminRoute, setIsAdminRoute] = useState(false);
+
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsAdminRoute(window.location.pathname.includes("/admin"));
+    }
+  }, [router]);
 
   const toastFetch = useToast({
     id: "fetch",
@@ -62,6 +70,7 @@ const AdminCoursesList = () => {
         search: title,
         currentPage: currentPage,
         limit: limitCardPerPage,
+        isAdminRoute: isAdminRoute,
       },
     });
     if (!toastFetch.isActive("fetch")) {
@@ -266,6 +275,7 @@ const AdminCoursesList = () => {
                         onClick={() => {
                           handleOpen(item.course_id);
                         }}
+                        role="button"
                       />
                       <AdminCommonModalBox
                         open={open}
